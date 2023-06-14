@@ -2,7 +2,7 @@ name: Master Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
 
@@ -19,10 +19,10 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
     - name: Build the Docker image
-      run: docker build -t uzomacharles28/bcloud-frontend-prod:latest --build-arg environment=production .
+      run: docker build -t uzomacharles28/bcloud-manager-prod:latest --build-arg environment=production .
       
     - name: Docker Push
-      run: docker push uzomacharles28/bcloud-frontend-prod:latest
+      run: docker push uzomacharles28/bcloud-manager-prod:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -40,21 +40,21 @@ jobs:
             command_timeout: 12m
             script: |
               
-              sudo docker pull uzomacharles28/bcloud-frontend-prod
+              sudo docker pull uzomacharles28/bcloud-manager-prod
             
               # Stop running container
-              sudo docker stop BCLOUD_FRONTEND || true
+              sudo docker stop BCLOUD_MANAGER || true
               
               # prune images
               sudo docker system prune -f
               
 
               # Remove old container
-              sudo docker rm BCLOUD_FRONTEND
+              sudo docker rm BCLOUD_MANAGER
 
               # Run a new container from a new image
               sudo docker run -d \
               --restart always \
-              -p 3000:3000 \
-              --name BCLOUD_FRONTEND \
-              uzomacharles28/bcloud-frontend-prod
+              -p 3002:3002 \
+              --name BCLOUD_MANAGER \
+              uzomacharles28/bcloud-manager-prod
