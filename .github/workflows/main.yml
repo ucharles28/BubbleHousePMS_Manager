@@ -1,0 +1,60 @@
+name: Master Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+
+  build_image:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: docker login
+      env:
+        DOCKER_USER: ${{secrets.DOCKER_USER}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
+    - name: Build the Docker image
+      run: docker build -t uzomacharles28/bcloud-frontend-prod:latest --build-arg environment=production .
+      
+    - name: Docker Push
+      run: docker push uzomacharles28/bcloud-frontend-prod:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_image
+
+    steps:
+      - name: Deploy to Digital Ocean droplet via SSH action
+        if: always()
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+            host: ${{ secrets.PROD_SSH_HOST }}
+            username: ${{ secrets.PROD_SSH_USER }}
+            password: ${{ secrets.PROD_SSH_PASSWORD }}
+            envs: IMAGE_NAME,GITHUB_SHA
+            command_timeout: 12m
+            script: |
+              
+              sudo docker pull uzomacharles28/bcloud-frontend-prod
+            
+              # Stop running container
+              sudo docker stop BCLOUD_FRONTEND || true
+              
+              # prune images
+              sudo docker system prune -f
+              
+
+              # Remove old container
+              sudo docker rm BCLOUD_FRONTEND
+
+              # Run a new container from a new image
+              sudo docker run -d \
+              --restart always \
+              -p 3000:3000 \
+              --name BCLOUD_FRONTEND \
+              uzomacharles28/bcloud-frontend-prod
