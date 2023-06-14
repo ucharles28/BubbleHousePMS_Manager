@@ -1,12 +1,13 @@
 'use client'
-import { forwardRef, useState } from "react";
+import { LegacyRef, forwardRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import Image from 'next/image';
 import logo from '../logo.png'
 import { Setting2, People, Notification, Buildings2, Calendar, Messages2, Category, LogoutCurve, Money2 } from 'iconsax-react';
 
-const SideBar = forwardRef(({ showNav }, ref) => {
+const SideBar = forwardRef((ref: LegacyRef<HTMLDivElement>) => {
+// const SideBar = forwardRef(({ showNav }, ref) => {
     const logOut = () => {
         router.push('/auth/login');
     }
@@ -15,19 +16,19 @@ const SideBar = forwardRef(({ showNav }, ref) => {
     const [box5, setBox5] = useState(false)
 
     // keep router.pathname alive when routes is in sub page
-    if (router.pathname?.includes("/staffs")) {
-        router.pathname = "/staffs";
-    } else if (router.pathname?.includes("/hotel")) {
-        router.pathname = "/hotel";
-    } else if (router.pathname?.includes("/bookings")) {
-        router.pathname = "/bookings";
-    } else if (router.pathname?.includes("/notifications")) {
-        router.pathname = "/notifications";
-    } else if (router.pathname?.includes("/settings")) {
-        router.pathname = "/settings";
-    } else {
-        router.pathname = "/";
-    }
+    // if (router.pathname?.includes("/staffs")) {
+    //     router.pathname = "/staffs";
+    // } else if (router.pathname?.includes("/hotel")) {
+    //     router.pathname = "/hotel";
+    // } else if (router.pathname?.includes("/bookings")) {
+    //     router.pathname = "/bookings";
+    // } else if (router.pathname?.includes("/notifications")) {
+    //     router.pathname = "/notifications";
+    // } else if (router.pathname?.includes("/settings")) {
+    //     router.pathname = "/settings";
+    // } else {
+    //     router.pathname = "/";
+    // }
 
     return (
         <div ref={ref} className="md:flex hidden flex-col fixed z-20 w-72 h-full bg-white shadow-sm border-dashed border-r-[1.5px] border-[#E4E4E4]">
@@ -38,7 +39,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
             <div className="flex flex-col gap-y-4 px-2 text-sm">
                 <Link href="/">
                     <div
-                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${router.pathname == "/"
+                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/"
                             ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
                             : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
                             }`}
@@ -51,7 +52,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
                 <Link href="/staffs" >
                     {/* onClick={() => setBox5(!box5)} */}
                     <div
-                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${router.pathname == "/staffs"
+                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/staffs"
                             ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
                             : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
                             }`}
@@ -71,7 +72,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
 
                 <Link href="/bookings">
                     <div
-                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${router.pathname == "/bookings"
+                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/bookings"
                             ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
                             : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
                             }`}
@@ -83,7 +84,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
 
                 <Link href="/hotel">
                     <div
-                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${router.pathname == "/hotel"
+                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/hotel"
                             ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
                             : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
                             }`}
@@ -95,7 +96,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
 
                 <Link href="/notifications">
                     <div
-                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${router.pathname == "/notifications"
+                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/notifications"
                             ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
                             : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
                             }`}
@@ -107,7 +108,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
 
                 <Link href="/settings">
                     <div
-                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${router.pathname == "/settings"
+                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/settings"
                             ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
                             : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
                             }`}
@@ -119,7 +120,7 @@ const SideBar = forwardRef(({ showNav }, ref) => {
 
                 <Link href="/#">
                     <div
-                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${router.pathname == "/#"
+                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/#"
                             ? "bg-red-500 text-white rounded-xl"
                             : "text-[#636363] hover:bg-red-500 hover:text-white rounded-xl"
                             }`}
