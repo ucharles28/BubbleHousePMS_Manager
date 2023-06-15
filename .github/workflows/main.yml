@@ -55,6 +55,6 @@ jobs:
               # Run a new container from a new image
               sudo docker run -d \
               --restart always \
-              -p 3002:3002 \
+              -p 8000:8000 \
               --name BCLOUD_MANAGER \
               uzomacharles28/bcloud-manager-prod
