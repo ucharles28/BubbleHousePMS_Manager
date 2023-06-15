@@ -6,8 +6,7 @@ import Image from 'next/image';
 import logo from '../logo.png'
 import { Setting2, People, Notification, Buildings2, Calendar, Messages2, Category, LogoutCurve, Money2 } from 'iconsax-react';
 
-const SideBar = forwardRef((ref: LegacyRef<HTMLDivElement>) => {
-// const SideBar = forwardRef(({ showNav }, ref) => {
+const SideBar = forwardRef(({ showNav }: {showNav: boolean}, ref: LegacyRef<HTMLDivElement>) => {
     const logOut = () => {
         router.push('/auth/login');
     }
