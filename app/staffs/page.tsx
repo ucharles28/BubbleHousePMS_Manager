@@ -6,36 +6,41 @@ import styled from '@emotion/styled';
 import { ArrowLeft2, Eye } from 'iconsax-react'
 
 function Staffs() {
-  const handleChangePage = (e, newPage) => {
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
   };
-  const handleChangeRowsPerPage = (e) => {
-    setRowsPerPage(e.target.value);
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
 
   const rows = [
     {
       userName: 'Chijioke Emechebe',
       role: 'Staff',
       email: 'chijiokeemechebe@gmail.com',
-      status: 'active'
+      status: 'active',
+      date: '2023-06-15'
     },
     {
       userName: 'John Doe',
       role: 'Staff',
       email: 'johndoe@gmail.com',
-      status: 'banned'
+      status: 'banned',
+      date: '2023-06-09'
     },
     {
       userName: 'Jane Smith',
       role: 'Staff',
       email: 'janesmith@gmail.com',
-      status: 'active'
+      status: 'active',
+      date: '2023-06-22'
     },
   ];
 
-  const getStatusChip = (status) => {
+  const getStatusChip = (status: string) => {
     let chipColor = '';
     let chipText = '';
 
@@ -61,7 +66,7 @@ function Staffs() {
   };
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const TableRowStyled = styled(TableRow)`
         &:nth-of-type(odd) {
             background-color: #f8f8f8;
@@ -73,8 +78,8 @@ function Staffs() {
     `;
 
   const sortedRows = [...rows].sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
+    const dateA = new Date(a.date.split('-').reverse().join('-')).getTime();
+    const dateB = new Date(b.date.split('-').reverse().join('-')).getTime();
     return dateB - dateA;
   });
 

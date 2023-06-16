@@ -110,10 +110,8 @@ export default function Dashboard() {
     );
   };
 
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  // const [rows, setRows] = useState([]);
   const TableRowStyled = styled(TableRow)`
         &:nth-of-type(odd) {
             background-color: #f8f8f8;
@@ -125,8 +123,8 @@ export default function Dashboard() {
     `;
 
   const sortedRows = [...rows].sort((a, b) => {
-    const dateA = new Date(a.date.split('-').reverse().join('-'));
-    const dateB = new Date(b.date.split('-').reverse().join('-'));
+    const dateA = new Date(a.date.split('-').reverse().join('-')).getTime();
+    const dateB = new Date(b.date.split('-').reverse().join('-')).getTime();
     return dateB - dateA;
   });
 
