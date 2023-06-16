@@ -1,68 +1,3 @@
-// 'use client'
-// import { LegacyRef, forwardRef } from "react";
-// import Link from "next/link";
-// import { useRouter, usePathname } from "next/navigation";
-// import Image from 'next/image';
-// import logo from '../logo.png'
-// import { Setting2, People, Notification, Buildings2, Calendar, Messages2, Category, LogoutCurve, Money2 } from 'iconsax-react';
-
-// const sidebarLinks = [
-//   { path: "/", label: "Dashboard", icon: Category },
-//   { path: "/staffs", label: "Staffs", icon: People },
-//   { path: "/bookings", label: "Bookings", icon: Calendar },
-//   { path: "/hotel", label: "Manage Hotel", icon: Buildings2 },
-//   { path: "/notifications", label: "Notifications", icon: Notification },
-//   { path: "/settings", label: "Settings", icon: Setting2 }
-// ];
-
-// const SideBar = forwardRef(({ showNav }: {showNav: boolean}, ref: LegacyRef<HTMLDivElement>) => {
-//   const logOut = () => {
-//     router.push('/auth/login');
-//   };
-//   const router = useRouter();
-//   const pathname = usePathname();
-
-//   return (
-//     <div ref={ref} className="md:flex hidden flex-col fixed z-20 w-72 h-full bg-white shadow-sm border-dashed border-r-[1.5px] border-[#E4E4E4]">
-//       <div className="flex justify-center mt-4 mb-12">
-//         <Image src={logo} width={100} height={100} alt='mybcloud manager' />
-//       </div>
-
-//       <div className="flex flex-col gap-y-4 px-2 text-sm">
-//         {sidebarLinks.map(({ path, label, icon: Icon }) => (
-//           <Link key={path} href={path}>
-//             <div
-//               className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname === path
-//                 ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
-//                 : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
-//                 }`}
-//             >
-//               <Icon className="h-5 w-5" variant="Bold" />
-//               <p className="">{label}</p>
-//             </div>
-//           </Link>
-//         ))}
-
-//         <div
-//           className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname === "/#"
-//             ? "bg-red-500 text-white rounded-xl"
-//             : "text-[#636363] hover:bg-red-500 hover:text-white rounded-xl"
-//             }`}
-//           onClick={logOut}
-//         >
-//           <LogoutCurve className="h-5 w-5" variant="Bold" />
-//           <p className="">Log Out</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// });
-
-// SideBar.displayName = "SideBar";
-
-// export default SideBar;
-
-
 'use client'
 import { LegacyRef, forwardRef } from "react";
 import Link from "next/link";
@@ -87,16 +22,10 @@ const SideBar = forwardRef(({ showNav }: { showNav: boolean }, ref: LegacyRef<HT
     const router = useRouter();
     const pathname = usePathname();
 
-    // const isLinkActive = (linkPath: string) => {
-    //     return pathname.startsWith(linkPath);
-    // };
-
     const isLinkActive = (linkPath: string) => {
         if (linkPath === "/") {
-            // Check if the current pathname is exactly "/"
             return pathname === "/";
         }
-        // Check if the current pathname starts with the linkPath and is not equal to "/"
         return pathname.startsWith(linkPath) && pathname !== "/";
     };
 

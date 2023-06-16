@@ -8,11 +8,6 @@ import { Transition } from "@headlessui/react";
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-   title: 'Mybcloud Manager Portal',
-   description: 'Created with love by mybcloud',
-}
-
 export default function RootLayout({
   children,
 }: {
