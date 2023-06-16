@@ -1,12 +1,21 @@
 'use client'
 import { Fragment, useEffect, useState } from "react";
-import { HambergerMenu, DirectNotification, Setting2, LogoutCurve, Profile2User, Notification, Buildings2, Calendar, Messages2, Category, Money2 } from 'iconsax-react';
 import { Menu, Transition, Popover } from "@headlessui/react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import Image from 'next/image';
 import logo from '../logo.png'
 import { Drawer } from 'antd';
+import { HambergerMenu, DirectNotification, Setting2, LogoutCurve, People, Notification, Buildings2, Calendar, Messages2, Category, Money2 } from 'iconsax-react';
+
+const sidebarLinks = [
+    { path: "/", label: "Dashboard", icon: Category },
+    { path: "/staffs", label: "Staffs", icon: People },
+    { path: "/bookings", label: "Bookings", icon: Calendar },
+    { path: "/hotel", label: "Manage Hotel", icon: Buildings2 },
+    { path: "/notifications", label: "Notifications", icon: Notification },
+    { path: "/settings", label: "Settings", icon: Setting2 }
+];
 
 export default function TopBar({ showNav, setShowNav }: { showNav: boolean; setShowNav: any }) {
     const logOut = () => {
@@ -24,19 +33,12 @@ export default function TopBar({ showNav, setShowNav }: { showNav: boolean; setS
     const pathname = usePathname()
 
     const [user, setUser] = useState()
-    // if (router.pathname?.includes("/staffs")) {
-    //     router.pathname = "/staffs";
-    // } else if (router.pathname?.includes("/hotel")) {
-    //     router.pathname = "/hotel";
-    // } else if (router.pathname?.includes("/bookings")) {
-    //     router.pathname = "/bookings";
-    // } else if (router.pathname?.includes("/notifications")) {
-    //     router.pathname = "/notifications";
-    // } else if (router.pathname?.includes("/settings")) {
-    //     router.pathname = "/settings";
-    // } else {
-    //     router.pathname = "/";
-    // }
+    const isLinkActive = (linkPath: string) => {
+        if (linkPath === "/") {
+            return pathname === "/";
+        }
+        return pathname.startsWith(linkPath) && pathname !== "/";
+    };
 
     return (
         <div
@@ -88,90 +90,30 @@ export default function TopBar({ showNav, setShowNav }: { showNav: boolean; setS
 
 
                 <div className="flex flex-col gap-y-4 px-2 text-sm">
-                    <Link href="/">
-                        <div
-                            className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/"
-                                ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
-                                : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
-                                }`}
-                        >
-                            <Category className="h-5 w-5" variant="Bold" />
-                            <p className="">Dashboard</p>
-                        </div>
-                    </Link>
+                    {sidebarLinks.map(({ path, label, icon: Icon }) => (
+                        <Link key={path} href={path}>
+                            <div
+                                className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${isLinkActive(path)
+                                    ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
+                                    : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
+                                    }`}
+                            >
+                                <Icon className="h-5 w-5" variant="Bold" />
+                                <p className="">{label}</p>
+                            </div>
+                        </Link>
+                    ))}
 
-                    <Link href="/staffs">
-                        <div
-                            className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/staffs"
-                                ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
-                                : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
-                                }`}
-                        >
-                            <Profile2User className="h-5 w-5" variant="Bold" />
-                            <p className="">Staffs</p>
-                        </div>
-                    </Link>
-
-                    <Link href="/bookings">
-                        <div
-                            className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/bookings"
-                                ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
-                                : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
-                                }`}
-                        >
-                            <Calendar className="h-5 w-5" variant="Bold" />
-                            <p className="">Bookings</p>
-                        </div>
-                    </Link>
-
-                    <Link href="/hotel">
-                        <div
-                            className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/hotel"
-                                ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
-                                : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
-                                }`}
-                        >
-                            <Buildings2 className="h-5 w-5" variant="Bold" />
-                            <p className="">Manage Hotel</p>
-                        </div>
-                    </Link>
-
-                    <Link href="/notifications">
-                        <div
-                            className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/notifications"
-                                ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
-                                : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
-                                }`}
-                        >
-                            <Notification className="h-5 w-5" variant="Bold" />
-                            <p className="">Notifications</p>
-                        </div>
-                    </Link>
-
-                    <Link href="/settings">
-                        <div
-                            className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/settings"
-                                ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
-                                : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
-                                }`}
-                        >
-                            <Setting2 className="h-5 w-5" variant="Bold" />
-                            <p className="">Settings</p>
-                        </div>
-                    </Link>
-
-                    <Link href="/#">
-                        <div
-                            className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${pathname == "/#"
-                                ? "bg-red-500 text-white rounded-xl"
-                                : "text-[#636363] hover:bg-red-500 hover:text-white rounded-xl"
-                                }`}
-                                onClick={logOut}
-                        >
-                            <LogoutCurve className="h-5 w-5" variant="Bold" />
-                            <p className="">Log Out</p>
-                        </div>
-                    </Link>
+                    <div
+                        className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${isLinkActive("/#")
+                            ? "bg-red-500 text-white rounded-xl"
+                            : "text-[#636363] hover:bg-red-500 hover:text-white rounded-xl"
+                            }`}
+                        onClick={logOut}
+                    >
+                        <LogoutCurve className="h-5 w-5" variant="Bold" />
+                        <p className="">Log Out</p>
+                    </div>
                 </div>
             </Drawer>
 
