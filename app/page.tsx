@@ -81,7 +81,7 @@ export default function Dashboard() {
     },
   ];
 
-  const getStatusChip = (status) => {
+  const getStatusChip = (status: string) => {
     let chipColor = '';
     let chipText = '';
 
@@ -109,6 +109,7 @@ export default function Dashboard() {
       </span>
     );
   };
+
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
