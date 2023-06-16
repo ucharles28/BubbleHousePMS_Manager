@@ -15,19 +15,19 @@ const SideBar = forwardRef(({ showNav }: {showNav: boolean}, ref: LegacyRef<HTML
     const [box5, setBox5] = useState(false)
 
     // keep router.pathname alive when routes is in sub page
-    // if (router.pathname?.includes("/staffs")) {
-    //     router.pathname = "/staffs";
-    // } else if (router.pathname?.includes("/hotel")) {
-    //     router.pathname = "/hotel";
-    // } else if (router.pathname?.includes("/bookings")) {
-    //     router.pathname = "/bookings";
-    // } else if (router.pathname?.includes("/notifications")) {
-    //     router.pathname = "/notifications";
-    // } else if (router.pathname?.includes("/settings")) {
-    //     router.pathname = "/settings";
-    // } else {
-    //     router.pathname = "/";
-    // }
+    if (router.pathname?.includes("/staffs")) {
+        router.pathname = "/staffs";
+    } else if (router.pathname?.includes("/hotel")) {
+        router.pathname = "/hotel";
+    } else if (router.pathname?.includes("/bookings")) {
+        router.pathname = "/bookings";
+    } else if (router.pathname?.includes("/notifications")) {
+        router.pathname = "/notifications";
+    } else if (router.pathname?.includes("/settings")) {
+        router.pathname = "/settings";
+    } else {
+        router.pathname = "/";
+    }
 
     return (
         <div ref={ref} className="md:flex hidden flex-col fixed z-20 w-72 h-full bg-white shadow-sm border-dashed border-r-[1.5px] border-[#E4E4E4]">
