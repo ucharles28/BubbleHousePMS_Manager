@@ -1,7 +1,6 @@
 'use client'
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import styled from '@emotion/styled';
 import { ArrowLeft2 } from 'iconsax-react'
 import { useRouter } from 'next/navigation';
 
