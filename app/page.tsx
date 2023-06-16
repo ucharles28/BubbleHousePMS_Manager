@@ -6,11 +6,11 @@ import { TableCell, TablePagination, TableRow, Table, TableContainer, TableHead,
 import styled from '@emotion/styled';
 
 export default function Dashboard() {
-  const handleChangePage = (e, newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-  const handleChangeRowsPerPage = (e) => {
-    setRowsPerPage(e.target.value);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(event.target.value);
     setPage(0);
   };
 
