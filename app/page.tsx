@@ -6,11 +6,12 @@ import { TableCell, TablePagination, TableRow, Table, TableContainer, TableHead,
 import styled from '@emotion/styled';
 
 export default function Dashboard() {
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
   };
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(event.target.value);
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
