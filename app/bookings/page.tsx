@@ -5,13 +5,13 @@ import { Buildings, Calendar, Money2, MessageEdit, Notepad2, Slash, CalendarTick
 
 function BookingsPage() {
   const dashboardCards = [
-    { title: 'Today Booked', url: '/staffs', icon: Notepad2, value: 10 },
-    { title: 'Running Bookings', url: '/staffs', icon: Calendar, value: 10 },
-    { title: 'Booking Request', url: '/staffs', icon: MessageEdit, value: 10 },
-    { title: 'Available Rooms', url: '/staffs', icon: Buildings, value: 10 },
-    { title: 'Cancelled Bookings', url: '/staffs', icon: Slash, value: 10 },
-    { title: 'Total Bookings', url: '/staffs', icon: CalendarTick, value: 10 },
-    { title: 'Total Payments', url: '/staffs', icon: Money2, value: 'NGN 100K' },
+    { key: 1, title: 'Today Booked', url: '/bookings/running', icon: Notepad2, value: 10 },
+    { key: 2, title: 'Running Bookings', url: '/bookings/running', icon: Calendar, value: 10 },
+    { key: 3, title: 'Booking Request', url: '/staffs', icon: MessageEdit, value: 10 },
+    { key: 4, title: 'Available Rooms', url: '/staffs', icon: Buildings, value: 10 },
+    { key: 5, title: 'Cancelled Bookings', url: '/staffs', icon: Slash, value: 10 },
+    { key: 6, title: 'Total Bookings', url: '/staffs', icon: CalendarTick, value: 10 },
+    { key: 7, title: 'Total Payments', url: '/staffs', icon: Money2, value: 'NGN 100K' },
   ]
 
   return (
@@ -23,8 +23,8 @@ function BookingsPage() {
 
         <div className='grid grid-cols-2 md:grid-cols-3 sm:grid-cols-3 w-full h-auto items-center gap-x-5 md:gap-x-10 gap-y-6'>
 
-          {dashboardCards.map(({ url, title, icon: Icon, value }) => (
-            <Link href={url} key={url}>
+          {dashboardCards.map(({ key, url, title, icon: Icon, value }) => (
+            <Link href={url} key={key}>
               <div className="box rounded-2xl bg-white  border border-[#E4E4E4] flex md:flex-row flex-col items-center md:items-start p-4 md:p-6 pb-6 md:pb-8 gap-5 h-auto">
                 <div className='p-4 bg-[#F6F6F6] rounded-full justify-center'>
                   <Icon size={24} className='text-[#636363]' variant='Bold' />

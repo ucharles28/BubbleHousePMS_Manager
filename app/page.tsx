@@ -216,7 +216,7 @@ export default function Dashboard() {
                     <TableCell className=" ">Date</TableCell>
                     <TableCell className=" ">No. of rooms</TableCell>
                     <TableCell className=" ">Status</TableCell>
-                    <TableCell className="w-20">Action</TableCell>
+                    <TableCell className="w-16 md:w-20">Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -227,7 +227,7 @@ export default function Dashboard() {
                       <TableCell>{row.date}</TableCell>
                       <TableCell>{row.numberOfRooms}</TableCell>
                       <TableCell>{getStatusChip(row.status)}</TableCell>
-                      <TableCell className='w-20'>
+                      <TableCell className='w-16 md:w-20'>
                         <Link href='/'
                         >
                           <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
