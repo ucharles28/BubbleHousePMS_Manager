@@ -11,12 +11,13 @@ function NewStaff() {
   const router = useRouter()
 
   const [userRoles, setUserRoles] = useState(['Admin', 'Manager', 'Staff', 'Customer']);
+  const [userStatus, setUserStatus] = useState(['Active', 'Banned']);
 
   return (
     <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
       <div className='flex items-center justify-between gap-y-1 w-full'>
-        <p className='block md:w-full text-lg font-medium text-[#1A1A1A] leading-6'>
-          Add Staff
+        <p className='block md:w-full text-xl font-medium text-[#1A1A1A] leading-6'>
+          Information on staff-'firstName'
         </p>
 
         <div
@@ -73,6 +74,15 @@ function NewStaff() {
             className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
           >
             {userRoles.map((rol) => <option className='placeholder:text-xs text-sm'>{rol}</option>)}
+          </select>
+        </div>
+
+        <div className="flex flex-col space-y-1" >
+          <label className='text-xs font-medium leading-5 text-gray-700'>Status</label>
+          <select
+            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+          >
+            {userStatus.map((stat) => <option className='placeholder:text-xs text-sm'>{stat}</option>)}
           </select>
         </div>
 

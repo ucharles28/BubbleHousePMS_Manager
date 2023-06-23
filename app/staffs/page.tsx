@@ -46,7 +46,7 @@ function Staffs() {
 
     switch (status) {
       case 'active':
-        chipColor = 'bg-[#F1FBEB] text-[#56CA00]';
+        chipColor = 'bg-[#EAF5EA] text-[#56CA00]';
         chipText = 'Active';
         break;
       case 'banned':
@@ -66,7 +66,7 @@ function Staffs() {
   };
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const TableRowStyled = styled(TableRow)`
         &:nth-of-type(odd) {
             background-color: #f8f8f8;
@@ -86,7 +86,7 @@ function Staffs() {
   return (
     <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
       <div className='flex flex-col items-end gap-y-1 md:flex-row w-full'>
-        <p className='block w-full text-lg font-medium text-[#1A1A1A] leading-6'>
+        <p className='block w-full text-xl font-medium text-[#1A1A1A] leading-6'>
           Staffs
         </p>
 
@@ -140,7 +140,7 @@ function Staffs() {
                   <TableCell>{row.email}</TableCell>
                   <TableCell>{getStatusChip(row.status)}</TableCell>
                   <TableCell className='w-20'>
-                    <Link href='/'
+                    <Link href='/staffs/details'
                     >
                       <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
                     </Link>
