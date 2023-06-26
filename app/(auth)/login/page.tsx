@@ -73,7 +73,7 @@ function Login() {
                                         </div>
                                         <div className='flex justify-end mt-2'>
                                             <span className='text-xs text-normal text-gray-500 leading-5 hover:text-gray-800 cursor-pointer'>
-                                                <Link href="/auth/forgotpassword">
+                                                <Link href="/forgotpassword">
                                                     <span className='hover:text-gray-800 hover:transition-colors'>Forgot password?</span>
                                                 </Link>
                                             </span>

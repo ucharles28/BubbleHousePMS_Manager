@@ -1,12 +1,25 @@
 'use client'
-import './globals.css'
+import '../globals.css'
+import '../styles/nprogress.css'
+import nProgress from "nprogress"
 import { Inter } from 'next/font/google'
 import { useState, useEffect, Fragment } from "react";
 import SideBar from './containers/Sidebar';
 import TopBar from './containers/TopBar';
 import { Transition } from "@headlessui/react";
+import Router from "next/router"
+import { Metadata } from 'next'
+
+
+export const metadata: Metadata = {
+  title: 'MyBcloud',
+}
 
 const inter = Inter({ subsets: ['latin'] })
+
+Router.events.on("routeChangeStart", nProgress.start)
+Router.events.on("routeChangeError", nProgress.done)
+Router.events.on("routeChangeComplete", nProgress.done)
 
 export default function RootLayout({
   children,

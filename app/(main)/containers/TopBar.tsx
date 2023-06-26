@@ -4,7 +4,7 @@ import { Menu, Transition, Popover } from "@headlessui/react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import Image from 'next/image';
-import logo from '../logo.png'
+import logo from '../../logo.png'
 import { Drawer } from 'antd';
 import { HambergerMenu, DirectNotification, Setting2, LogoutCurve, People, Notification, Buildings2, Calendar, Messages2, Category, Money2 } from 'iconsax-react';
 
