@@ -7,11 +7,11 @@ function BookingsPage() {
   const dashboardCards = [
     { key: 1, title: 'Today Booked', url: '/bookings/running', icon: Notepad2, value: 10 },
     { key: 2, title: 'Running Bookings', url: '/bookings/running', icon: Calendar, value: 10 },
-    { key: 3, title: 'Booking Request', url: '/staffs', icon: MessageEdit, value: 10 },
+    { key: 3, title: 'Booking Request', url: '/bookings/pending', icon: MessageEdit, value: 10 },
     { key: 4, title: 'Available Rooms', url: '/staffs', icon: Buildings, value: 10 },
-    { key: 5, title: 'Cancelled Bookings', url: '/staffs', icon: Slash, value: 10 },
-    { key: 6, title: 'Total Bookings', url: '/staffs', icon: CalendarTick, value: 10 },
-    { key: 7, title: 'Total Payments', url: '/staffs', icon: Money2, value: 'NGN 100K' },
+    { key: 5, title: 'Cancelled Bookings', url: '/bookings/cancelled', icon: Slash, value: 10 },
+    { key: 6, title: 'Total Bookings', url: '/bookings/all', icon: CalendarTick, value: 10 },
+    { key: 7, title: 'Total Payments', url: '#', icon: Money2, value: 'NGN 100K' },
   ]
 
   return (

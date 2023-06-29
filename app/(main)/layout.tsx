@@ -10,6 +10,7 @@ import { Transition } from "@headlessui/react";
 import Router from "next/router"
 import { Metadata } from 'next'
 import AppProvider from '../context/appContext'
+import ProgressBar from 'next-nprogress-bar';
 
 
 export const metadata: Metadata = {
@@ -54,6 +55,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <ProgressBar
+          height="4px"
+          color="#fffd00"
+          options={{ showSpinner: true }}
+          shallowRouting
+          appDirectory
+        />
         {/* <AppProvider> */}
           <div className="h-screen flex flex-row justify-start">
 

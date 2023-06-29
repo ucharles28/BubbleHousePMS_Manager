@@ -1,4 +1,4 @@
-'use client';
+"use client"
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { ArrowLeft2, Eye } from 'iconsax-react'
@@ -9,8 +9,8 @@ import { BookingResponse } from '@/app/models/bookingResponse';
 import Bookings from '@/app/components/Bookings';
 import { useRouter } from 'next/navigation';
 
-async function getRunningBookings(hotelId: string) {
-  const res = await makeApiCall(`Booking/Hotel/Running/${hotelId}`, 'GET')
+async function getCancelledBookings(hotelId: string) {
+  const res = await makeApiCall(`Booking/Hotel/Cancelled/${hotelId}`, 'GET')
   if (res.successful) {
     return res.data
   }
@@ -18,11 +18,10 @@ async function getRunningBookings(hotelId: string) {
   return [];
 }
 
-async function RunningBookingsPage() {
+async function CancelledBookingsPage() {
   const router = useRouter()
   const { hotelId } = await getUserInfo()
-  const bookings: BookingResponse[] = await getRunningBookings(hotelId) as BookingResponse[]
-
+  const bookings: BookingResponse[] = await getCancelledBookings(hotelId) as BookingResponse[]
   const goBack = () => {
     router.back()
   }
@@ -31,7 +30,7 @@ async function RunningBookingsPage() {
     <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
       <div className='flex flex-col items-end gap-y-1 md:flex-row w-full'>
         <p className='block w-full text-xl font-medium text-[#1A1A1A] leading-6'>
-          Running booking
+          Cancelled Bookings
         </p>
 
         <div className='flex justify-end gap-2 w-full'>
@@ -67,4 +66,4 @@ async function RunningBookingsPage() {
   )
 }
 
-export default RunningBookingsPage;
+export default CancelledBookingsPage;
