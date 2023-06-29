@@ -49,7 +49,7 @@ function Login() {
                         <div className='w-full h-full bg-[url(https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80)] bg-center bg-no-repeat bg-cover'>
                             <div className='w-full h-full flex bg-gradient-to-t from-black/90 to-black/20'>
                                 <div className='text-xs font-normal leading-6 text-white fixed bottom-0 left-0 w-full p-8'>
-                                    <p>Copyright Mybcloud © {new Date().getFullYear()}</p>
+                                    <p>Copyright Mybcloud &copy; {new Date().getFullYear()}</p>
                                 </div>
                             </div>
                         </div>
