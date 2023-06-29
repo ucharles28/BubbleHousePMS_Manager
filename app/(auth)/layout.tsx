@@ -1,7 +1,5 @@
 'use client'
 import '../globals.css'
-import '../styles/nprogress.css'
-import nProgress from "nprogress"
 import { Inter } from 'next/font/google'
 import { useState, useEffect, Fragment } from "react";
 // import { Metadata } from 'next'

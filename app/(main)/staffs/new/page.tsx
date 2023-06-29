@@ -66,10 +66,10 @@ function NewStaff() {
             <label className='text-xs font-medium leading-5 text-gray-700'>Firstname</label>
             <input
               type='text'
-              // placeholder='eg. '
+              placeholder='eg. Uzoma '
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+              className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
             />
           </div>
 
@@ -77,10 +77,10 @@ function NewStaff() {
             <label className='text-xs font-medium leading-5 text-gray-700'>Lastname</label>
             <input
               type='text'
-              // placeholder='eg. Mybcloud'
+              placeholder='eg. Mybcloud'
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+              className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
             />
           </div>
         </div>
@@ -89,10 +89,10 @@ function NewStaff() {
           <label className='text-xs font-medium leading-5 text-gray-700'>Email Address</label>
           <input
             type='email'
-            // placeholder='eg. Staff@mybcloud.com'
+            placeholder='eg. Staff@mybcloud.com'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
           />
         </div>
 
@@ -100,10 +100,10 @@ function NewStaff() {
           <label className='text-xs font-medium leading-5 text-gray-700'>Phone Number</label>
           <input
             type='phone'
-            // placeholder='eg. 0123456789'
+            placeholder='eg. 0123456789'
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
           />
         </div>
 
@@ -112,7 +112,7 @@ function NewStaff() {
           <select
             value={selectedRole}
             onChange={(e) => setSelectedRole(e.target.value)}
-            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
           >
             {userRoles.map((rol) => <option className='placeholder:text-xs text-sm'>{rol}</option>)}
           </select>
