@@ -1,7 +1,7 @@
 import { User } from "../models/user"
 
 export async function getUserInfo() {
-    if (process.env.HOST){
+    if (!process.env.HOST){
         return { hotelId: '', userId: ''}
     }
     const result = await fetch(`${process.env.HOST}/api/users/info`)
