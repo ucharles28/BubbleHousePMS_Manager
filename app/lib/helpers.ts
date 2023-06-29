@@ -1,12 +1,7 @@
 import { User } from "../models/user"
 
 export async function getUserInfo() {
-    let host = window.location.hostname;
-
-    if (host === 'localhost') {
-        host = `${host}:3000`
-    }
-    const result = await fetch(`${host}/api/users/info`)
+    const result = await fetch(`${process.env.HOST}/api/users/info`)
     return await result.json() as User
 }
 
