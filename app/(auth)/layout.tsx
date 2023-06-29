@@ -5,12 +5,12 @@ import nProgress from "nprogress"
 import { Inter } from 'next/font/google'
 import { useState, useEffect, Fragment } from "react";
 import Router from "next/router"
-import { Metadata } from 'next'
+// import { Metadata } from 'next'
 
 
-export const metadata: Metadata = {
-  title: 'MyBcloud',
-}
+// export const metadata: Metadata = {
+//   title: 'MyBcloud',
+// }
 
 const inter = Inter({ subsets: ['latin'] })
 
