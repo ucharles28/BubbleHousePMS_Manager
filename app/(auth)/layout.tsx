@@ -4,7 +4,6 @@ import '../styles/nprogress.css'
 import nProgress from "nprogress"
 import { Inter } from 'next/font/google'
 import { useState, useEffect, Fragment } from "react";
-import Router from "next/router"
 // import { Metadata } from 'next'
 
 
@@ -13,10 +12,6 @@ import Router from "next/router"
 // }
 
 const inter = Inter({ subsets: ['latin'] })
-
-Router.events.on("routeChangeStart", nProgress.start)
-Router.events.on("routeChangeError", nProgress.done)
-Router.events.on("routeChangeComplete", nProgress.done)
 
 export default function RootLayout({
   children,
