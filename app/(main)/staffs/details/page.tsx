@@ -36,7 +36,7 @@ function NewStaff() {
             <input
               type='text'
               placeholder='eg. Developer'
-              className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+              className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
             />
           </div>
 
@@ -45,7 +45,7 @@ function NewStaff() {
             <input
               type='text'
               placeholder='eg. Mybcloud'
-              className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+              className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
             />
           </div>
         </div>
@@ -55,7 +55,7 @@ function NewStaff() {
           <input
             type='email'
             placeholder='eg. Staff@mybcloud.com'
-            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
           />
         </div>
 
@@ -64,14 +64,14 @@ function NewStaff() {
           <input
             type='phone'
             placeholder='eg. 0123456789'
-            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
           />
         </div>
 
         <div className="flex flex-col space-y-1" >
           <label className='text-xs font-medium leading-5 text-gray-700'>User Role</label>
           <select
-            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
           >
             {userRoles.map((rol) => <option className='placeholder:text-xs text-sm'>{rol}</option>)}
           </select>
@@ -80,7 +80,7 @@ function NewStaff() {
         <div className="flex flex-col space-y-1" >
           <label className='text-xs font-medium leading-5 text-gray-700'>Status</label>
           <select
-            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
           >
             {userStatus.map((stat) => <option className='placeholder:text-xs text-sm'>{stat}</option>)}
           </select>
