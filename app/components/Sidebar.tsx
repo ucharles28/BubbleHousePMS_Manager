@@ -3,7 +3,7 @@ import { LegacyRef, forwardRef } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import Image from 'next/image';
-import logo from '../../logo.png'
+import logo from '../logo.png'
 import { Setting2, People, Notification, Buildings2, Calendar, Messages2, Category, LogoutCurve, Money2 } from 'iconsax-react';
 
 const sidebarLinks = [

@@ -34,7 +34,7 @@ function NewStaff() {
             <label className='text-xs font-medium leading-5 text-gray-700'>Firstname</label>
             <input
               type='text'
-              placeholder='eg. Developer'
+              // placeholder='eg. '
               className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
             />
           </div>
@@ -43,7 +43,7 @@ function NewStaff() {
             <label className='text-xs font-medium leading-5 text-gray-700'>Lastname</label>
             <input
               type='text'
-              placeholder='eg. Mybcloud'
+              // placeholder='eg. Mybcloud'
               className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
             />
           </div>
@@ -53,7 +53,7 @@ function NewStaff() {
           <label className='text-xs font-medium leading-5 text-gray-700'>Email Address</label>
           <input
             type='email'
-            placeholder='eg. Staff@mybcloud.com'
+            // placeholder='eg. Staff@mybcloud.com'
             className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text-[#636363] placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
           />
         </div>

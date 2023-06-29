@@ -2,15 +2,43 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Eye, EyeSlash } from 'iconsax-react';
+import { CircularProgress } from '@mui/material';
+import { makeApiCall } from '@/app/helpers/apiRequest';
+import { useRouter } from 'next/navigation';
+import { message } from 'antd';
+import { cookies } from 'next/dist/client/components/headers';
 
 function Login() {
+    const router = useRouter()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const [passwordShown, setPasswordShown] = useState(false);
     const togglePasswordVisiblity = () => {
         setPasswordShown(passwordShown ? false : true);
     };
+
+    async function loginUser() {
+        setIsLoading(false)
+        try {
+            const response = await fetch('api/login', {
+                method: 'POST',
+                body: JSON.stringify({ email, password })
+            })
+
+            if (response.ok) { 
+                console.log(await response.json())           
+                router.push('/')
+            } else {
+                message.error(response.json())
+            }
+        } catch (ex) {
+
+        }
+        
+        setIsLoading(true)
+    }
 
     return (
         <div className='bg-white w-full h-screen'>
@@ -83,12 +111,13 @@ function Login() {
                                     <div className="mt-6">
                                         <button
                                             role="button"
-                                            type="submit"
+                                            type="button"
+                                            onClick={loginUser}
                                             aria-label="log into my account"
                                             className="text-sm font-normal rounded leading-none text-white focus:outline-none bg-[#404040] disabled:bg-[#404040]/50 hover:disabled:text-white hover:text-gray-900 border hover:bg-yellow-500 transition-all py-3 w-full flex items-center justify-center gap-1 tracking-wide"
-                                            disabled={!email || !password}
+                                            disabled={!email || !password || isLoading}
                                         >
-                                            <span>Login</span>
+                                            {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Login'}
                                         </button>
                                     </div>
                                 </form>

@@ -4,11 +4,12 @@ import '../styles/nprogress.css'
 import nProgress from "nprogress"
 import { Inter } from 'next/font/google'
 import { useState, useEffect, Fragment } from "react";
-import SideBar from './containers/Sidebar';
-import TopBar from './containers/TopBar';
+import SideBar from '../components/Sidebar';
+import TopBar from '../components/TopBar';
 import { Transition } from "@headlessui/react";
 import Router from "next/router"
 import { Metadata } from 'next'
+import AppProvider from '../context/appContext'
 
 
 export const metadata: Metadata = {
@@ -53,33 +54,35 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="h-screen flex flex-row justify-start">
+        {/* <AppProvider> */}
+          <div className="h-screen flex flex-row justify-start">
 
-          <div className="w-full h-full flex-1 flex-col justify-between">
-            <TopBar showNav={showNav} setShowNav={setShowNav} />
-            <main
-              className={`pt-16 transition-all duration-[400ms] ${showNav && !isMobile ? "md:pl-72" : ""
-                }`}
+            <div className="w-full h-full flex-1 flex-col justify-between">
+              <TopBar showNav={showNav} setShowNav={setShowNav} />
+              <main
+                className={`pt-16 transition-all duration-[400ms] ${showNav && !isMobile ? "md:pl-72" : ""
+                  }`}
+              >
+                <div className="px-4 bg-[#f6f6f6] min-h-screen">
+                  {children}
+                </div>
+              </main>
+            </div>
+
+            <Transition
+              as={Fragment}
+              show={showNav}
+              enter="transform transition duration-[400ms]"
+              enterFrom="-translate-x-full"
+              enterTo="translate-x-0"
+              leave="transform duration-[400ms] transition ease-in-out"
+              leaveFrom="translate-x-0"
+              leaveTo="-translate-x-full"
             >
-              <div className="px-4 bg-[#f6f6f6] min-h-screen">
-                {children}
-              </div>
-            </main>
+              <SideBar showNav={showNav} />
+            </Transition>
           </div>
-
-          <Transition
-            as={Fragment}
-            show={showNav}
-            enter="transform transition duration-[400ms]"
-            enterFrom="-translate-x-full"
-            enterTo="translate-x-0"
-            leave="transform duration-[400ms] transition ease-in-out"
-            leaveFrom="translate-x-0"
-            leaveTo="-translate-x-full"
-          >
-            <SideBar showNav={showNav} />
-          </Transition>
-        </div>
+        {/* </AppProvider> */}
       </body>
     </html>
   )
