@@ -1,87 +1,24 @@
 'use client'
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { makeApiCall } from '@/app/helpers/apiRequest';
+import { getUserInfo } from '@/app/lib/helpers';
+import { StaffResponse } from '@/app/models/staffResponse';
 import Link from 'next/link';
-import { TableCell, TablePagination, TableRow, Table, TableContainer, TableHead, CircularProgress, TableBody, TextField } from '@mui/material';
-import styled from '@emotion/styled';
-import { ArrowLeft2, Eye } from 'iconsax-react'
+import { Suspense } from 'react';
+import Loading from '../loading';
+import Staffs from '@/app/components/Staffs';
 
-function Staffs() {
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPage(newPage);
-  };
+async function getStaffs(hotelId: string) {
+  const res = await makeApiCall(`User/Staff/${hotelId}`, 'GET')
+  if (res.successful) {
+    return res.data
+  }
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  return [];
+}
 
-
-  const rows = [
-    {
-      userName: 'Chijioke Emechebe',
-      role: 'Staff',
-      email: 'chijiokeemechebe@gmail.com',
-      status: 'active',
-      date: '2023-06-15'
-    },
-    {
-      userName: 'John Doe',
-      role: 'Staff',
-      email: 'johndoe@gmail.com',
-      status: 'banned',
-      date: '2023-06-09'
-    },
-    {
-      userName: 'Jane Smith',
-      role: 'Staff',
-      email: 'janesmith@gmail.com',
-      status: 'active',
-      date: '2023-06-22'
-    },
-  ];
-
-  const getStatusChip = (status: string) => {
-    let chipColor = '';
-    let chipText = '';
-
-    switch (status) {
-      case 'active':
-        chipColor = 'bg-[#EAF5EA] text-[#56CA00]';
-        chipText = 'Active';
-        break;
-      case 'banned':
-        chipColor = 'bg-[#FFF1F1] text-[#FF4C51]';
-        chipText = 'Banned';
-        break;
-      default:
-        chipColor = 'bg-[#F9FAFC] text-[#6366F1]';
-        chipText = status;
-    }
-
-    return (
-      <span className={`text-xs mx-auto text-center font-medium rounded-full p-2 px-3 leading-6 ${chipColor}`}>
-        {chipText}
-      </span>
-    );
-  };
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const TableRowStyled = styled(TableRow)`
-        &:nth-of-type(odd) {
-            background-color: #f8f8f8;
-        }
-        & > td {
-            color: #636363;
-            font-size: 0.75rem;
-        }
-    `;
-
-  const sortedRows = [...rows].sort((a, b) => {
-    const dateA = new Date(a.date.split('-').reverse().join('-')).getTime();
-    const dateB = new Date(b.date.split('-').reverse().join('-')).getTime();
-    return dateB - dateA;
-  });
+async function StaffsPage() {
+  const { hotelId } = await getUserInfo()
+  const staffs: StaffResponse[] = await getStaffs(hotelId) as StaffResponse[]
 
   return (
     <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
@@ -109,60 +46,12 @@ function Staffs() {
 
         </div>
       </div>
+      <Suspense fallback={<Loading />}>
+        <Staffs staffs={staffs} />
+      </Suspense>
 
-      <div className='bg-white border border-gray-50 drop-shadow-sm rounded-lg w-full h-auto p-1'>
-        <TableContainer>
-          <Table >
-            <TableHead>
-              <TableRow
-                sx={{
-                  color: "#1A1A1A",
-                  "& th": {
-                    fontSize: "0.75rem",
-                    fontWeight: "550",
-                    letterSpacing: "0.20px"
-                  }
-                }}
-                className='text-xs leading-6 font-[600] uppercase text-[#1a1a1a]'
-              >
-                <TableCell className=" ">Name</TableCell>
-                <TableCell className=" ">Role</TableCell>
-                <TableCell className=" ">Email</TableCell>
-                <TableCell className=" ">Status</TableCell>
-                <TableCell className="w-20">Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-                <TableRowStyled key={index}>
-                  <TableCell>{row.userName}</TableCell>
-                  <TableCell>{row.role}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{getStatusChip(row.status)}</TableCell>
-                  <TableCell className='w-20'>
-                    <Link href='/staffs/details'
-                    >
-                      <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
-                    </Link>
-
-                  </TableCell>
-                </TableRowStyled>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25, 50, 100]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </div>
     </div>
   )
 }
 
-export default Staffs
+export default StaffsPage

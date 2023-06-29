@@ -1,18 +1,23 @@
 'use client'
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Buildings, Calendar, Money2, MessageEdit, Notepad2, Slash, CalendarTick } from 'iconsax-react';
+import { makeApiCall } from '@/app/helpers/apiRequest';
+import { getUserInfo } from '@/app/lib/helpers';
+import { BookingsOverview } from '@/app/models/bookingsOverview';
+import { Suspense } from 'react';
+import Loading from '../loading';
+import HotelBookingsOverview from '@/app/components/HotelBookingsOverview';
 
-function BookingsPage() {
-  const dashboardCards = [
-    { key: 1, title: 'Today Booked', url: '/bookings/running', icon: Notepad2, value: 10 },
-    { key: 2, title: 'Running Bookings', url: '/bookings/running', icon: Calendar, value: 10 },
-    { key: 3, title: 'Booking Request', url: '/bookings/pending', icon: MessageEdit, value: 10 },
-    { key: 4, title: 'Available Rooms', url: '/staffs', icon: Buildings, value: 10 },
-    { key: 5, title: 'Cancelled Bookings', url: '/bookings/cancelled', icon: Slash, value: 10 },
-    { key: 6, title: 'Total Bookings', url: '/bookings/all', icon: CalendarTick, value: 10 },
-    { key: 7, title: 'Total Payments', url: '#', icon: Money2, value: 'NGN 100K' },
-  ]
+async function getBookingsOverview(hotelId: string) {
+  const res = await makeApiCall(`Hotel/Booking/Overview/${hotelId}`, 'GET')
+  if (res.successful) {
+    return res.data
+  }
+
+  return [];
+}
+
+async function BookingsPage() {
+  const { hotelId } = await getUserInfo()
+  const bookingsOverview: BookingsOverview = await getBookingsOverview(hotelId) as BookingsOverview
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between m-auto">
@@ -21,23 +26,9 @@ function BookingsPage() {
           Bookings
         </p>
 
-        <div className='grid grid-cols-2 md:grid-cols-3 sm:grid-cols-3 w-full h-auto items-center gap-x-5 md:gap-x-10 gap-y-6'>
-
-          {dashboardCards.map(({ key, url, title, icon: Icon, value }) => (
-            <Link href={url} key={key}>
-              <div className="box rounded-2xl bg-white  border border-[#E4E4E4] flex md:flex-row flex-col items-center md:items-start p-4 md:p-6 pb-6 md:pb-8 gap-5 h-auto">
-                <div className='p-4 bg-[#F6F6F6] rounded-full justify-center'>
-                  <Icon size={24} className='text-[#636363]' variant='Bold' />
-                </div>
-                <div className='block text-center md:text-left gap-3'>
-                  <p className='text-sm leading-6 font-medium text-[#636363]'>{title}</p>
-                  <p className='text-xl md:text-2xl leading-10 font-semibold text-[#1a1a1a]'>{value}</p>
-                </div>
-              </div>
-            </Link>
-          ))}
-
-        </div>
+        <Suspense fallback={<Loading />}>
+          <HotelBookingsOverview bookingsOverview={bookingsOverview} />
+        </Suspense>
 
       </div>
     </main>

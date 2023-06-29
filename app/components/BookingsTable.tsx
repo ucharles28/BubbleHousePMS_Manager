@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { Eye } from 'iconsax-react'
 import { BookingResponse } from '@/app/models/bookingResponse';
 
-export default function Bookings({ bookings }: { bookings: BookingResponse[] }) {
+export default function BookingsTable({ bookings }: { bookings: BookingResponse[] }) {
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);

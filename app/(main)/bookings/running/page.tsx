@@ -6,7 +6,7 @@ import { makeApiCall } from '@/app/helpers/apiRequest';
 import Loading from '../../loading';
 import { getUserInfo } from '@/app/lib/helpers';
 import { BookingResponse } from '@/app/models/bookingResponse';
-import Bookings from '@/app/components/Bookings';
+import BookingsTable from '@/app/components/BookingsTable';
 import { useRouter } from 'next/navigation';
 
 async function getRunningBookings(hotelId: string) {
@@ -60,7 +60,7 @@ async function RunningBookingsPage() {
       </div>
 
       <Suspense fallback={<Loading />}>
-        <Bookings bookings={bookings} />
+        <BookingsTable bookings={bookings} />
       </Suspense>
 
     </div>

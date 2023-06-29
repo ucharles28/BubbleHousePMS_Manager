@@ -55,41 +55,41 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-      <ProgressBar
+        <ProgressBar
           height="4px"
-          color="#fffd00"
+          color="#F5C400"
           options={{ showSpinner: true }}
           shallowRouting
           appDirectory
         />
         {/* <AppProvider> */}
-          <div className="h-screen flex flex-row justify-start">
+        <div className="h-screen flex flex-row justify-start">
 
-            <div className="w-full h-full flex-1 flex-col justify-between">
-              <TopBar showNav={showNav} setShowNav={setShowNav} />
-              <main
-                className={`pt-16 transition-all duration-[400ms] ${showNav && !isMobile ? "md:pl-72" : ""
-                  }`}
-              >
-                <div className="px-4 bg-[#f6f6f6] min-h-screen">
-                  {children}
-                </div>
-              </main>
-            </div>
-
-            <Transition
-              as={Fragment}
-              show={showNav}
-              enter="transform transition duration-[400ms]"
-              enterFrom="-translate-x-full"
-              enterTo="translate-x-0"
-              leave="transform duration-[400ms] transition ease-in-out"
-              leaveFrom="translate-x-0"
-              leaveTo="-translate-x-full"
+          <div className="w-full h-full flex-1 flex-col justify-between">
+            <TopBar showNav={showNav} setShowNav={setShowNav} />
+            <main
+              className={`pt-16 transition-all duration-[400ms] ${showNav && !isMobile ? "md:pl-72" : ""
+                }`}
             >
-              <SideBar showNav={showNav} />
-            </Transition>
+              <div className="px-4 bg-[#f6f6f6] min-h-screen">
+                {children}
+              </div>
+            </main>
           </div>
+
+          <Transition
+            as={Fragment}
+            show={showNav}
+            enter="transform transition duration-[400ms]"
+            enterFrom="-translate-x-full"
+            enterTo="translate-x-0"
+            leave="transform duration-[400ms] transition ease-in-out"
+            leaveFrom="translate-x-0"
+            leaveTo="-translate-x-full"
+          >
+            <SideBar showNav={showNav} />
+          </Transition>
+        </div>
         {/* </AppProvider> */}
       </body>
     </html>
