@@ -4,10 +4,10 @@ import { BookingsOverview } from '../models/bookingsOverview';
 
 export default function HotelBookingsOverview({ bookingsOverview }: { bookingsOverview: BookingsOverview }) {
     const dashboardCards = [
-        { key: 1, title: 'Today Booked', url: '/bookings/running', icon: Notepad2, value: bookingsOverview.todayBooked },
+        { key: 1, title: 'Today Booked', url: '/bookings/todaybooked', icon: Notepad2, value: bookingsOverview.todayBooked },
         { key: 2, title: 'Running Bookings', url: '/bookings/running', icon: Calendar, value: bookingsOverview.runningBookings },
         { key: 3, title: 'Booking Request', url: '/bookings/pending', icon: MessageEdit, value: bookingsOverview.bookingRequest },
-        { key: 4, title: 'Available Rooms', url: '/staffs', icon: Buildings, value: bookingsOverview.availableRooms },
+        { key: 4, title: 'Available Rooms', url: '/bookings/availablerooms', icon: Buildings, value: bookingsOverview.availableRooms },
         { key: 5, title: 'Cancelled Bookings', url: '/bookings/cancelled', icon: Slash, value: bookingsOverview.cancelledBookings },
         { key: 6, title: 'Total Bookings', url: '/bookings/all', icon: CalendarTick, value: bookingsOverview.totalBookings },
         { key: 7, title: 'Total Payments', url: '#', icon: Money2, value: bookingsOverview.totalPayment },
