@@ -19,6 +19,7 @@ export default function BookingsTable({ bookings }: { bookings: BookingResponse[
 
     const rows = bookings.map((booking) => (
         {
+            id: booking.id,
             bookingNo: booking.code,
             bookedBy: booking.fullName,
             date: booking.dateRangeString,
@@ -115,7 +116,7 @@ export default function BookingsTable({ bookings }: { bookings: BookingResponse[
                                 <TableCell className='tracking-wider'>{row.date}</TableCell>
                                 <TableCell>{getStatusChip(row.status)}</TableCell>
                                 <TableCell className='w-20'>
-                                    <Link href='/bookings/details'
+                                    <Link href={`/bookings/details/${row.id}`}
                                     >
                                         <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
                                     </Link>
