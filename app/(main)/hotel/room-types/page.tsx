@@ -1,10 +1,9 @@
 "use client"
 import { Suspense } from 'react';
 import Link from 'next/link';
+import RoomTypesTable from '@/app/components/RoomTypesTable';
 import { ArrowLeft2, Eye } from 'iconsax-react';
 import Loading from '../../loading';
-import { BookingResponse } from '@/app/models/bookingResponse';
-import BookingsTable from '@/app/components/BookingsTable';
 import { useRouter } from 'next/navigation';
 
 async function RoomTypesPage() {
@@ -28,17 +27,21 @@ async function RoomTypesPage() {
                         <ArrowLeft2 size={14} />
                         <span className="text-xs font-medium leading-6">Back</span>
                     </div>
-                    <Link href='/bookings'>
+                    <Link href='/hotel/room-types/new'>
                         <button
                             type="button"
                             className="w-auto bg-[#1a1a1a]/50 hover:bg-[#636363] uppercase text-white font-medium leading-6 rounded-lg text-xs text-center px-2.5 py-1.5"
                         >
-                            Book room
+                            Add New
                         </button>
                     </Link>
 
                 </div>
             </div>
+
+            <Suspense fallback={<Loading />}>
+                <RoomTypesTable />
+            </Suspense>
 
         </div>
     )

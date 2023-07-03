@@ -4,12 +4,12 @@ import { Buildings, Calendar, Money2, MessageEdit, Notepad2, Slash, CalendarTick
 export default function ManageHotelOverview() {
     const dashboardCards = [
         { key: 1, title: 'Hotel details', url: '/hotel' },
-        { key: 2, title: 'Running Bookings', url: '/hotel' },
-        { key: 3, title: 'Booking Request', url: '/hotel' },
-        { key: 4, title: 'Available Rooms', url: '/hotel' },
-        { key: 5, title: 'Cancelled Bookings', url: '/hotel' },
-        { key: 6, title: 'Total Bookings', url: '/hotel' },
-        { key: 7, title: 'Total Payments', url: '/hotel' },
+        { key: 2, title: 'FAQ', url: '/hotel' },
+        { key: 3, title: 'Room types', url: '/hotel/room-types' },
+        { key: 4, title: 'Bed types', url: '/hotel' },
+        { key: 5, title: 'Rooms', url: '/hotel' },
+        { key: 6, title: 'Amenities', url: '/hotel' },
+        { key: 7, title: 'Complements', url: '/hotel' },
     ]
 
     return (
