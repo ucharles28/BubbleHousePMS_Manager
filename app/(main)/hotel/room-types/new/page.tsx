@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import Loading from '@/app/(main)/loading';
 import AddRoomType from '@/app/components/AddRoomType';
 import { makeApiCall } from '@/app/helpers/apiRequest';

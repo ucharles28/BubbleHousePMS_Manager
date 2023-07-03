@@ -1,3 +1,4 @@
+"use client"
 import Loading from "@/app/(main)/loading";
 import AddRoom from "@/app/components/AddRoom";
 import { makeApiCall } from "@/app/helpers/apiRequest";

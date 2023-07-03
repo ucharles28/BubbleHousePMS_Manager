@@ -2,15 +2,11 @@
 import { useRef, useState } from 'react';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import { Amenity } from '../models/amenity';
+import { OptionType } from '../models/optionType';
 import { Complement } from '../models/complement';
 import { CircularProgress } from '@mui/material';
 import { makeApiCall } from '../helpers/apiRequest';
 import { message } from 'antd';
-
-type OptionType = {
-    value: string;
-    label: string;
-};
 
 export default function AddRoom({ bedTypes, roomTypes, hotelId }: { bedTypes: any[], roomTypes: any[], hotelId: string }) {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -45,7 +41,7 @@ export default function AddRoom({ bedTypes, roomTypes, hotelId }: { bedTypes: an
             roomNumbers: validRoomNumbers,
         }
 
-        const response = await makeApiCall('RoomType', 'POST', req)
+        const response = await makeApiCall('Room', 'POST', req)
         if (response.successful) {
             message.success('Room type saved successfully')
         } else {

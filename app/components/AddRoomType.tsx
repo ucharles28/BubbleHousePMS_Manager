@@ -2,15 +2,12 @@
 import { useRef, useState } from 'react';
 import Select, { MultiValue } from 'react-select';
 import { Amenity } from '../models/amenity';
+import { OptionType } from '../models/optionType';
 import { Complement } from '../models/complement';
 import { CircularProgress } from '@mui/material';
 import { makeApiCall } from '../helpers/apiRequest';
 import { message } from 'antd';
 
-type OptionType = {
-    value: string;
-    label: string;
-};
 
 export default function AddRoomType({ amenties, complements, hotelId }: { amenties: Amenity[], complements: Complement[], hotelId: string }) {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -295,7 +292,8 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
                         <button className="text-white font-medium flex items-center px-3 py-2 rounded-md bg-[#1a1a1a]/50 text-xs leading-6 uppercase hover:bg-[#636363]"
                             disabled={!roomTypeName}
                             onClick={saveRoomType}>
-                            {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Save Changes'}                            </button>
+                            {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Save Changes'}
+                        </button>
                     </div>
                 </div>
             </div>
