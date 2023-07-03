@@ -16,8 +16,14 @@ type Room = {
     price: number
 }
 
+type BookedRoom = {
+    roomId: string
+}
+
+
+
 export default function BookingDetails({ booking, availableRooms = [] }: { booking: any, availableRooms: any[] }) {
-    console.log(booking)
+
     const [selectedRooms, setSelectedRooms] = useState<MultiValue<OptionType> | null>([])
     const [roomsToBook, setRoomsToBook] = useState<Room[]>([])
     const [isApproving, setIsApproving] = useState(false)
@@ -32,6 +38,7 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
 
     useEffect(() => {
         if (selectedRooms && selectedRooms.length > 0) {
+            console.log(selectedRooms)
             const rooms = selectedRooms.map((selectedRoom) => {
                 const room = availableRooms.find(item => String(item.id) === selectedRoom.value)
                 return {
@@ -55,9 +62,20 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
     useEffect(() => {
         if (booking) {
             setBookingStatus(booking.status)
-
             if (bookingStatusOptions.some(item => item.value === String(booking.status))) {
                 setSelectedBookingStatus(bookingStatusOptions.find(item => item.value === String(booking.status)))
+            }
+
+            if (booking.bookedRooms) {
+                const bookedRooms: BookedRoom[] = booking.bookedRooms as BookedRoom[]
+                
+                const selected = roomsOptions.map(room => {
+                    if (bookedRooms.some(item => item.roomId === room.value)) {
+                        return room
+                    }
+                }) 
+                console.log(selected)
+                // setSelectedRooms(selected)
             }
         }
     }, [booking])
@@ -123,7 +141,7 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
             bookedRooms: selectedRooms?.map((room) => {
                 return availableRooms.find(item => String(item.id) === room.value)
             }),
-            status: selectedBookingStatus ? Number(selectedBookingStatus.value) : Number(booking.status),            
+            status: selectedBookingStatus ? Number(selectedBookingStatus.value) : Number(booking.status),
         }
 
         const response = await makeApiCall(`Booking/${booking.id}`, 'PUT', req)
@@ -369,7 +387,7 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                         {bookingStatus === 0 && <button className="text-white font-medium flex items-center px-3 py-2 rounded-md bg-[#1a1a1a]/50 text-xs leading-6 uppercase hover:bg-[#636363]" onClick={cancelBooking}>
                             {isCancelling ? <CircularProgress size={20} color="inherit" /> : 'Cancel'}
                         </button>}
-                        {bookingStatus === 0 && <button className="text-white font-medium flex items-center px-3 py-2 rounded-md bg-[#F5C400] text-xs leading-6 uppercase hover:bg-[#F5C400]/70"  onClick={confirmBooking}>
+                        {bookingStatus === 0 && <button className="text-white font-medium flex items-center px-3 py-2 rounded-md bg-[#F5C400] text-xs leading-6 uppercase hover:bg-[#F5C400]/70" onClick={confirmBooking}>
                             {isApproving ? <CircularProgress size={20} color="inherit" /> : 'Approve'}
                         </button>}
 
