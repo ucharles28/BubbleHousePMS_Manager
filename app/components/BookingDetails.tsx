@@ -55,6 +55,10 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
     useEffect(() => {
         if (booking) {
             setBookingStatus(booking.status)
+
+            if (bookingStatusOptions.some(item => item.value === String(booking.status))) {
+                setSelectedBookingStatus(bookingStatusOptions.find(item => item.value === String(booking.status)))
+            }
         }
     }, [booking])
 
@@ -114,15 +118,16 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
     }
 
     async function updateBooking() {
+        debugger
         setIsLoading(true)
         const req = {
             bookedRooms: selectedRooms?.map((room) => {
                 return availableRooms.find(item => String(item.id) === room.value)
             }),
-            status: selectedBookingStatus ? selectedBookingStatus.value : booking.status,            
+            status: selectedBookingStatus ? Number(selectedBookingStatus.value) : Number(booking.status),            
         }
 
-        const response = await makeApiCall(`Booking/${booking.id}`, 'POST', req)
+        const response = await makeApiCall(`Booking/${booking.id}`, 'PUT', req)
 
         if (response.successful) {
             message.success('Booking updated successfully')
@@ -368,7 +373,7 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                         </button>}
 
                         {(bookingStatus !== 0 && bookingStatus !== 3) && <button className="text-white font-medium flex items-center px-3 py-2 rounded-md bg-[#F5C400] text-xs leading-6 uppercase hover:bg-[#F5C400]/70" onClick={updateBooking}>
-                            {isApproving ? <CircularProgress size={20} color="inherit" /> : 'Save Changes'}
+                            {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Save Changes'}
                         </button>}
                     </div>
                 </div>
