@@ -7,7 +7,7 @@ export default function ManageHotelOverview() {
         { key: 2, title: 'FAQ', url: '/hotel' },
         { key: 3, title: 'Room types', url: '/hotel/room-types' },
         { key: 4, title: 'Bed types', url: '/hotel' },
-        { key: 5, title: 'Rooms', url: '/hotel' },
+        { key: 5, title: 'Rooms', url: '/hotel/rooms' },
         { key: 6, title: 'Amenities', url: '/hotel' },
         { key: 7, title: 'Complements', url: '/hotel' },
     ]
