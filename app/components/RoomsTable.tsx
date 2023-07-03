@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { Eye, Trash } from 'iconsax-react'
 import { BookingResponse } from '@/app/models/bookingResponse';
 
-export default function RoomTypesTable({ roomTypes }: { roomTypes: any[] }) {
+export default function RoomsTable({ rooms }: { rooms: any[] }) {
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -16,37 +16,14 @@ export default function RoomTypesTable({ roomTypes }: { roomTypes: any[] }) {
         setPage(0);
     };
 
-    // const rows = bookings.map((booking) => (
-    //     {
-    //         id: booking.id,
-    //         roomName: booking.code,
-    //         roomPrice: booking.code,
-    //         numberofRooms: booking.code,
-    //         adult: booking.fullName,
-    //         children: booking.dateRangeString
-    //     }
-    // ))
-
-    // const rows = [
-    //     {
-    //         id: 1,
-    //         roomName: 'Staffs',
-    //         roomPrice: '45,000',
-    //         numberofRooms: '10',
-    //         adult: '10',
-    //         children: '10',
-    //     },
-    // ]
-
-    const rows = roomTypes.map((roomType) => (
+    const rows = rooms.map((room) => (
         {
-            id: roomType.id,
-            name: roomType.name,
-            numberofRooms: roomType.numberOfRooms,
-            adult: roomType.totalAdult,
-            children: roomType.totalChildren,
-            price: Number(roomType.price).toLocaleString(),
-            date: roomType.createdDate
+            id: room.id,
+            name: room.roomType.name,
+            roomNumber: room.roomNumber,
+            price: Number(room.roomType.price).toLocaleString(),
+            date: room.createdDate,
+            status: Number(room.status) === 0 ? 'Available' : 'Booked'
         }
     ))
 
@@ -84,12 +61,11 @@ export default function RoomTypesTable({ roomTypes }: { roomTypes: any[] }) {
                             }}
                             className='text-xs leading-6 font-[600] uppercase text-[#1a1a1a]'
                         >
-                            <TableCell className="w-8">id</TableCell>
-                            <TableCell className=" ">Room Name</TableCell>
+                            <TableCell className="w-8">Id</TableCell>
+                            <TableCell className=" ">Room Type</TableCell>
+                            <TableCell className=" ">Room Number</TableCell>
                             <TableCell className=" ">Room Price</TableCell>
-                            <TableCell className=" ">Number of rooms</TableCell>
-                            <TableCell className=" ">Adult</TableCell>
-                            <TableCell className=" ">Children</TableCell>
+                            <TableCell className=" ">Status</TableCell>
                             <TableCell className="w-20">Action</TableCell>
                         </TableRow>
                     </TableHead>
@@ -98,10 +74,9 @@ export default function RoomTypesTable({ roomTypes }: { roomTypes: any[] }) {
                             <TableRowStyled key={index}>
                                 <TableCell className='w-8'>{index + 1}</TableCell>
                                 <TableCell className=''>{row.name}</TableCell>
-                                <TableCell className='font-medium'>{row.price}</TableCell>
-                                <TableCell className=''>{row.numberofRooms}</TableCell>
-                                <TableCell className=''>{row.adult}</TableCell>
-                                <TableCell className=''>{row.children}</TableCell>
+                                <TableCell className='font-medium'>{row.roomNumber}</TableCell>
+                                <TableCell className=''>{row.price}</TableCell>
+                                <TableCell className=''>{row.status}</TableCell>
                                 <TableCell className='w-20'>
                                     <Link
                                         // href={`/bookings/details/${row.id}`}
