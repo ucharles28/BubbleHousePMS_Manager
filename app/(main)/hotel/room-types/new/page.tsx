@@ -2,7 +2,12 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { ArrowLeft2 } from 'iconsax-react';
 import { useRouter } from 'next/navigation';
-import Select, { OptionTypeBase, ValueType } from 'react-select';
+import Select, { ValueType } from 'react-select';
+
+type OptionType = {
+    value: string;
+    label: string;
+};
 
 function AddRoomType() {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -39,15 +44,15 @@ function AddRoomType() {
         console.log('selected', value);
     };
 
-    const option: OptionTypeBase[] = [
+    const option: OptionType[] = [
         { value: 'wifi', label: 'WiFi' },
         { value: 'gym', label: 'Gym' },
         { value: 'bar', label: 'Bar' }
     ];
 
-    const [selectedOptions, setSelectedOptions] = useState<ValueType<OptionTypeBase>>([]);
+    const [selectedOptions, setSelectedOptions] = useState<ValueType<OptionType>>([]);
 
-    const handleSelectChange = (selectedOptions: ValueType<OptionTypeBase>) => {
+    const handleSelectChange = (selectedOptions: ValueType<OptionType>) => {
         setSelectedOptions(selectedOptions);
     };
 
