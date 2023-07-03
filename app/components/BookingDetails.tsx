@@ -118,7 +118,6 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
     }
 
     async function updateBooking() {
-        debugger
         setIsLoading(true)
         const req = {
             bookedRooms: selectedRooms?.map((room) => {
@@ -128,6 +127,8 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
         }
 
         const response = await makeApiCall(`Booking/${booking.id}`, 'PUT', req)
+
+        console.log(response)
 
         if (response.successful) {
             message.success('Booking updated successfully')
