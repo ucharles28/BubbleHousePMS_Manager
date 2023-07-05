@@ -3,13 +3,13 @@ import { Buildings, Calendar, Money2, MessageEdit, Notepad2, Slash, CalendarTick
 
 export default function ManageHotelOverview() {
     const dashboardCards = [
-        { key: 1, title: 'Hotel details', url: '/hotel' },
-        { key: 2, title: 'FAQ', url: '/hotel' },
+        { key: 1, title: 'Hotel details', url: '/hotel/details' },
+        { key: 2, title: 'FAQ', url: '/hotel/faqs' },
         { key: 3, title: 'Room types', url: '/hotel/room-types' },
-        { key: 4, title: 'Bed types', url: '/hotel' },
+        { key: 4, title: 'Bed types', url: '/hotel/bedtypes' },
         { key: 5, title: 'Rooms', url: '/hotel/rooms' },
-        { key: 6, title: 'Amenities', url: '/hotel' },
-        { key: 7, title: 'Complements', url: '/hotel' },
+        { key: 6, title: 'Amenities', url: '/hotel/amenities' },
+        { key: 7, title: 'Complements', url: '/hotel/complements' },
     ]
 
     return (

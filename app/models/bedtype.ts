@@ -1,6 +1,6 @@
-export type Complement = {
+export type BedType = {
     id: string
-    title: string
+    name: string
     hotelId: string
     createdDate: string
 }

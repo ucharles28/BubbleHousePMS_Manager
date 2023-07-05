@@ -1,6 +1,7 @@
-export type Complement = {
+export type FAQ = {
     id: string
-    title: string
+    answer: string
+    question: string
     hotelId: string
     createdDate: string
 }
