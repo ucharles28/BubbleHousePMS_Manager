@@ -76,7 +76,7 @@ async function FAQsPage() {
             />
 
             <Suspense fallback={<Loading />}>
-                <FAQsTable faqs={faqs} />
+                <FAQsTable faqs={faqs} hotelId={hotelId} />
             </Suspense>
 
         </div>

@@ -9,7 +9,7 @@ import { FAQ } from '../models/faq';
 import DeleteDialog from './DeleteDialogComponent';
 import CreateDialog from './CreateDialogComponent';
 
-export default function FAQsTable({ faqs }: { faqs: FAQ[] }) {
+export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: string }) {
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -130,6 +130,7 @@ export default function FAQsTable({ faqs }: { faqs: FAQ[] }) {
             />
 
             <CreateDialog
+                hotelId={hotelId}
                 open={openDialog}
                 onClose={handleClose}
                 confirmationTitle="Update FAQ"
