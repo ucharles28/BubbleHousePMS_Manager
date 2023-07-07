@@ -6,6 +6,8 @@ import styled from '@emotion/styled';
 import { Eye, Trash } from 'iconsax-react'
 import { Complement } from '../models/complement';
 import { FAQ } from '../models/faq';
+import DeleteDialog from './DeleteDialogComponent';
+import CreateDialog from './CreateDialogComponent';
 
 export default function FAQsTable({ faqs }: { faqs: FAQ[] }) {
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -26,6 +28,24 @@ export default function FAQsTable({ faqs }: { faqs: FAQ[] }) {
         }
     ))
 
+    const handleClickOpenDel = () => {
+        setOpenDelDialog(true);
+    };
+
+    const handleCloseDel = () => {
+        setOpenDelDialog(false);
+    };
+
+    const handleClickOpen = () => {
+        setOpenDialog(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+
+    const [openDelDialog, setOpenDelDialog] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const TableRowStyled = styled(TableRow)`
@@ -46,6 +66,7 @@ export default function FAQsTable({ faqs }: { faqs: FAQ[] }) {
 
     return (
         <div className='bg-white border border-gray-50 drop-shadow-sm rounded-lg w-full h-auto p-1'>
+
             <TableContainer>
                 <Table >
                     <TableHead>
@@ -73,14 +94,17 @@ export default function FAQsTable({ faqs }: { faqs: FAQ[] }) {
                                 <TableCell className=''>{row.question}</TableCell>
                                 <TableCell className=''>{row.answer}</TableCell>
                                 <TableCell className='w-20'>
-                                    <Link
-                                        // href={`/bookings/details/${row.id}`}
-                                        href='/'
-                                    >
-                                        <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
-                                    </Link>
+                                    <Eye
+                                        size={18}
+                                        className='text-[#636363] hover:text-[#1a1a1a]'
+                                        onClick={handleClickOpen}
+                                    />
 
-                                    <Trash size={18} className='text-[#636363] hover:text-red-500' />
+                                    <Trash
+                                        size={18}
+                                        className='text-[#636363] hover:text-red-500'
+                                        onClick={handleClickOpenDel}
+                                    />
 
                                 </TableCell>
                             </TableRowStyled>
@@ -88,6 +112,7 @@ export default function FAQsTable({ faqs }: { faqs: FAQ[] }) {
                     </TableBody>
                 </Table>
             </TableContainer>
+
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25, 50, 100]}
                 component="div"
@@ -97,6 +122,19 @@ export default function FAQsTable({ faqs }: { faqs: FAQ[] }) {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
+
+            <DeleteDialog
+                open={openDelDialog}
+                onClose={handleCloseDel}
+                confirmationType="FAQ"
+            />
+
+            <CreateDialog
+                open={openDialog}
+                onClose={handleClose}
+                confirmationTitle="Update FAQ"
+            />
+
         </div>
     )
 }

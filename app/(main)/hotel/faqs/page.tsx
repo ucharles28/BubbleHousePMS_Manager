@@ -1,5 +1,5 @@
 "use client"
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft2, Eye } from 'iconsax-react';
 import Loading from '../../loading';
@@ -11,6 +11,8 @@ import { BedType } from '@/app/models/bedtype';
 import BedTypesTable from '@/app/components/BedTypesTable';
 import { FAQ } from '@/app/models/faq';
 import FAQsTable from '@/app/components/FAQsTable';
+import CreateDialog from '@/app/components/CreateDialogComponent';
+
 
 async function getFAQs(hotelId: string) {
     const res = await makeApiCall(`FAQ/${hotelId}`, 'GET')
@@ -21,6 +23,17 @@ async function getFAQs(hotelId: string) {
 }
 
 async function FAQsPage() {
+
+    const handleClickOpen = () => {
+        setOpenDialog(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+
+    const [openDialog, setOpenDialog] = useState(false);
+
     const router = useRouter()
     const { hotelId } = await getUserInfo()
     const faqs: FAQ[] = await getFAQs(hotelId) as FAQ[]
@@ -44,17 +57,23 @@ async function FAQsPage() {
                         <ArrowLeft2 size={14} />
                         <span className="text-xs font-medium leading-6">Back</span>
                     </div>
-                    <Link href='/hotel/room-types/new'>
-                        <button
-                            type="button"
-                            className="w-auto bg-[#1a1a1a]/50 hover:bg-[#636363] uppercase text-white font-medium leading-6 rounded-lg text-xs text-center px-2.5 py-1.5"
-                        >
-                            Add New
-                        </button>
-                    </Link>
+
+                    <button
+                        type="button"
+                        className="w-auto bg-[#1a1a1a]/50 hover:bg-[#636363] uppercase text-white font-medium leading-6 rounded-lg text-xs text-center px-2.5 py-1.5"
+                        onClick={handleClickOpen}
+                    >
+                        Add New
+                    </button>
 
                 </div>
             </div>
+
+            <CreateDialog
+                open={openDialog}
+                onClose={handleClose}
+                confirmationTitle="Add New FAQ"
+            />
 
             <Suspense fallback={<Loading />}>
                 <FAQsTable faqs={faqs} />
