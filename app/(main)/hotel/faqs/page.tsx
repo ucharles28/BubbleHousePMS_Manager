@@ -13,7 +13,7 @@ import { FAQ } from '@/app/models/faq';
 import FAQsTable from '@/app/components/FAQsTable';
 
 async function getFAQs(hotelId: string) {
-    const res = await makeApiCall(`BedType/Hotel/${hotelId}`, 'GET')
+    const res = await makeApiCall(`FAQ/${hotelId}`, 'GET')
     if (res.successful) {
         return res.data
     }
@@ -24,6 +24,7 @@ async function FAQsPage() {
     const router = useRouter()
     const { hotelId } = await getUserInfo()
     const faqs: FAQ[] = await getFAQs(hotelId) as FAQ[]
+    console.log(faqs)
     const goBack = () => {
         router.back()
     }
