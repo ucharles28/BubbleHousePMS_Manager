@@ -70,6 +70,7 @@ async function FAQsPage() {
             </div>
 
             <CreateDialog
+            hotelId={hotelId}
                 open={openDialog}
                 onClose={handleClose}
                 confirmationTitle="Add New FAQ"
