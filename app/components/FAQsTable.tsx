@@ -10,6 +10,7 @@ import DeleteDialog from './DeleteDialogComponent';
 import CreateDialog from './CreateDialogComponent';
 
 export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: string }) {
+    const [faq, setFAQ] = useState<FAQ | undefined>() 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -36,7 +37,8 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
         setOpenDelDialog(false);
     };
 
-    const handleClickOpen = () => {
+    const handleClickOpen = (index: number) => {
+        setFAQ(faqs[index])
         setOpenDialog(true);
     };
 
@@ -97,7 +99,7 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
                                     <Eye
                                         size={18}
                                         className='text-[#636363] hover:text-[#1a1a1a]'
-                                        onClick={handleClickOpen}
+                                        onClick={() => handleClickOpen(index)}
                                     />
 
                                     <Trash
@@ -133,6 +135,7 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
                 hotelId={hotelId}
                 open={openDialog}
                 onClose={handleClose}
+                faq={faq}
                 confirmationTitle="Update FAQ"
             />
 

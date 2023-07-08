@@ -37,7 +37,6 @@ async function FAQsPage() {
     const router = useRouter()
     const { hotelId } = await getUserInfo()
     const faqs: FAQ[] = await getFAQs(hotelId) as FAQ[]
-    console.log(faqs)
     const goBack = () => {
         router.back()
     }
