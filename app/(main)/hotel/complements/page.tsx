@@ -20,6 +20,16 @@ async function getComplements(hotelId: string) {
 }
 
 async function ComplementsPage() {
+    const handleClickOpen = () => {
+        setOpenDialog(true);
+    };
+    
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+    
+    const [openDialog, setOpenDialog] = useState(false);
+    
     const router = useRouter()
     const { hotelId } = await getUserInfo()
     const complements: Complement[] = await getComplements(hotelId) as Complement[]
@@ -27,15 +37,6 @@ async function ComplementsPage() {
         router.back()
     }
 
-    const handleClickOpen = () => {
-        setOpenDialog(true);
-    };
-
-    const handleClose = () => {
-        setOpenDialog(false);
-    };
-
-    const [openDialog, setOpenDialog] = useState(false);
 
     return (
         <div className='min-h-screen w-full py-6 flex flex-col gap-6'>

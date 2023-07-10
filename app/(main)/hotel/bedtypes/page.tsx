@@ -20,13 +20,6 @@ async function getBedTypes(hotelId: string) {
 }
 
 async function BedTypesPage() {
-    const router = useRouter()
-    const { hotelId } = await getUserInfo()
-    const bedTypes: BedType[] = await getBedTypes(hotelId) as BedType[]
-    const goBack = () => {
-        router.back()
-    }
-
     const handleClickOpen = () => {
         setOpenDialog(true);
     };
@@ -36,6 +29,14 @@ async function BedTypesPage() {
     };
 
     const [openDialog, setOpenDialog] = useState(false);
+    
+    const router = useRouter()
+    const { hotelId } = await getUserInfo()
+    const bedTypes: BedType[] = await getBedTypes(hotelId) as BedType[]
+    const goBack = () => {
+        router.back()
+    }
+
 
     return (
         <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
