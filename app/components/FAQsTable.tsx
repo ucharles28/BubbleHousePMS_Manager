@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { Eye, Trash } from 'iconsax-react'
 import { Complement } from '../models/complement';
 import { FAQ } from '../models/faq';
-import DeleteDialog from './DeleteDialogComponent';
+import DeleteDialog from './DeleteDialog';
 import CreateFAQDialog from './CreateFAQDialog';
 import { makeApiCall } from '../helpers/apiRequest';
 import { message } from 'antd';

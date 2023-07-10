@@ -5,11 +5,27 @@ import { TableCell, TablePagination, TableRow, Table, TableContainer, TableHead,
 import styled from '@emotion/styled';
 import { Eye, Trash } from 'iconsax-react'
 import { Complement } from '../models/complement';
+import DeleteDialog from './DeleteDialog';
+import CreateComplementDialog from './CreateComplementDialog';
+import { makeApiCall } from '../helpers/apiRequest';
+import { message } from 'antd';
 
-export default function ComplementsTable({ complements }: { complements: Complement[] }) {
+export default function ComplementsTable({ complements, hotelId }: { complements: Complement[], hotelId: string }) {
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
+
+    async function deleteComplement(index: number) {
+        const complement = complements[index]
+        const response = await makeApiCall(`Complement/${complement.id}`, 'DELETE')
+
+        if (response.successful) {
+            message.success('Complement delete successfully')
+        }
+        else {
+            message.error(response.data)
+        }
+    }
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -23,7 +39,27 @@ export default function ComplementsTable({ complements }: { complements: Complem
             date: complement.createdDate
         }
     ))
+    const handleClickOpenDel = (index: number) => {
+        setIndex(index)
+        setOpenDelDialog(true);
+    };
 
+    const handleCloseDel = () => {
+        setOpenDelDialog(false);
+    };
+
+    const handleClickOpen = (index: number) => {
+        setComplement(complements[index])
+        setOpenDialog(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+    const [complement, setComplement] = useState<Complement | undefined>()
+    const [openDelDialog, setOpenDelDialog] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [index, setIndex] = useState(0)
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const TableRowStyled = styled(TableRow)`
@@ -69,15 +105,9 @@ export default function ComplementsTable({ complements }: { complements: Complem
                                 <TableCell className='w-8'>{index + 1}</TableCell>
                                 <TableCell className=''>{row.title}</TableCell>
                                 <TableCell className='w-20'>
-                                    <Link
-                                        // href={`/bookings/details/${row.id}`}
-                                        href='/'
-                                    >
-                                        <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
-                                    </Link>
+                                    <Eye onClick={() => handleClickOpen(index)} size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
 
-                                    <Trash size={18} className='text-[#636363] hover:text-red-500' />
-
+                                    <Trash onClick={() => handleClickOpenDel(index)} size={18} className='text-[#636363] hover:text-red-500' />
                                 </TableCell>
                             </TableRowStyled>
                         ))}
@@ -92,6 +122,22 @@ export default function ComplementsTable({ complements }: { complements: Complem
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+
+            <DeleteDialog
+                open={openDelDialog}
+                onClose={handleCloseDel}
+                confirmationType="Complement"
+                index={index}
+                onDelete={deleteComplement}
+            />
+
+            <CreateComplementDialog
+                hotelId={hotelId}
+                open={openDialog}
+                onClose={handleClose}
+                complement={complement}
+                confirmationTitle="Update Complement"
             />
         </div>
     )

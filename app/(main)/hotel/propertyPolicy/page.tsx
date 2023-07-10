@@ -16,7 +16,7 @@ async function getPropertyPolicy(hotelId: string) {
     return {};
 }
 
-export default async function HotelDetailsPage() {
+export default async function PropertyPolicyPage() {
     const router = useRouter();
     const { hotelId } = await getUserInfo()
     const propertyPolicy: PropertyPolicy = await getPropertyPolicy(hotelId) as PropertyPolicy

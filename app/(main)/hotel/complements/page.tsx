@@ -1,7 +1,6 @@
 "use client"
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
-import RoomTypesTable from '@/app/components/RoomTypesTable';
 import { ArrowLeft2, Eye } from 'iconsax-react';
 import Loading from '../../loading';
 import { useRouter } from 'next/navigation';
@@ -9,6 +8,7 @@ import { makeApiCall } from '@/app/helpers/apiRequest';
 import { getUserInfo } from '@/app/lib/helpers';
 import { Complement } from '@/app/models/complement';
 import ComplementsTable from '@/app/components/ComplementsTable';
+import CreateComplementDialog from '@/app/components/CreateComplementDialog';
 
 async function getComplements(hotelId: string) {
     const res = await makeApiCall(`Complement/Hotel/${hotelId}`, 'GET')
@@ -27,6 +27,16 @@ async function ComplementsPage() {
         router.back()
     }
 
+    const handleClickOpen = () => {
+        setOpenDialog(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+
+    const [openDialog, setOpenDialog] = useState(false);
+
     return (
         <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
             <div className='flex flex-col items-end gap-y-1 md:flex-row w-full'>
@@ -42,20 +52,26 @@ async function ComplementsPage() {
                         <ArrowLeft2 size={14} />
                         <span className="text-xs font-medium leading-6">Back</span>
                     </div>
-                    <Link href='/hotel/room-types/new'>
                         <button
                             type="button"
+                            onClick={handleClickOpen}
                             className="w-auto bg-[#1a1a1a]/50 hover:bg-[#636363] uppercase text-white font-medium leading-6 rounded-lg text-xs text-center px-2.5 py-1.5"
                         >
                             Add New
                         </button>
-                    </Link>
 
                 </div>
             </div>
 
+            <CreateComplementDialog
+            hotelId={hotelId}
+                open={openDialog}
+                onClose={handleClose}
+                confirmationTitle="Add New Complement"
+            />
+
             <Suspense fallback={<Loading />}>
-                <ComplementsTable complements={complements} />
+                <ComplementsTable complements={complements} hotelId={hotelId} />
             </Suspense>
 
         </div>

@@ -7,7 +7,7 @@ import { makeApiCall } from "../helpers/apiRequest";
 import { message } from "antd";
 import { CircularProgress } from "@mui/material";
 
-export default function HotelDetails({ propertyPolicyPayload }: { propertyPolicyPayload: PropertyPolicy }) {
+export default function ProperyPolicy({ propertyPolicyPayload }: { propertyPolicyPayload: PropertyPolicy }) {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<SingleValue<OptionType>>();
     const [isLoading, setIsLoading] = useState(false);
     const [propertyPolicy, setPropertyPolicy] = useState({ ...propertyPolicyPayload });

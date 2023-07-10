@@ -5,8 +5,12 @@ import { TableCell, TablePagination, TableRow, Table, TableContainer, TableHead,
 import styled from '@emotion/styled';
 import { Eye, Trash } from 'iconsax-react'
 import { BedType } from '../models/bedtype';
+import CreateBedTypeDialog from './CreateBedTypeDialog';
+import { makeApiCall } from '../helpers/apiRequest';
+import { message } from 'antd';
+import DeleteDialog from './DeleteDialog';
 
-export default function BedTypesTable({ bedTypes }: { bedTypes: BedType[] }) {
+export default function BedTypesTable({ bedTypes, hotelId }: { bedTypes: BedType[], hotelId: string }) {
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -23,7 +27,40 @@ export default function BedTypesTable({ bedTypes }: { bedTypes: BedType[] }) {
             date: bedType.createdDate,
         }
     ))
+    const handleClickOpenDel = (index: number) => {
+        setIndex(index)
+        setOpenDelDialog(true);
+    };
 
+    const handleCloseDel = () => {
+        setOpenDelDialog(false);
+    };
+
+    const handleClickOpen = (index: number) => {
+        setBedType(bedTypes[index])
+        setOpenDialog(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
+
+    async function deleteBedType(index: number) {
+        const complement = bedTypes[index]
+        const response = await makeApiCall(`BedType/${complement.id}`, 'DELETE')
+
+        if (response.successful) {
+            message.success('Bed type delete successfully')
+        }
+        else {
+            message.error(response.data)
+        }
+    }
+
+    const [bedType, setBedType] = useState<BedType | undefined>()
+    const [index, setIndex] = useState(0)
+    const [openDelDialog, setOpenDelDialog] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const TableRowStyled = styled(TableRow)`
@@ -69,14 +106,10 @@ export default function BedTypesTable({ bedTypes }: { bedTypes: BedType[] }) {
                                 <TableCell className='w-8'>{index + 1}</TableCell>
                                 <TableCell className=''>{row.name}</TableCell>
                                 <TableCell className='w-20'>
-                                    <Link
-                                        // href={`/bookings/details/${row.id}`}
-                                        href='/'
-                                    >
-                                        <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
-                                    </Link>
 
-                                    <Trash size={18} className='text-[#636363] hover:text-red-500' />
+                                    <Eye onClick={() => handleClickOpen(index)} size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
+
+                                    <Trash onClick={() => handleClickOpenDel(index)} size={18} className='text-[#636363] hover:text-red-500' />
 
                                 </TableCell>
                             </TableRowStyled>
@@ -92,6 +125,22 @@ export default function BedTypesTable({ bedTypes }: { bedTypes: BedType[] }) {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+
+            <DeleteDialog
+                open={openDelDialog}
+                onClose={handleCloseDel}
+                confirmationType="Bed Type"
+                index={index}
+                onDelete={deleteBedType}
+            />
+
+            <CreateBedTypeDialog
+                hotelId={hotelId}
+                open={openDialog}
+                onClose={handleClose}
+                bedType={bedType}
+                confirmationTitle="Update Bed Type"
             />
         </div>
     )
