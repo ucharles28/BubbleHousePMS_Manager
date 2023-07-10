@@ -3,10 +3,10 @@ import { makeApiCall } from "@/app/helpers/apiRequest";
 import { getUserInfo } from "@/app/lib/helpers";
 import { PropertyPolicy } from "@/app/models/propertyPolicy";
 import { ArrowLeft2 } from "iconsax-react";
-import { useRouter } from "next/router";
 import { Suspense } from "react";
 import Loading from "../../loading";
 import HotelDetails from "@/app/components/HotelDetails";
+import { useRouter } from "next/navigation";
 
 async function getPropertyPolicy(hotelId: string) {
     const res = await makeApiCall(`PropertyPolicy/${hotelId}`, 'GET')
