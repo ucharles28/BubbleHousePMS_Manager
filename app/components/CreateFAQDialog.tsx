@@ -17,7 +17,7 @@ interface DialogComponentProps {
     faq?: FAQ
 }
 
-const CreateDialog: React.FC<DialogComponentProps> = ({ open, onClose, confirmationTitle, hotelId, faq }) => {
+const CreateFAQDialog: React.FC<DialogComponentProps> = ({ open, onClose, confirmationTitle, hotelId, faq }) => {
     const [question, setQuestion] = useState(faq ? faq.question : '')
     const [answer, setAnswer] = useState(faq ? faq.answer : '')
     const [isLoading, setIsLoading] = useState(false)
@@ -115,4 +115,4 @@ const CreateDialog: React.FC<DialogComponentProps> = ({ open, onClose, confirmat
     );
 };
 
-export default CreateDialog;
+export default CreateFAQDialog;

@@ -7,10 +7,13 @@ import { Eye, Trash } from 'iconsax-react'
 import { Complement } from '../models/complement';
 import { FAQ } from '../models/faq';
 import DeleteDialog from './DeleteDialogComponent';
-import CreateDialog from './CreateDialogComponent';
+import CreateFAQDialog from './CreateFAQDialog';
+import { makeApiCall } from '../helpers/apiRequest';
+import { message } from 'antd';
 
 export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: string }) {
     const [faq, setFAQ] = useState<FAQ | undefined>() 
+    const [index, setIndex] = useState(0) 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -19,6 +22,18 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
+    async function deleteFAQ(index: number) {
+        const faq = faqs[index]
+        const response = await makeApiCall(`FAQ/${faq.id}`, 'DELETE')
+
+        if (response.successful) {
+            message.success('FAQ delete successfully')
+        }
+        else {
+            message.error(response.data)
+        }
+    }
 
     const rows = faqs.map((faq) => (
         {
@@ -29,7 +44,8 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
         }
     ))
 
-    const handleClickOpenDel = () => {
+    const handleClickOpenDel = (index: number) => {
+        setIndex(index)
         setOpenDelDialog(true);
     };
 
@@ -105,7 +121,7 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
                                     <Trash
                                         size={18}
                                         className='text-[#636363] hover:text-red-500'
-                                        onClick={handleClickOpenDel}
+                                        onClick={() => handleClickOpenDel(index)}
                                     />
 
                                 </TableCell>
@@ -129,9 +145,11 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
                 open={openDelDialog}
                 onClose={handleCloseDel}
                 confirmationType="FAQ"
+                index={index}
+                onDelete={deleteFAQ}
             />
 
-            <CreateDialog
+            <CreateFAQDialog
                 hotelId={hotelId}
                 open={openDialog}
                 onClose={handleClose}

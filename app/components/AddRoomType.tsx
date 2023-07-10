@@ -76,7 +76,6 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        debugger
         setIsImageLoading(true)
         const fileList = e.target.files
         let list = [...roomImageFiles?.map(file => file) ?? []]
@@ -90,7 +89,6 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
 
         let mainImageCopy = mainImageSrc
 
-        let roomImagesList = [...rooomImagesSrc?.map(images => images) ?? []]
         for (let i = 0; i < files.length; i++) {
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -99,13 +97,13 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
                     mainImageCopy = reader?.result as string
                     setMainImageSrc(reader?.result as string);
                 } else {
+                    let roomImagesList = [...rooomImagesSrc?.map(images => images) ?? []]
                     roomImagesList.push(reader?.result as string)
+                    setRoomImagesSrc(roomImagesList)
                 }
             };
             reader.readAsDataURL(files[i]);
         }
-        setRoomImagesSrc(roomImagesList)
-        console.log(roomImageFiles)
         setIsImageLoading(false)
     };
 
@@ -152,7 +150,7 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
                         ref={inputRef}
                         type="file"
                         accept="image/*"
-                        multiple={true}
+                        multiple={false}
                         onChange={handleFileChange}
                     />
 

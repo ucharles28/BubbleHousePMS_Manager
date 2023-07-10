@@ -8,10 +8,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 interface DialogComponentProps {
     open: boolean;
     onClose: () => void;
+    onDelete: (index: number) => Promise<void>;
     confirmationType: string;
+    index: number;
 }
 
-const DeleteDialog: React.FC<DialogComponentProps> = ({ open, onClose, confirmationType }) => {
+const DeleteDialog: React.FC<DialogComponentProps> = ({ open, onClose, confirmationType, onDelete, index }) => {
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle
@@ -40,8 +42,8 @@ const DeleteDialog: React.FC<DialogComponentProps> = ({ open, onClose, confirmat
                     </span>
 
                     <div className='flex items-center gap-3 justify-end w-full border-t border-gray-300 pt-2'>
-                        <button className='p-3 text-sm font-medium text-white rounded-lg bg-[#404040] disabled:bg-[#404040]/50'>No</button>
-                        <button className='p-3 text-sm font-medium text-gray-900 rounded-lg bg-yellow-500'>Yes</button>
+                        <button onClick={onClose} className='p-3 text-sm font-medium text-white rounded-lg bg-[#404040] disabled:bg-[#404040]/50'>No</button>
+                        <button onClick={() => onDelete(index)} className='p-3 text-sm font-medium text-gray-900 rounded-lg bg-yellow-500'>Yes</button>
                     </div>
                 </DialogContentText>
             </DialogContent>

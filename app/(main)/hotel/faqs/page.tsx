@@ -11,7 +11,7 @@ import { BedType } from '@/app/models/bedtype';
 import BedTypesTable from '@/app/components/BedTypesTable';
 import { FAQ } from '@/app/models/faq';
 import FAQsTable from '@/app/components/FAQsTable';
-import CreateDialog from '@/app/components/CreateDialogComponent';
+import CreateFAQDialog from '@/app/components/CreateFAQDialog';
 
 
 async function getFAQs(hotelId: string) {
@@ -68,7 +68,7 @@ async function FAQsPage() {
                 </div>
             </div>
 
-            <CreateDialog
+            <CreateFAQDialog
             hotelId={hotelId}
                 open={openDialog}
                 onClose={handleClose}
