@@ -77,7 +77,7 @@ const CreateBedTypeDialog: React.FC<DialogComponentProps> = ({ open, onClose, co
                             <label className='text-xs font-medium leading-6 text-gray-800'>Bed Type Name</label>
                             <input
                                 type="text"
-                                placeholder="Title"
+                                placeholder="Name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 role="input"
