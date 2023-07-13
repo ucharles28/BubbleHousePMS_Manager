@@ -1,3 +1,4 @@
+'use client'
 import { useRouter } from "next/navigation"
 import { AvailableRoom } from "../models/availableRoom"
 import { ArrowLeft2 } from "iconsax-react"

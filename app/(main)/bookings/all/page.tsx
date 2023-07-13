@@ -1,4 +1,3 @@
-"use client"
 import { Suspense } from 'react';
 import { makeApiCall } from '@/app/helpers/apiRequest';
 import Loading from '../../loading';
