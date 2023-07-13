@@ -2,6 +2,7 @@
 import '../globals.css'
 import { Inter } from 'next/font/google'
 import { useState, useEffect, Fragment } from "react";
+import NProgress from '../components/NProgress';
 // import { Metadata } from 'next'
 
 
@@ -43,7 +44,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-            {children}
+        <NProgress />
+        {children}
       </body>
     </html>
   )

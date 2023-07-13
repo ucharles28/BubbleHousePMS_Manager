@@ -9,6 +9,7 @@ import Router from "next/router"
 // import { Metadata } from 'next'
 import AppProvider from '../context/appContext'
 import ProgressBar from 'next-nprogress-bar';
+import NProgress from '../components/NProgress';
 
 
 // export const metadata: Metadata = {
@@ -49,13 +50,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ProgressBar
-          height="4px"
-          color="#F5C400"
-          options={{ showSpinner: true }}
-          shallowRouting
-          appDirectory
-        />
+        <NProgress />
         {/* <AppProvider> */}
         <div className="h-screen flex flex-row justify-start">
 

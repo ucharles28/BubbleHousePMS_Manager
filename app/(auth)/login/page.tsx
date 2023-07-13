@@ -20,7 +20,7 @@ function Login() {
     };
 
     async function loginUser() {
-        setIsLoading(false)
+        setIsLoading(true)
         try {
             const response = await fetch('api/login', {
                 method: 'POST',
@@ -37,7 +37,7 @@ function Login() {
 
         }
         
-        setIsLoading(true)
+        setIsLoading(false)
     }
 
     return (
