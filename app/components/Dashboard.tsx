@@ -1,3 +1,4 @@
+'use client'
 import { Buildings, Calendar, Money2, MessageEdit, People, Buliding, Eye } from 'iconsax-react';
 import styled from '@emotion/styled';
 import { forwardRef, useEffect, useRef, useState } from 'react';

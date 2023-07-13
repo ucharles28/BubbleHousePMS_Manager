@@ -1,4 +1,3 @@
-'use client'
 import { Suspense, useContext } from "react"
 import { makeApiCall } from "../helpers/apiRequest"
 import { IDashboard } from "../models/dashboard"
@@ -21,7 +20,7 @@ async function getDashboardOverview(hotelId: string) {
 }
 
 async function DashboardPage() {
- const {hotelId} = await getUserInfo()
+  const { hotelId } = await getUserInfo()
   const dashboardData: IDashboard = await getDashboardOverview(hotelId)
 
   return (
@@ -31,7 +30,7 @@ async function DashboardPage() {
           Overview
         </p>
         <Suspense fallback={<Loading />}>
-          <Dashboard dashboardData={dashboardData}/>
+          <Dashboard dashboardData={dashboardData} />
         </Suspense>
       </div>
     </main>
