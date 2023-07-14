@@ -19,6 +19,7 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
 
     const handleClose = () => {
         setOpenDialog(false);
+        setOpenUpdateDialog(false);
     };
 
     const [faq, setFAQ] = useState<FAQ | undefined>()
@@ -68,11 +69,12 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
 
     const handleClickOpenDetail = (index: number) => {
         setFAQ(faqs[index])
-        setOpenDialog(true);
+        setOpenUpdateDialog(true);
     };
 
     const [openDelDialog, setOpenDelDialog] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const TableRowStyled = styled(TableRow)`
@@ -118,12 +120,13 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
                 </div>
             </div>
 
-            {/* <CreateFAQDialog
-                hotelId={hotelId}
-                open={openDialog}
-                onClose={handleClose}
-                confirmationTitle="Add New FAQ"
-            /> */}
+            <CreateFAQDialog
+                    hotelId={hotelId}
+                    open={openDialog}
+                    onClose={handleClose}
+                    faq={faq}
+                    confirmationTitle="Update FAQ"
+                />
 
             <div className='bg-white border border-gray-50 drop-shadow-sm rounded-lg w-full h-auto p-1'>
 
@@ -193,7 +196,7 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
 
                 <CreateFAQDialog
                     hotelId={hotelId}
-                    open={openDialog}
+                    open={openUpdateDialog}
                     onClose={handleClose}
                     faq={faq}
                     confirmationTitle="Update FAQ"

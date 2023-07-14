@@ -1,14 +1,9 @@
-"use client"
-import { Suspense, useState } from 'react';
-import Link from 'next/link';
-import { ArrowLeft2, Eye } from 'iconsax-react';
+import { Suspense } from 'react';
 import Loading from '../../loading';
-import { useRouter } from 'next/navigation';
 import { makeApiCall } from '@/app/helpers/apiRequest';
 import { getUserInfo } from '@/app/lib/helpers';
 import { Complement } from '@/app/models/complement';
 import ComplementsTable from '@/app/components/ComplementsTable';
-import CreateComplementDialog from '@/app/components/CreateComplementDialog';
 
 async function getComplements(hotelId: string) {
     const res = await makeApiCall(`Complement/Hotel/${hotelId}`, 'GET')
@@ -20,62 +15,13 @@ async function getComplements(hotelId: string) {
 }
 
 async function ComplementsPage() {
-    const handleClickOpen = () => {
-        setOpenDialog(true);
-    };
-    
-    const handleClose = () => {
-        setOpenDialog(false);
-    };
-    
-    const [openDialog, setOpenDialog] = useState(false);
-    
-    const router = useRouter()
     const { hotelId } = await getUserInfo()
     const complements: Complement[] = await getComplements(hotelId) as Complement[]
-    const goBack = () => {
-        router.back()
-    }
-
 
     return (
-        <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
-            <div className='flex flex-col items-end gap-y-1 md:flex-row w-full'>
-                <p className='block w-full text-xl font-medium text-[#1A1A1A] leading-6'>
-                    Complements
-                </p>
-
-                <div className='flex justify-end gap-2 w-full'>
-
-                    <div
-                        onClick={goBack}
-                        className="px-2 py-1.5 rounded-lg flex items-center cursor-pointer bg-white hover:bg-[#f9f9f9] border-2 border-[#E4E4E4] text-gray-500 hover:text-gray-800">
-                        <ArrowLeft2 size={14} />
-                        <span className="text-xs font-medium leading-6">Back</span>
-                    </div>
-                        <button
-                            type="button"
-                            onClick={handleClickOpen}
-                            className="w-auto bg-[#1a1a1a]/50 hover:bg-[#636363] uppercase text-white font-medium leading-6 rounded-lg text-xs text-center px-2.5 py-1.5"
-                        >
-                            Add New
-                        </button>
-
-                </div>
-            </div>
-
-            <CreateComplementDialog
-            hotelId={hotelId}
-                open={openDialog}
-                onClose={handleClose}
-                confirmationTitle="Add New Complement"
-            />
-
-            <Suspense fallback={<Loading />}>
-                <ComplementsTable complements={complements} hotelId={hotelId} />
-            </Suspense>
-
-        </div>
+        <Suspense fallback={<Loading />}>
+            <ComplementsTable complements={complements} hotelId={hotelId} />
+        </Suspense>
     )
 }
 
