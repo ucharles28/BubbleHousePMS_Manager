@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { TableCell, TablePagination, TableRow, Table, TableContainer, TableHead, TableBody } from '@mui/material';
 import styled from '@emotion/styled';
-import { Eye, Trash } from 'iconsax-react'
+import { ArrowLeft2, Eye, Trash } from 'iconsax-react'
 import { Amenity } from '../models/amenity';
 import { useRouter } from 'next/navigation';
 
