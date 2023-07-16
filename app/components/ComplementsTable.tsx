@@ -146,10 +146,10 @@ export default function ComplementsTable({ complements, hotelId }: { complements
                                 <TableRowStyled key={index}>
                                     <TableCell className='w-8'>{index + 1}</TableCell>
                                     <TableCell className=''>{row.title}</TableCell>
-                                    <TableCell className='w-20'>
-                                        <Eye onClick={() => handleClickOpenUpate(index)} size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
+                                    <TableCell className='w-20 flex items-center gap-2'>
+                                        <Eye onClick={() => handleClickOpenUpate(index)} size={18} className='text-[#636363] hover:text-[#1a1a1a] cursor-pointer' />
 
-                                        <Trash onClick={() => handleClickOpenDel(index)} size={18} className='text-[#636363] hover:text-red-500' />
+                                        <Trash onClick={() => handleClickOpenDel(index)} size={18} className='text-[#636363] hover:text-red-500 cursor-pointer' />
                                     </TableCell>
                                 </TableRowStyled>
                             ))}

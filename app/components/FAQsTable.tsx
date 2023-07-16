@@ -125,7 +125,7 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
                     open={openDialog}
                     onClose={handleClose}
                     faq={faq}
-                    confirmationTitle="Update FAQ"
+                    confirmationTitle="add new FAQ"
                 />
 
             <div className='bg-white border border-gray-50 drop-shadow-sm rounded-lg w-full h-auto p-1'>
@@ -156,16 +156,16 @@ export default function FAQsTable({ faqs, hotelId }: { faqs: FAQ[], hotelId: str
                                     <TableCell className='w-8'>{index + 1}</TableCell>
                                     <TableCell className=''>{row.question}</TableCell>
                                     <TableCell className=''>{row.answer}</TableCell>
-                                    <TableCell className='w-20'>
+                                    <TableCell className='w-20 flex items-center gap-2'>
                                         <Eye
                                             size={18}
-                                            className='text-[#636363] hover:text-[#1a1a1a]'
+                                            className='text-[#636363] hover:text-[#1a1a1a] cursor-pointer'
                                             onClick={() => handleClickOpenDetail(index)}
                                         />
 
                                         <Trash
                                             size={18}
-                                            className='text-[#636363] hover:text-red-500'
+                                            className='text-[#636363] hover:text-red-500 cursor-pointer'
                                             onClick={() => handleClickOpenDel(index)}
                                         />
 

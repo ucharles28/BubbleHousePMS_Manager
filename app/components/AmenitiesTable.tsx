@@ -102,15 +102,15 @@ export default function AmenitiesTable({ amenities }: { amenities: Amenity[] }) 
                                 <TableRowStyled key={index}>
                                     <TableCell className='w-8'>{index + 1}</TableCell>
                                     <TableCell className=''>{row.title}</TableCell>
-                                    <TableCell className='w-20'>
+                                    <TableCell className='w-20 flex items-center gap-2'>
                                         <Link
                                             // href={`/bookings/details/${row.id}`}
                                             href='/'
                                         >
-                                            <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
+                                            <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a] cursor-pointer' />
                                         </Link>
 
-                                        <Trash size={18} className='text-[#636363] hover:text-red-500' />
+                                        <Trash size={18} className='text-[#636363] hover:text-red-500 cursor-pointer' />
 
                                     </TableCell>
                                 </TableRowStyled>

@@ -111,15 +111,15 @@ export default function RoomTypesTable({ roomTypes }: { roomTypes: any[] }) {
                                     <TableCell className=''>{row.numberofRooms}</TableCell>
                                     <TableCell className=''>{row.adult}</TableCell>
                                     <TableCell className=''>{row.children}</TableCell>
-                                    <TableCell className='w-20'>
+                                    <TableCell className='w-20 flex items-center gap-2'>
                                         <Link
                                             // href={`/bookings/details/${row.id}`}
                                             href='/'
                                         >
-                                            <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
+                                            <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a] cursor-pointer' />
                                         </Link>
 
-                                        <Trash size={18} className='text-[#636363] hover:text-red-500' />
+                                        <Trash size={18} className='text-[#636363] hover:text-red-500 cursor-pointer' />
 
                                     </TableCell>
                                 </TableRowStyled>

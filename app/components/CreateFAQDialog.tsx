@@ -22,7 +22,7 @@ const CreateFAQDialog: React.FC<DialogComponentProps> = ({ open, onClose, confir
     const [answer, setAnswer] = useState(faq ? faq.answer : '')
     const [isLoading, setIsLoading] = useState(false)
 
-    
+
 
     async function saveFAQ() {
         setIsLoading(true)
@@ -55,15 +55,19 @@ const CreateFAQDialog: React.FC<DialogComponentProps> = ({ open, onClose, confir
         setIsLoading(false)
     }
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth={'sm'}
+            fullWidth={true}
+        >
             <DialogTitle
-                className='font-poppins'
+                className='font-poppins capitalize'
                 sx={{
                     padding: '16px',
                     fontSize: '1rem',
                     letterSpacing: '0rem',
                     fontWeight: '600',
-                    width: 'auto',
                     color: '#364a63',
                 }}
             >
@@ -74,7 +78,7 @@ const CreateFAQDialog: React.FC<DialogComponentProps> = ({ open, onClose, confir
                     padding: '16px',
                     textAlign: 'justify',
                 }}
-                className='scrollbar-thin scroll-smooth scrollbar-thumb-gray-300 scrollbar-rounded-full scrollbar-thumb-rounded-full'
+                className='scrollbar-thin scroll-smooth scrollbar-thumb-gray-300 scrollbar-rounded-full scrollbar-thumb-rounded-full w-full'
             >
                 <DialogContentText className='flex flex-col gap-5 w-full'>
                     <div className='flex flex-col gap-3 w-full'>

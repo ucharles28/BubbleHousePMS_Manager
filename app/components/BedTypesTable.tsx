@@ -54,6 +54,7 @@ export default function BedTypesTable({ bedTypes, hotelId }: { bedTypes: BedType
 
     const handleClose = () => {
         setOpenDialog(false);
+        setOpenUpdateDialog(false);
     };
 
     async function deleteBedType(index: number) {
@@ -149,11 +150,11 @@ export default function BedTypesTable({ bedTypes, hotelId }: { bedTypes: BedType
                                 <TableRowStyled key={index}>
                                     <TableCell className='w-8'>{index + 1}</TableCell>
                                     <TableCell className=''>{row.name}</TableCell>
-                                    <TableCell className='w-20'>
+                                    <TableCell className='w-20 flex items-center gap-2'>
 
-                                        <Eye onClick={() => handleClickOpenUpdate(index)} size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
+                                        <Eye onClick={() => handleClickOpenUpdate(index)} size={18} className='text-[#636363] hover:text-[#1a1a1a] cursor-pointer' />
 
-                                        <Trash onClick={() => handleClickOpenDel(index)} size={18} className='text-[#636363] hover:text-red-500' />
+                                        <Trash onClick={() => handleClickOpenDel(index)} size={18} className='text-[#636363] hover:text-red-500 cursor-pointer' />
 
                                     </TableCell>
                                 </TableRowStyled>

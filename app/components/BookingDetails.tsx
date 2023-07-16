@@ -308,7 +308,12 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
 
                 </div>
 
-                <Dialog open={openDialog} onClose={handleClose}>
+                <Dialog 
+                open={openDialog} 
+                onClose={handleClose}
+                maxWidth={'sm'}
+                fullWidth={true}
+                >
                     <DialogTitle
                         className='font-poppins'
                         sx={{
@@ -316,7 +321,6 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                             fontSize: "1rem",
                             letterSpacing: "0rem",
                             fontWeight: "600",
-                            width: "auto",
                             color: "#364a63",
                         }}
                     >
@@ -327,7 +331,7 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                             padding: "16px",
                             textAlign: 'justify',
                         }}
-                        className='scrollbar-thin scroll-smooth scrollbar-thumb-gray-300 scrollbar-rounded-full scrollbar-thumb-rounded-full'
+                        className='scrollbar-thin scroll-smooth scrollbar-thumb-gray-300 scrollbar-rounded-full scrollbar-thumb-rounded-full w-full'
                     >
                         <DialogContentText className='text-sm font-normal leading-5 text-gray-600'>
                             {booking.specialRequest}

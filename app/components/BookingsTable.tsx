@@ -154,7 +154,7 @@ export default function BookingsTable({ bookings, title }: { bookings: BookingRe
                                     <TableCell className='w-20'>
                                         <Link href={`/bookings/details/${row.id}`}
                                         >
-                                            <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
+                                            <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a] cursor-pointer' />
                                         </Link>
 
                                     </TableCell>
