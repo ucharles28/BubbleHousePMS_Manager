@@ -5,7 +5,7 @@ import { makeApiCall } from "@/app/helpers/apiRequest";
 import { getUserInfo } from "@/app/lib/helpers";
 import { ArrowLeft2 } from "iconsax-react";
 import { useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, use } from "react";
 
 async function getRoomTypes(hotelId: string) {
     const res = await makeApiCall(`RoomType/Hotel/${hotelId}`, 'GET')
@@ -26,10 +26,10 @@ async function getBedTypes(hotelId: string) {
 export default async function AddRoomPage() {
     const router = useRouter();
     const { hotelId } = await getUserInfo()
-    const bedTypesData = getBedTypes(hotelId)
-    const roomTypesData = getRoomTypes(hotelId)
+    const bedTypes = use(getBedTypes(hotelId))
+    const roomTypes = use(getRoomTypes(hotelId))
 
-    const [bedTypes, roomTypes] = await Promise.all([bedTypesData, roomTypesData])
+    // const [bedTypes, roomTypes] = await Promise.all([bedTypesData, roomTypesData])
 
     const goBack = () => {
         router.back();
