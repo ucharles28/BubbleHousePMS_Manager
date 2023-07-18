@@ -1,3 +1,4 @@
+'use client'
 import { DirectNotification } from "iconsax-react";
 import { Notification } from "../models/notification";
 import { format } from "date-fns";
