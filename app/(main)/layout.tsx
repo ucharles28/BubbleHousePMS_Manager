@@ -1,6 +1,6 @@
 'use client'
 import '../globals.css'
-import { Inter } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 import { useState, useEffect, Fragment } from "react";
 import SideBar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
@@ -16,7 +16,13 @@ import NProgress from '../components/NProgress';
 //   title: 'MyBcloud',
 // }
 
-const inter = Inter({ subsets: ['latin'] })
+const poppins = Poppins({
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  subsets: ['devanagari', 'latin', 'latin-ext'],
+  preload: true
+})
 
 export default function RootLayout({
   children,
@@ -49,7 +55,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={poppins.className}>
         <NProgress />
         {/* <AppProvider> */}
         <div className="h-screen flex flex-row justify-start">
