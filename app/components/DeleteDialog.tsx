@@ -15,7 +15,12 @@ interface DialogComponentProps {
 
 const DeleteDialog: React.FC<DialogComponentProps> = ({ open, onClose, confirmationType, onDelete, index }) => {
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth={'sm'}
+            fullWidth={true}
+        >
             <DialogTitle
                 className='font-poppins'
                 sx={{
@@ -23,7 +28,6 @@ const DeleteDialog: React.FC<DialogComponentProps> = ({ open, onClose, confirmat
                     fontSize: '1rem',
                     letterSpacing: '0rem',
                     fontWeight: '600',
-                    width: 'auto',
                     color: '#364a63',
                 }}
             >
@@ -34,7 +38,7 @@ const DeleteDialog: React.FC<DialogComponentProps> = ({ open, onClose, confirmat
                     padding: '16px',
                     textAlign: 'justify',
                 }}
-                className='scrollbar-thin scroll-smooth scrollbar-thumb-gray-300 scrollbar-rounded-full scrollbar-thumb-rounded-full'
+                className='scrollbar-thin scroll-smooth scrollbar-thumb-gray-300 scrollbar-rounded-full scrollbar-thumb-rounded-full w-full'
             >
                 <DialogContentText className='flex flex-col gap-5 w-full'>
                     <span className='text-sm font-normal leading-5 text-gray-600'>

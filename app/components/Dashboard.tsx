@@ -174,7 +174,7 @@ export default function Dashboard({ dashboardData }: {dashboardData: IDashboard}
 
                 {dashboardCards.map(({ url, title, icon: Icon, value }) => (
                     <Link href={url} key={url}>
-                        <div className="box rounded-2xl bg-white  border border-[#FFDD55] flex md:flex-row flex-col items-center md:items-start p-4 md:p-6 pb-6 md:pb-8 gap-5 h-auto">
+                        <div className="box rounded-2xl bg-white border border-[#FFDD55] flex md:flex-row flex-col items-center md:items-start p-4 md:p-6 pb-6 md:pb-8 gap-5 h-auto">
                             <div className='p-4 bg-[#fff7d8] rounded-full justify-center'>
                                 <Icon size={24} className='text-[#D4AA00]' variant='Bold' />
                             </div>
@@ -226,7 +226,7 @@ export default function Dashboard({ dashboardData }: {dashboardData: IDashboard}
                                         <TableCell className='w-16 md:w-20'>
                                             <Link href='/'
                                             >
-                                                <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
+                                                <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a] cursor-pointer' />
                                             </Link>
 
                                         </TableCell>

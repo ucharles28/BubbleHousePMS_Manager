@@ -39,11 +39,6 @@ export default async function TodayBookedPage() {
     return (
         <Suspense fallback={<Loading />}>
             <TodaysBooked todaysBookings={todaysBookings as TodayBooked[]} >
-                <div className='flex flex-col items-end gap-y-1 md:flex-row w-full'>
-                    <p className='block w-full text-xl font-medium text-[#1A1A1A] leading-6'>
-                        Available for booking
-                    </p>
-                </div>
                 <AvailableRooms availableRooms={availableRooms as AvailableRoom[]} />
             </TodaysBooked>
 

@@ -127,7 +127,7 @@ export default function Staffs({ staffs }: { staffs: StaffResponse[] }) {
                                 <TableCell className='w-20'>
                                     <Link href='/staffs/details'
                                     >
-                                        <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a]' />
+                                        <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a] cursor-pointer' />
                                     </Link>
 
                                 </TableCell>
