@@ -5,4 +5,5 @@ export type StaffResponse = {
     accountType: number
     accountStatus: number
     createdDate: string
+    phoneNumber: string
 }

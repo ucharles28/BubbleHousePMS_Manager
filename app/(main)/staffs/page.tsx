@@ -1,4 +1,3 @@
-'use client'
 import { makeApiCall } from '@/app/helpers/apiRequest';
 import { getUserInfo } from '@/app/lib/helpers';
 import { StaffResponse } from '@/app/models/staffResponse';

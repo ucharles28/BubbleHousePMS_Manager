@@ -19,6 +19,7 @@ export default function Staffs({ staffs }: { staffs: StaffResponse[] }) {
 
     const rows = staffs.map((staff) => (
         {
+            id: staff.id,
             userName: staff.fullName,
             role: 'Staff', //staff.accountType
             email: staff.email,
@@ -26,30 +27,6 @@ export default function Staffs({ staffs }: { staffs: StaffResponse[] }) {
             date: format(new Date(staff.createdDate), 'yyyy-dd-MM')//'2023-06-15'
         }
     ))
-
-    //   const rows = [
-    //     {
-    //       userName: ,
-    //       role: 'Staff',
-    //       email: 'chijiokeemechebe@gmail.com',
-    //       status: 'active',
-    //       date: '2023-06-15'
-    //     },
-    //     {
-    //       userName: 'John Doe',
-    //       role: 'Staff',
-    //       email: 'johndoe@gmail.com',
-    //       status: 'banned',
-    //       date: '2023-06-09'
-    //     },
-    //     {
-    //       userName: 'Jane Smith',
-    //       role: 'Staff',
-    //       email: 'janesmith@gmail.com',
-    //       status: 'active',
-    //       date: '2023-06-22'
-    //     },
-    //   ];
 
     const getStatusChip = (status: number) => {
         let chipColor = '';
@@ -125,7 +102,7 @@ export default function Staffs({ staffs }: { staffs: StaffResponse[] }) {
                                 <TableCell>{row.email}</TableCell>
                                 <TableCell>{getStatusChip(row.status)}</TableCell>
                                 <TableCell className='w-20'>
-                                    <Link href='/staffs/details'
+                                    <Link href={`/staffs/details/${row.id}`}
                                     >
                                         <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a] cursor-pointer' />
                                     </Link>

@@ -29,7 +29,8 @@ function NewStaff() {
       lastName,
       accountType: selectedRole,
       phoneNumber: phone,
-      hotelId
+      hotelId,
+      email
     }
 
     const response = await makeApiCall('User/Staff/Create', 'POST', req)
@@ -114,7 +115,7 @@ function NewStaff() {
             onChange={(e) => setSelectedRole(e.target.value)}
             className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
           >
-            {userRoles.map((rol) => <option className='placeholder:text-xs text-sm'>{rol}</option>)}
+            {userRoles.map((rol, index) => <option key={index} className='placeholder:text-xs text-sm'>{rol}</option>)}
           </select>
         </div>
 
@@ -123,6 +124,7 @@ function NewStaff() {
             type="button"
             className="w-full text-gray-800 font-medium flex items-center justify-center p-3 rounded-md bg-[#F5C400] text-xs leading-6 uppercase hover:bg-[#FFDD55] disabled:bg-[#FFDD55]"
             disabled={!firstName || !lastName || !email || !phone || !selectedRole || isLoading}
+            onClick={saveStaff}
           >
             {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Submit'}
           </button>

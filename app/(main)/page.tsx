@@ -1,11 +1,8 @@
-import { Suspense, useContext } from "react"
+import { Suspense } from "react"
 import { makeApiCall } from "../helpers/apiRequest"
 import { IDashboard } from "../models/dashboard"
-import { AppContext } from "../context/appContext"
 import Loading from "./loading"
 import Dashboard from "../components/Dashboard"
-import { GetServerSideProps, InferGetServerSidePropsType } from "next"
-import { User } from "../models/user"
 import { getUserInfo } from "../lib/helpers"
 
 async function getDashboardOverview(hotelId: string) {
