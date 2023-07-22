@@ -220,7 +220,7 @@ export default function BookRoom({ roomTypes, hotelId }) {
                     <div className="relative flex flex-col gap-1 w-full md:col-span-1">
                         <label className='text-xs font-medium leading-5 text-gray-700'>Check In/Out</label>
                         <div
-                            className="bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md flex items-center gap-2"
+                            className="bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md flex items-center gap-2 cursor-pointer"
                             onClick={datePickerHandler}
                         >
                             {`${format(dateFrom, "dd-MM-yyy")} - ${format(
@@ -327,76 +327,93 @@ export default function BookRoom({ roomTypes, hotelId }) {
                     <div className='flex flex-col w-full h-auto gap-y-4 justify-start bg-white border-[1.2px] border-[#E4E4E4] rounded-md p-3'>
                         <p className='mb-[0] text-sm text-[#636363] font-medium leading-6 w-full'>Booking Information</p>
 
-                        <div className='grid grid-cols-1 w-full gap-3'>
+                        <div className='grid grid-cols-1 w-full gap-6'>
 
-                            <div className="flex flex-col gap-1 w-full">
-                                <label className='text-xs font-medium leading-5 text-gray-700'>Name</label>
-                                <input
-                                    type='text'
-                                    placeholder='eg. Chijioke'
-                                    value={fullName}
-                                    onChange={(e) => setFullName(e.target.value)}
-                                    className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
-                                />
-                            </div>
+                            <div className='flex flex-col gap-3 w-full'>
 
-                            <div className="flex flex-col gap-1 w-full">
-                                <label className='text-xs font-medium leading-5 text-gray-700'>Email Address</label>
-                                <input
-                                    type='email'
-                                    placeholder='eg. Chijioke@gamil.com'
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-1 w-full">
-                                <label className='text-xs font-medium leading-5 text-gray-700'>Phone Number</label>
-                                <input
-                                    type='text'
-                                    placeholder='eg. 0123456789'
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
-                                />
-                            </div>
-
-                            <div className='grid grid-cols-3 w-full justify-between text-sm gap-1'>
-                                <span className='text-xs font-semibold leading-6 '>Rooms</span>
-                                <span className='text-xs font-semibold leading-6 '>Days</span>
-                                <span className='text-xs font-semibold leading-6 '>Room price</span>
-                            </div>
-
-                            {selectedRooms.map((selectedRoom, index) => (<div key={index} className='grid grid-cols-3 w-full items-center justify-between text-[#636363] text-sm gap-1'>
-                                <div className="flex gap-1.5 items-center w-full justify-start">
-                                    <span
-                                        className="px-2.5 py-1 rounded-lg bg-[#FF6166] text-xs font-medium text-white cursor-pointer"
-                                        onClick={() => handleRemoveRoom(selectedRoom)}
-                                    >
-                                        x
-                                    </span>
-                                    <span className='text-sm font-normal leading-6'>{selectedRoom.roomNumber}</span>
+                                <div className="flex flex-col gap-1 w-full">
+                                    <label className='text-xs font-medium leading-5 text-gray-700'>Name</label>
+                                    <input
+                                        type='text'
+                                        placeholder='eg. Chijioke'
+                                        value={fullName}
+                                        onChange={(e) => setFullName(e.target.value)}
+                                        className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+                                    />
                                 </div>
-                                <span className='text-sm font-normal leading-6 w-full justify-center'>{numberOfDays}</span>
-                                <span className='text-sm font-normal leading-6 w-full justify-end'>NGN {Number(selectedRoom.roomType.price).toLocaleString()} </span>
-                            </div>))}
 
-                            <div className='grid grid-cols-2 w-full items-center justify-between text-sm gap-1'>
-                                <span className='text-sm font-normal leading-6 text-[#636363]'>Sub Total </span>
-                                <div className="flex justify-end w-full text-right"><span className='text-sm font-normal leading-6 '>NGN {subTotal.toLocaleString()}</span></div>
+                                <div className="flex flex-col gap-1 w-full">
+                                    <label className='text-xs font-medium leading-5 text-gray-700'>Email Address</label>
+                                    <input
+                                        type='email'
+                                        placeholder='eg. Chijioke@gamil.com'
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-1 w-full">
+                                    <label className='text-xs font-medium leading-5 text-gray-700'>Phone Number</label>
+                                    <input
+                                        type='text'
+                                        placeholder='eg. 0123456789'
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value)}
+                                        className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+                                    />
+                                </div>
+
                             </div>
-                            <div className='grid grid-cols-2 w-full items-center justify-between text-sm gap-1'>
-                                <span className='text-sm font-normal leading-6 text-[#636363]'>7.5 % VAT </span>
-                                <div className="flex justify-end w-full text-right"><span className='text-sm font-normal leading-6 '>NGN {vat.toLocaleString()}</span></div>
+
+                            <div className="flex flex-col gap-2 w-full">
+                                <div className='grid grid-cols-3 w-full justify-between gap-1'>
+                                    <span className='text-xs font-semibold leading-6 flex justify-start'>Rooms</span>
+                                    <span className='text-xs font-semibold leading-6 flex justify-center'>Days</span>
+                                    <span className='text-xs font-semibold leading-6 flex justify-end'>Room price</span>
+                                </div>
+
+                                {selectedRooms.map((selectedRoom, index) => (<div key={index} className='grid grid-cols-3 w-full items-center justify-between text-[#636363] text-xs gap-1'>
+                                    <div className="flex gap-1.5 items-center w-full justify-start">
+                                        <span
+                                            className="px-2.5 py-1 rounded-lg bg-[#FF6166] text-xs font-medium text-white cursor-pointer"
+                                            onClick={() => handleRemoveRoom(selectedRoom)}
+                                        >
+                                            x
+                                        </span>
+                                        <span className='font-normal leading-6'>{selectedRoom.roomNumber}</span>
+                                    </div>
+                                    <span className='font-normal leading-6 w-full flex justify-center'>
+                                        {numberOfDays}
+                                    </span>
+                                    <span className='font-normal leading-6 w-full flex justify-end'>
+                                        NGN {Number(selectedRoom.roomType.price).toLocaleString()}
+                                    </span>
+                                </div>))}
                             </div>
-                            <div className='grid grid-cols-2 w-full items-center justify-between text-sm gap-1'>
-                                <span className='text-sm font-normal leading-6 text-[#636363]'>5 % State Tax</span>
-                                <div className="flex justify-end w-full text-right"><span className='text-sm font-normal leading-6 '>NGN {stateTax.toLocaleString()}</span></div>
-                            </div>
-                            <div className='grid grid-cols-2 w-full items-center justify-between text-sm gap-1'>
-                                <span className='text-sm font-semibold leading-6'>Total</span>
-                                <div className="flex justify-end w-full text-right"><span className='text-sm font-semibold leading-6 '>NGN {totalAmount.toLocaleString()}</span></div>
+
+                            <div className="flex flex-col gap-3 w-full mt-2">
+
+                                <div className="flex items-center justify-between w-full text-xs font-normal text-[#636363]">
+                                    <span className=''>Sub Total</span>
+                                    <span className='font-medium text-gray-950'>NGN {subTotal.toLocaleString()}</span>
+                                </div>
+
+                                <div className="flex items-center justify-between w-full text-xs font-normal text-[#636363]">
+                                    <span className=''>7.5 % VAT</span>
+                                    <span className='font-medium text-gray-950'>NGN {vat.toLocaleString()}</span>
+                                </div>
+
+                                <div className="flex items-center justify-between w-full text-xs font-normal text-[#636363]">
+                                    <span className=''>5 % State Tax</span>
+                                    <span className='font-medium text-gray-950'>NGN {stateTax.toLocaleString()}</span>
+                                </div>
+
+                                <div className="flex items-center justify-between w-full text-sm font-bold text-gray-950">
+                                    <span className=''>Total</span>
+                                    <span className=''>NGN {totalAmount.toLocaleString()}</span>
+                                </div>
+
                             </div>
 
                             <div className="flex flex-col gap-1 w-full">
@@ -415,7 +432,7 @@ export default function BookRoom({ roomTypes, hotelId }) {
                                     type="button"
                                     onClick={handleBookRoom}
                                     disabled={!fullName || !email || !phone || selectedRooms.length < 1 || payingAmount < 1}
-                                    className="w-full text-gray-800 font-medium flex items-center justify-center p-3 rounded-md bg-[#F5C400] text-xs tracking-wide leading-6 uppercase hover:bg-[#f1ce40] disabled:bg-[#FFDD55]"
+                                    className="cursor-pointer w-full text-gray-800 font-medium flex items-center justify-center p-3 rounded-md bg-[#F5C400] text-xs tracking-wide leading-6 uppercase hover:bg-[#f1ce40] disabled:bg-[#FFDD55]"
                                 >
                                     {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Book now'}
                                 </button>
