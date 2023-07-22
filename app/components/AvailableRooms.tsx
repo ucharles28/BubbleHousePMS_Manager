@@ -23,7 +23,7 @@ export default function AvailableRooms({ availableRooms }: { availableRooms: Ava
                         <ArrowLeft2 size={14} />
                         <span className="text-xs font-medium leading-6">Back</span>
                     </div>
-                    <Link href='/bookings/book-now'>
+                    <Link href='/bookings/book-room'>
                         <button
                             type="button"
                             className="w-auto bg-[#1a1a1a]/50 hover:bg-[#636363] uppercase text-white font-medium leading-6 rounded-lg text-xs text-center px-2.5 py-1.5"
