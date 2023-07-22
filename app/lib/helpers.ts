@@ -9,3 +9,13 @@ export async function getUserInfo() {
     const userInfo = cookies().get('user')
     return JSON.parse(String(userInfo?.value)) as User
 }
+
+export async function logOutUser(){
+    cookies().set({
+        name: 'user',
+        value: '',
+        expires: new Date(),
+        maxAge:0,
+        path: '/', // For all paths
+      })
+}

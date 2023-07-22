@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Image from 'next/image';
 import logo from '../logo.png'
 import { Setting2, People, Notification, Buildings2, Calendar, Messages2, Category, LogoutCurve, Money2 } from 'iconsax-react';
+import { logOutUser } from "../lib/helpers";
 
 const sidebarLinks = [
     { path: "/", label: "Dashboard", icon: Category },
@@ -16,8 +17,9 @@ const sidebarLinks = [
 ];
 
 const SideBar = forwardRef(({ showNav }: { showNav: boolean }, ref: LegacyRef<HTMLDivElement>) => {
-    const logOut = () => {
-        router.push('/auth/login');
+    const logOut = async() => {
+        await logOutUser()
+        router.push('/login');
     };
     const router = useRouter();
     const pathname = usePathname();

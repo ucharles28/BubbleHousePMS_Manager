@@ -7,6 +7,7 @@ import Image from 'next/image';
 import logo from '../logo.png'
 import { Drawer } from 'antd';
 import { HambergerMenu, DirectNotification, Setting2, LogoutCurve, People, Notification, Buildings2, Calendar, Messages2, Category, Money2 } from 'iconsax-react';
+import { logOutUser } from "../lib/helpers";
 
 const sidebarLinks = [
     { path: "/", label: "Dashboard", icon: Category },
@@ -18,9 +19,10 @@ const sidebarLinks = [
 ];
 
 export default function TopBar({ showNav, setShowNav }: { showNav: boolean; setShowNav: any }) {
-    const logOut = () => {
-        router.push('/auth/login');
-    }
+    const logOut = async() => {
+        await logOutUser()
+        router.push('/login');
+    };
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
         setOpen(true);
