@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 interface ButtonProps {
-  variant: 'selected' | 'available' | 'booked';
+  variant: number;
 }
 
-const Button = styled.div<ButtonProps>`
+const Button = styled.button<ButtonProps>`
   display: inline-block;
   padding: 0.5rem;
   font-size: 0.75rem;
@@ -17,17 +17,17 @@ const Button = styled.div<ButtonProps>`
 
   ${(props) => {
     switch (props.variant) {
-      case 'selected':
-        return `
-          background-color: #32BAFF;
-        `;
-      case 'available':
+      case 0:
         return `
           background-color: #6AD01F;
         `;
-      case 'booked':
+      case 1:
         return `
-          background-color: #FF6166;
+            background-color: #FF6166;
+          `;
+      case 2:
+        return `
+            background-color: #32BAFF;
         `;
       default:
         return 'background-color: #6AD01F;';

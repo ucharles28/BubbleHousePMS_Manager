@@ -1,5 +1,3 @@
-import { IApiResponse } from "../models/apiResponse"
-
 // const baseUrl = 'https://localhost:7298/api/'
 const baseUrl = process.env.NEXT_PUBLIC_REACT_API_BASE_URL
 

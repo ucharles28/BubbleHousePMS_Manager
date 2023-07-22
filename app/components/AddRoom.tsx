@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState } from 'react';
-import Select, { MultiValue, SingleValue } from 'react-select';
+import Select, { SingleValue } from 'react-select';
 import { Amenity } from '../models/amenity';
 import { OptionType } from '../models/optionType';
 import { Complement } from '../models/complement';

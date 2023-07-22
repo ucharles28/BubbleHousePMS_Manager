@@ -1,10 +1,7 @@
-'use client'
 import Loading from '@/app/(main)/loading';
 import BookingDetails from '@/app/components/BookingDetails';
 import { makeApiCall } from '@/app/helpers/apiRequest';
 import { getUserInfo } from '@/app/lib/helpers';
-import { ArrowLeft2 } from 'iconsax-react'
-import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 
 async function getBookingDetails(bookingId) {

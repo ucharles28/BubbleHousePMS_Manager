@@ -25,6 +25,7 @@
     "next": "^13.4.9",
     "next-nprogress-bar": "^1.2.5",
     "react": "^18.2.0",
+    "react-calendar": "^4.4.0",
     "react-dom": "^18.2.0",
     "react-select": "^5.7.3",
     "react-spinners": "^0.13.8",

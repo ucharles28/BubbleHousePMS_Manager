@@ -5,11 +5,9 @@ import { useState, useEffect, Fragment } from "react";
 import SideBar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
 import { Transition } from "@headlessui/react";
-import Router from "next/router"
 // import { Metadata } from 'next'
-import AppProvider from '../context/appContext'
-import ProgressBar from 'next-nprogress-bar';
 import NProgress from '../components/NProgress';
+import "react-calendar/dist/Calendar.css";
 
 
 // export const metadata: Metadata = {
@@ -20,7 +18,7 @@ const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   style: ['normal', 'italic'],
   display: 'swap',
-  subsets: ['devanagari', 'latin', 'latin-ext'],
+  subsets: ['devanagari', 'latin', 'latin-ext'], 
   preload: true
 })
 
