@@ -42,8 +42,9 @@ export default function BookRoom({ roomTypes, hotelId }) {
 
     useEffect(() => {
         if (selectedRooms && selectedRooms.length > 0) {
+            const days = dateDiffInDays(dateFrom, dateTo)
             let totalRoomsPrice = selectedRooms.map(item => item.roomType.price).reduce((prev, next) => prev + next);
-
+            totalRoomsPrice *= days
             const theVat = 0.075 * totalRoomsPrice
             const theStateTax = 0.05 * totalRoomsPrice
             setTotalAmount(theVat + theStateTax + totalRoomsPrice)
@@ -51,7 +52,7 @@ export default function BookRoom({ roomTypes, hotelId }) {
             setStateTax(theStateTax)
             setSubTotal(totalRoomsPrice)
 
-            setNumberOfDays(dateDiffInDays(dateFrom, dateTo))
+            setNumberOfDays(days)
         }
     }, [selectedRooms])
 
