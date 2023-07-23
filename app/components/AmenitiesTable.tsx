@@ -6,9 +6,23 @@ import styled from '@emotion/styled';
 import { ArrowLeft2, Eye, Trash } from 'iconsax-react'
 import { Amenity } from '../models/amenity';
 import { useRouter } from 'next/navigation';
+import CreateAmenitiesDialog from './CreateAmenitiesDialog';
+import { getUserInfo } from '../lib/helpers';
 
-export default function AmenitiesTable({ amenities }: { amenities: Amenity[] }) {
+export default async function AmenitiesTable({ amenities, hotelId }: { amenities: Amenity[], hotelId: string }) {
     const router = useRouter()
+
+
+    const [openDialog, setOpenDialog] = useState(false);
+    const [amenity, setAmenity] = useState();
+    const handleClickOpen = () => {
+        setOpenDialog(true);
+    };
+
+    const handleClose = () => {
+        setOpenDialog(false);
+        // setOpenUpdateDialog(false);
+    };
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
@@ -49,7 +63,6 @@ export default function AmenitiesTable({ amenities }: { amenities: Amenity[] }) 
         const dateB = new Date(b.date.split('-').reverse().join('-')).getTime();
         return dateB - dateA;
     });
-
     return (
         <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
             <div className='flex flex-col items-end gap-y-1 md:flex-row w-full'>
@@ -65,17 +78,24 @@ export default function AmenitiesTable({ amenities }: { amenities: Amenity[] }) 
                         <ArrowLeft2 size={14} />
                         <span className="text-xs font-medium leading-6">Back</span>
                     </div>
-                    <Link href='/hotel/room-types/new'>
-                        <button
-                            type="button"
-                            className="w-auto bg-[#1a1a1a]/50 hover:bg-[#636363] uppercase text-white font-medium leading-6 rounded-lg text-xs text-center px-2.5 py-1.5"
-                        >
-                            Add New
-                        </button>
-                    </Link>
+                    <button
+                        type="button"
+                        onClick={handleClickOpen}
+                        className="w-auto bg-[#1a1a1a]/50 hover:bg-[#636363] uppercase text-white font-medium leading-6 rounded-lg text-xs text-center px-2.5 py-1.5"
+                    >
+                        Add New
+                    </button>
 
                 </div>
             </div>
+
+            <CreateAmenitiesDialog
+                hotelId={hotelId}
+                amenity={amenity}
+                open={openDialog}
+                onClose={handleClose}
+                confirmationTitle="Add new Amenity"
+            />
 
             <div className='bg-white border border-gray-50 drop-shadow-sm rounded-lg w-full h-auto p-1'>
                 <TableContainer>

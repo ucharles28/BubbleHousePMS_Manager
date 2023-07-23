@@ -23,7 +23,7 @@ const poppins = Poppins({
 })
 
 export default function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode
 }) {
