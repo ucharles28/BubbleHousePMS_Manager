@@ -4,7 +4,6 @@ import { PropertyPolicy } from "@/app/models/propertyPolicy";
 import { Suspense } from "react";
 import Loading from "../../loading";
 import ProperyPolicy from "@/app/components/PropertyPolicy";
-import { useRouter } from "next/navigation";
 
 async function getPropertyPolicy(hotelId: string) {
     const res = await makeApiCall(`PropertyPolicy/${hotelId}`, 'GET')

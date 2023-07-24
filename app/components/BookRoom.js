@@ -119,6 +119,8 @@ export default function BookRoom({ roomTypes, hotelId }) {
 
         if (response.successful) {
             message.success('Booking created successfully')
+            setSelectedRoomType([])
+            setSelectedRooms([])
         } else {
             message.error(response.data)
         }
