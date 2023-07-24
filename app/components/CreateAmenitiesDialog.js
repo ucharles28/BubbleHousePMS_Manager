@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -63,38 +63,42 @@ const options = [
 const CreateAmenitiesDialog = ({ open, onClose, confirmationTitle, hotelId, amenity }) => {
     // const [question, setQuestion] = useState(faq ? faq.question : '')
     // const [answer, setAnswer] = useState(faq ? faq.answer : '')
+    useEffect(() => {
+        console.log('from useEffect', amenity)
+    }, [amenity])
+    console.log(amenity)
+    const [title, setTitle] = useState(amenity ? amenity.title : '');
     const [isLoading, setIsLoading] = useState(false)
 
+    async function saveAmenity() {
+        setIsLoading(true)
+        if (amenity) {
+            const req = {
+                title,
+                icon: ''
+            }
 
-    async function saveFAQ() {
-        // setIsLoading(true)
-        // if (faq) {
-        //     const req = {
-        //         question,
-        //         answer
-        //     }
+            const response = await makeApiCall(`FAQ/${amenity.id}`, 'PUT', req)
+            if (response.successful) {
+                message.success('Amenity saved successfully')
+            } else {
+                message.error(response.data)
+            }
+        } else {
+            const req = {
+                hotelId,
+                title,
+                icon: ''
+            }
 
-        //     const response = await makeApiCall(`FAQ/${faq.id}`, 'PUT', req)
-        //     if (response.successful) {
-        //         message.success('FAQ saved successfully')
-        //     } else {
-        //         message.error(response.data)
-        //     }
-        // } else {
-        //     const req = {
-        //         hotelId,
-        //         question,
-        //         answer
-        //     }
-
-        //     const response = await makeApiCall('FAQ', 'POST', req)
-        //     if (response.successful) {
-        //         message.success('FAQ saved successfully')
-        //     } else {
-        //         message.error(response.data)
-        //     }
-        // }
-        // setIsLoading(false)
+            const response = await makeApiCall('Amenity', 'POST', req)
+            if (response.successful) {
+                message.success('Amenity saved successfully')
+            } else {
+                message.error(response.data)
+            }
+        }
+        setIsLoading(false)
     }
     return (
         <Dialog
@@ -125,31 +129,27 @@ const CreateAmenitiesDialog = ({ open, onClose, confirmationTitle, hotelId, amen
                 <DialogContentText className='flex flex-col gap-5 w-full'>
                     <div className='flex flex-col gap-3 w-full'>
                         <div className='flex flex-col gap-1 w-full'>
-                            <label className='text-xs font-medium leading-6 text-gray-800'>Question</label>
-                            <FontAwesomeIcon icon={faEnvelope} />
-                            {/* <input
+                            <label className='text-xs font-medium leading-6 text-gray-800'>Amenity</label>
+                            <input
                                 type="text"
-                                placeholder="eg. Complimentary Breakfast?"
-                                value={question}
-                                onChange={(e) => setQuestion(e.target.value)}
+                                // placeholder="eg. Complimentary Breakfast?"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
                                 role="input"
                                 className="bg-white border-[1.3px] border-gray-300 rounded-md focus:outline-none text-sm font-normal leading-none text-gray-900 py-3 w-full pl-3 placeholder:font-normal placeholder:text-sm"
-                            /> */}
-                            <select
+                            />
+                            {/* <select
                                 id="select"
                                 className="py-2 px-4 border rounded-md focus:outline-none"
-                            // value={selectedOption}
-                            // onChange={handleSelectChange}
                             >
                                 <option value="">Select...</option>
                                 {options.map((option, index) => (
                                     <option key={index} value={option.title}>
                                         <FontAwesomeIcon icon={faEnvelope} />
-                                        {/* <FontAwesomeIcon icon={icon({name: option.icon, style: 'regular'})} className="mr-2" /> */}
                                         {option.title}
                                     </option>
                                 ))}
-                            </select>
+                            </select> */}
                         </div>
 
                         {/* <div className='flex flex-col gap-1 w-full'>
@@ -167,7 +167,7 @@ const CreateAmenitiesDialog = ({ open, onClose, confirmationTitle, hotelId, amen
 
                     <div className='flex items-center gap-3 justify-end w-full border-t border-gray-300 pt-2'>
                         <button onClick={onClose} className='p-3 text-sm font-medium text-white rounded-lg bg-[#404040] disabled:bg-[#404040]/50'>Cancel</button>
-                        <button onClick={saveFAQ} className='p-3 text-sm font-medium text-gray-900 rounded-lg bg-yellow-500'>
+                        <button onClick={saveAmenity} className='p-3 text-sm font-medium text-gray-900 rounded-lg bg-yellow-500'>
                             {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Submit'}
                         </button>
                     </div>

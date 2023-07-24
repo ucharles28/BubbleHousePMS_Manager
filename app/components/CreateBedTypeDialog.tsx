@@ -25,7 +25,7 @@ const CreateBedTypeDialog: React.FC<DialogComponentProps> = ({ open, onClose, co
         setIsLoading(true)
         if (bedType) {
             const req = {
-                title: name
+                name
             }
 
             const response = await makeApiCall(`BedType/${bedType.id}`, 'PUT', req)
@@ -37,7 +37,7 @@ const CreateBedTypeDialog: React.FC<DialogComponentProps> = ({ open, onClose, co
         } else {
             const req = {
                 hotelId,
-                title: name
+                name
             }
 
             const response = await makeApiCall('BedType', 'POST', req)
