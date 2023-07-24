@@ -27,7 +27,7 @@ export default async function HotelDetailsPage() {
 
     return (
         <div className="min-h-screen w-full py-6 flex flex-col gap-6">
-            <div className="flex items-center justify-between gap-y-1 w-full">
+            {/* <div className="flex items-center justify-between gap-y-1 w-full">
                 <p className="block md:w-full text-xl font-medium text-[#1A1A1A] leading-6">
                     Add room
                 </p>
@@ -43,7 +43,7 @@ export default async function HotelDetailsPage() {
 
             <Suspense fallback={<Loading />}>
                 <ProperyPolicy propertyPolicyPayload={propertyPolicy} />
-            </Suspense>
+            </Suspense> */}
         </div>
     )
 }
