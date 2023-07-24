@@ -6,6 +6,6 @@ export type PropertyPolicy = {
     parking: string;
     checkInTime: string;
     checkOutTime: string;
-    acceptsOnlyCash: string
+    acceptsOnlyCash: boolean
     hotelId: string
 }

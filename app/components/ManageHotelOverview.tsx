@@ -13,6 +13,7 @@ export default function ManageHotelOverview() {
         { key: 5, title: 'Rooms', url: '/hotel/rooms' },
         { key: 6, title: 'Amenities', url: '/hotel/amenities' },
         { key: 7, title: 'Complements', url: '/hotel/complements' },
+        { key: 7, title: 'Property policy', url: '/hotel/propertypolicy' }
     ]
 
     return (

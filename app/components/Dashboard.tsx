@@ -138,31 +138,31 @@ export default function Dashboard({ dashboardData }: {dashboardData: IDashboard}
         },
         {
             title: 'Total Rooms',
-            url: '/hotels',
+            url: '/hotels/all',
             icon: Buildings,
             value: dashboardData.totalRooms
         },
         {
             title: 'Available Rooms',
-            url: '/bookings',
+            url: '/bookings/availablerooms',
             icon: Buliding,
             value: dashboardData.availableRooms
         },
         {
             title: 'Booking Request',
-            url: '/bookings',
+            url: '/bookings/pending',
             icon: MessageEdit,
             value: dashboardData.bookingRequest
         },
         {
             title: 'Running Booking',
-            url: '/bookings',
+            url: '/bookings/running',
             icon: Calendar,
             value: dashboardData.runningBookings
         },
         {
             title: 'Total Payment',
-            url: '/bookings',
+            url: '#',
             icon: Money2,
             value: dashboardData.totalPayment
         }

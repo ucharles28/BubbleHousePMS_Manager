@@ -19,10 +19,8 @@ export default async function PropertyPolicyPage() {
     const propertyPolicy: PropertyPolicy = await getPropertyPolicy(hotelId) as PropertyPolicy
     
     return (
-        
-
             <Suspense fallback={<Loading />}>
-                <ProperyPolicy propertyPolicyPayload={propertyPolicy} />
+                <ProperyPolicy propertyPolicyPayload={propertyPolicy} hotelId={hotelId} />
             </Suspense>
     )
 }
