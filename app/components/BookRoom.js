@@ -41,7 +41,7 @@ export default function BookRoom({ roomTypes, hotelId }) {
     };
 
     useEffect(() => {
-        if (selectedRooms && selectedRooms.length > 0) {
+        if (selectedRooms.length > 0) {
             const days = dateDiffInDays(dateFrom, dateTo)
             let totalRoomsPrice = selectedRooms.map(item => item.roomType.price).reduce((prev, next) => prev + next);
             totalRoomsPrice *= days
@@ -53,6 +53,11 @@ export default function BookRoom({ roomTypes, hotelId }) {
             setSubTotal(totalRoomsPrice)
 
             setNumberOfDays(days)
+        } else {
+            setTotalAmount(0)
+            setVat(0)
+            setStateTax(0)
+            setSubTotal(0)
         }
     }, [selectedRooms])
 
