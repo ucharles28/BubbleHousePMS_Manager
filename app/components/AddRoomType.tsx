@@ -135,7 +135,7 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
     };
 
     return (
-        <div className="min-h-screen w-full py-6 flex flex-col gap-6">
+        <div className="min-h-fit h-full w-full py-6 flex flex-col gap-6">
             <div className="flex items-center justify-between gap-y-1 w-full">
                 <p className="block md:w-full text-xl font-medium text-[#1A1A1A] leading-6">
                     Add room type
@@ -179,7 +179,7 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
                         <div className="mt-5 flex justify-center items-center gap-1">
                             <button
                                 type="button"
-                                className="text-white font-medium flex items-center py-[7px] px-[22px] rounded-[5px] bg-[#666666] text-sm leading-6 uppercase hover:bg-[#1A1A1A]/50"
+                                className="text-white font-medium flex items-center py-2.5 px-5 rounded-md bg-[#666666] text-xs uppercase hover:bg-[#1A1A1A]/50"
                                 onClick={handleClick}
                             >
                                 Upload photo
@@ -189,7 +189,7 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
                         <div className="mt-4 flex justify-center">
                             <button
                                 type="button"
-                                className="text-[#666666] font-medium flex items-center py-[7px] px-[22px] rounded-[5px] border-[#666666] border-[1.2px] text-sm leading-6 uppercase hover:bg-[#666666] hover:text-white"
+                                className="text-[#666666] font-medium flex items-center py-2.5 px-5 rounded-md border-[#666666] border-[1.2px] text-xs uppercase hover:bg-[#666666] hover:text-white"
                                 onClick={clearImage}
                             >
                                 Reset
