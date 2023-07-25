@@ -138,7 +138,7 @@ export default function Dashboard({ dashboardData }: {dashboardData: IDashboard}
         },
         {
             title: 'Total Rooms',
-            url: '/hotels/rooms',
+            url: '/hotel/rooms',
             icon: Buildings,
             value: dashboardData.totalRooms
         },
