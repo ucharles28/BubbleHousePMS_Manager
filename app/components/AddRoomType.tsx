@@ -150,8 +150,8 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
                 </div>
             </div>
             <div className="flex md:flex-row flex-col items-start gap-3 w-full h-full">
-                <div className='item w-2/6 h-full'>
-                    <div className='flex flex-col items-center'>
+                <div className='item md:w-2/6 w-full h-full'>
+                    <div className='flex flex-col items-center justify-start'>
                         <div className="rounded-lg h-36 w-36 bg-[#1A1A1A]/25 flex items-center">
 
                             {!mainImageSrc ? <span className='flex items-center justify-center m-auto'>
@@ -162,9 +162,16 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
 
                         <div className='grid overflow-hidden grid-cols-3 h-auto items-center gap-3 mt-5'>
 
-                            {rooomImagesSrc && rooomImagesSrc.map((imageSrc) => (<div className="box rounded-lg h-14 w-14 bg-[#1A1A1A]/25 flex items-center">
-                                <img src={imageSrc} className='rounded-lg h-14 w-14 object-cover' />
-                            </div>))}
+                            {rooomImagesSrc && rooomImagesSrc.map((imageSrc) => (
+                                <div className='flex relative h-14 w-14'>
+                                    <div className="box rounded-lg h-14 w-14 bg-gray-300 flex items-center">
+                                        <img src={imageSrc} className='rounded-lg h-14 w-14 object-cover' />
+                                    </div>
+                                    <span className='absolute top-0 -right-1.5 font-medium text-gray-950 p-1 rounded-full bg-gray-100 cursor-pointer hover:bg-gray-200'>
+                                        <svg className='w-2 h-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M208.49 191.51a12 12 0 0 1-17 17L128 145l-63.51 63.49a12 12 0 0 1-17-17L111 128L47.51 64.49a12 12 0 0 1 17-17L128 111l63.51-63.52a12 12 0 0 1 17 17L145 128Z" /></svg>
+                                    </span>
+                                </div>
+                            ))}
 
                         </div>
                         <input
