@@ -1,4 +1,5 @@
 export type User = {
     userId: string,
-    hotelId: string
+    hotelId: string,
+    hotelName: string,
 }

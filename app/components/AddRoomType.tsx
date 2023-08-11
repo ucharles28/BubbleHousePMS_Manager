@@ -17,7 +17,7 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
     const inputRef = useRef<HTMLInputElement>(null);
     const [mainImageSrc, setMainImageSrc] = useState<string | null>('');
     const [roomImageFiles, setRoomImageFiles] = useState<Array<File> | null>([]);
-    const [rooomImagesSrc, setRoomImagesSrc] = useState<string[] | null>([]);
+    const [roomImagesSrc, setRoomImagesSrc] = useState<string[] | null>([]);
     const [roomTypeName, setRoomTypeName] = useState('');
     const [description, setDescription] = useState('');
     const [maxAdult, setMaxAdult] = useState('');
@@ -105,7 +105,7 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
                     mainImageCopy = reader?.result as string
                     setMainImageSrc(reader?.result as string);
                 } else {
-                    let roomImagesList = [...rooomImagesSrc?.map(images => images) ?? []]
+                    let roomImagesList = [...roomImagesSrc?.map(images => images) ?? []]
                     roomImagesList.push(reader?.result as string)
                     setRoomImagesSrc(roomImagesList)
                 }
@@ -124,6 +124,37 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
         { value: 'gym', label: 'Gym' },
         { value: 'bar', label: 'Bar' }
     ];
+
+    const removeMainImage = () => {
+        setMainImageSrc('')
+        if (roomImageFiles) {
+            let list = [...roomImageFiles]
+            list.splice(0, 1)
+            setRoomImageFiles(list)
+        }
+
+        if (roomImagesSrc && roomImagesSrc?.length > 0) {
+            setMainImageSrc(roomImagesSrc[0])
+            let list = [...roomImagesSrc]
+            list.splice(0, 1)
+            setRoomImagesSrc(list)
+        }
+    }
+
+    const removeImage = (index: number) => {
+        if (!roomImagesSrc) {
+            return
+        }
+        let list:any[] = [...roomImagesSrc]
+        list.splice(index, 1)
+        setRoomImagesSrc(list)
+        if (!roomImageFiles) {
+            return
+        }
+        list = [...roomImageFiles]
+        list.splice(index, 1)
+        setRoomImageFiles(list)
+    }
 
 
     const handleAmenitiesSelectChange = (selectedOptions: MultiValue<OptionType>) => {
@@ -157,17 +188,25 @@ export default function AddRoomType({ amenties, complements, hotelId }: { amenti
                             {!mainImageSrc ? <span className='flex items-center justify-center m-auto'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5.74 16c.11-.49-.09-1.19-.44-1.54l-2.43-2.43c-.76-.76-1.06-1.57-.84-2.27.23-.7.94-1.18 2-1.36l3.12-.52c.45-.08 1-.48 1.21-.89l1.72-3.45C10.58 2.55 11.26 2 12 2s1.42.55 1.92 1.54l1.72 3.45c.13.26.4.51.69.68L5.56 18.44c-.14.14-.38.01-.34-.19L5.74 16ZM18.7 14.462c-.36.36-.56 1.05-.44 1.54l.69 3.01c.29 1.25.11 2.19-.51 2.64a1.5 1.5 0 0 1-.9.27c-.51 0-1.11-.19-1.77-.58l-2.93-1.74c-.46-.27-1.22-.27-1.68 0l-2.93 1.74c-1.11.65-2.06.76-2.67.31-.23-.17-.4-.4-.51-.7l12.16-12.16c.46-.46 1.11-.67 1.74-.56l1.01.17c1.06.18 1.77.66 2 1.36.22.7-.08 1.51-.84 2.27l-2.42 2.43Z" fill="#666666"></path></svg>
                             </span> :
-                                <img src={mainImageSrc} className='rounded-lg h-36 w-36 bg-[#1A1A1A]/25 object-cover' />}
+                                // <img src={mainImageSrc} className='rounded-lg h-36 w-36 bg-[#1A1A1A]/25 object-cover' />
+                                <div className='flex relative h-36 w-36'>
+                                    <div className="box rounded-lg h-36 w-36 bg-gray-300 flex items-center">
+                                        <img src={mainImageSrc} className='rounded-lg h-36 w-36 object-cover' />
+                                    </div>
+                                    <span onClick={removeMainImage} className='absolute top-0 -right-1.5 font-medium text-gray-950 p-1 rounded-full bg-gray-100 cursor-pointer hover:bg-gray-200'>
+                                        <svg className='w-2 h-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M208.49 191.51a12 12 0 0 1-17 17L128 145l-63.51 63.49a12 12 0 0 1-17-17L111 128L47.51 64.49a12 12 0 0 1 17-17L128 111l63.51-63.52a12 12 0 0 1 17 17L145 128Z" /></svg>
+                                    </span>
+                                </div>}
                         </div>
 
                         <div className='grid overflow-hidden grid-cols-3 h-auto items-center gap-3 mt-5'>
 
-                            {rooomImagesSrc && rooomImagesSrc.map((imageSrc) => (
+                            {roomImagesSrc && roomImagesSrc.map((imageSrc, index) => (
                                 <div className='flex relative h-14 w-14'>
                                     <div className="box rounded-lg h-14 w-14 bg-gray-300 flex items-center">
                                         <img src={imageSrc} className='rounded-lg h-14 w-14 object-cover' />
                                     </div>
-                                    <span className='absolute top-0 -right-1.5 font-medium text-gray-950 p-1 rounded-full bg-gray-100 cursor-pointer hover:bg-gray-200'>
+                                    <span onClick={(e) => removeImage(index)} className='absolute top-0 -right-1.5 font-medium text-gray-950 p-1 rounded-full bg-gray-100 cursor-pointer hover:bg-gray-200'>
                                         <svg className='w-2 h-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M208.49 191.51a12 12 0 0 1-17 17L128 145l-63.51 63.49a12 12 0 0 1-17-17L111 128L47.51 64.49a12 12 0 0 1 17-17L128 111l63.51-63.52a12 12 0 0 1 17 17L145 128Z" /></svg>
                                     </span>
                                 </div>
