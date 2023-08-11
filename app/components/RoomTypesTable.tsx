@@ -111,7 +111,7 @@ export default function RoomTypesTable({ roomTypes }: { roomTypes: any[] }) {
                                     <TableCell className=''>{row.numberofRooms}</TableCell>
                                     <TableCell className=''>{row.adult}</TableCell>
                                     <TableCell className=''>{row.children}</TableCell>
-                                    <TableCell className='w-20 flex items-center gap-2'>
+                                    <TableCell className='w-20' style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                                         <Link
                                             // href={`/bookings/details/${row.id}`}
                                             href='/'
