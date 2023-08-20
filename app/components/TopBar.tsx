@@ -6,8 +6,10 @@ import { useRouter, usePathname } from "next/navigation";
 import Image from 'next/image';
 import logo from '../logo.png'
 import { Drawer } from 'antd';
-import { HambergerMenu, DirectNotification, Setting2, LogoutCurve, People, Notification, Buildings2, Calendar, Messages2, Category, Money2 } from 'iconsax-react';
+import { HambergerMenu, DirectNotification, Setting2, LogoutCurve, People, Buildings2, Calendar, Messages2, Category, Money2, Notification } from 'iconsax-react';
 import { logOutUser } from "../lib/helpers";
+import { makeApiCall } from "../helpers/apiRequest";
+import { format } from "date-fns";
 
 const sidebarLinks = [
     { path: "/", label: "Dashboard", icon: Category },
@@ -18,8 +20,22 @@ const sidebarLinks = [
     { path: "/settings", label: "Settings", icon: Setting2 }
 ];
 
-export default function TopBar({ showNav, setShowNav }: { showNav: boolean; setShowNav: any }) {
-    const logOut = async() => {
+export default function TopBar({ showNav, setShowNav, userId }: { showNav: boolean; setShowNav: any, userId: string }) {
+    const [notifications, setNotifications] = useState<any[] | null>([])
+    // const [notifications, setNotifications] = useState(false)
+
+    useEffect(() => {
+        async function getNotifications(userId: string) {
+            const res = await makeApiCall(`Notification/${userId}`, 'GET')
+            if (res.successful) {
+                setNotifications(res.data as any[])
+            }
+        }
+
+        getNotifications(userId)
+    }, [])
+
+    const logOut = async () => {
         await logOutUser()
         router.push('/login');
     };
@@ -137,54 +153,17 @@ export default function TopBar({ showNav, setShowNav }: { showNav: boolean; setS
                             <div className="relative p-3 flex flex-col gap-4">
                                 <div className="grid grid-cols-1 overflow-hidden w-full h-auto gap-3">
 
-                                    <Link href='/notifications'>
+                                    {notifications?.map((notification, index) => (<Link href='/notifications' key={index}>
                                         <div className='w-full flex items-center gap-2 cursor-pointer border-b pb-2'>
                                             <div className="rounded-full shrink-0 bg-green-200 h-9 w-9 flex items-center justify-center">
                                                 <DirectNotification className="h-4 w-4 text-green-600" />
                                             </div>
                                             <div className='flex flex-col w-full'>
-                                                <p className='text-xs text-[#1a1a1a] hover:text-[#D4AA00] font-medium leading-6 truncate md:w-1/2 w-3/4'>Cillum aliqua est veniam sunt dolore pariatur reprehenderit amet sint dolor commodo aliquip. Elit adipisicing ex cillum nisi reprehenderit qui occaecat proident deserunt eu pariatur duis. Do quis id nisi proident id ea.</p>
-                                                <p className='text-[10px] text-[#636363]'>29 July 2023 - 11:02 PM</p>
+                                                <p className='text-xs text-[#1a1a1a] hover:text-[#D4AA00] font-medium leading-6 truncate md:w-1/2 w-3/4'>{notification.body}</p>
+                                                <p className='text-[10px] text-[#636363]'>{format(new Date(notification.createdDate), 'dd MMMM yyyy - HH:mm')}</p>
                                             </div>
                                         </div>
-                                    </Link>
-
-                                    <Link href='/notifications'>
-                                        <div className='w-full flex items-center gap-2 cursor-pointer border-b pb-2'>
-                                            <div className="rounded-full shrink-0 bg-green-200 h-9 w-9 flex items-center justify-center">
-                                                <DirectNotification className="h-4 w-4 text-green-600" />
-                                            </div>
-                                            <div className='flex flex-col w-full'>
-                                                <p className='text-xs text-[#1a1a1a] hover:text-[#D4AA00] font-medium leading-6 truncate md:w-1/2 w-3/4'>Cillum aliqua est veniam sunt dolore pariatur reprehenderit amet sint dolor commodo aliquip. Elit adipisicing ex cillum nisi reprehenderit qui occaecat proident deserunt eu pariatur duis. Do quis id nisi proident id ea.</p>
-                                                <p className='text-[10px] text-[#636363]'>29 July 2023 - 11:02 PM</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-
-                                    <Link href='/notifications'>
-                                        <div className='w-full flex items-center gap-2 cursor-pointer border-b pb-2'>
-                                            <div className="rounded-full shrink-0 bg-green-200 h-9 w-9 flex items-center justify-center">
-                                                <DirectNotification className="h-4 w-4 text-green-600" />
-                                            </div>
-                                            <div className='flex flex-col w-full'>
-                                                <p className='text-xs text-[#1a1a1a] hover:text-[#D4AA00] font-medium leading-6 truncate md:w-1/2 w-3/4'>Cillum aliqua est veniam sunt dolore pariatur reprehenderit amet sint dolor commodo aliquip. Elit adipisicing ex cillum nisi reprehenderit qui occaecat proident deserunt eu pariatur duis. Do quis id nisi proident id ea.</p>
-                                                <p className='text-[10px] text-[#636363]'>29 July 2023 - 11:02 PM</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-
-                                    <Link href='/notifications'>
-                                        <div className='w-full flex items-center gap-2 cursor-pointer border-b pb-2'>
-                                            <div className="rounded-full shrink-0 bg-green-200 h-9 w-9 flex items-center justify-center">
-                                                <DirectNotification className="h-4 w-4 text-green-600" />
-                                            </div>
-                                            <div className='flex flex-col w-full'>
-                                                <p className='text-xs text-[#1a1a1a] hover:text-[#D4AA00] font-medium leading-6 truncate md:w-1/2 w-3/4'>Cillum aliqua est veniam sunt dolore pariatur reprehenderit amet sint dolor commodo aliquip. Elit adipisicing ex cillum nisi reprehenderit qui occaecat proident deserunt eu pariatur duis. Do quis id nisi proident id ea.</p>
-                                                <p className='text-[10px] text-[#636363]'>29 July 2023 - 11:02 PM</p>
-                                            </div>
-                                        </div>
-                                    </Link>
-
+                                    </Link>))}
                                 </div>
                             </div>
                         </Popover.Panel>

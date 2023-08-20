@@ -22,11 +22,11 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
 
-  const { hotelName } = await getUserInfo();
+  const { hotelName, userId } = await getUserInfo();
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <Layout hotelName={hotelName}>
+        <Layout hotelName={hotelName} userId={userId}>
           {children}
         </Layout>
       </body>
