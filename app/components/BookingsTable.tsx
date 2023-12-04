@@ -135,7 +135,7 @@ export default function BookingsTable({ bookings, title }: { bookings: BookingRe
                                 }}
                                 className='text-xs leading-6 font-[600] uppercase text-[#1a1a1a]'
                             >
-                                <TableCell className="w-8">id</TableCell>
+                                <TableCell className="w-8">S/N</TableCell>
                                 <TableCell className=" ">Booking Number</TableCell>
                                 <TableCell className=" ">Booked By</TableCell>
                                 <TableCell className=" ">Date</TableCell>

@@ -5,8 +5,10 @@ import { forwardRef, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { TableCell, TablePagination, TableRow, Table, TableContainer, TableHead, CircularProgress, TableBody, TextField } from '@mui/material';
 import { IDashboard } from '../models/dashboard';
+import { BookingResponse } from '../models/bookingResponse';
+import { format } from 'date-fns';
 
-export default function Dashboard({ dashboardData }: {dashboardData: IDashboard}) {
+export default function Dashboard({ dashboardData, bookings }: { dashboardData: IDashboard, bookings: BookingResponse[] }) {
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -16,92 +18,43 @@ export default function Dashboard({ dashboardData }: {dashboardData: IDashboard}
         setPage(0);
     };
 
-    const rows = [
-        {
-            userName: 'Chijioke Emechebe',
-            phoneNumber: '0123456789',
-            date: '25-10-2022',
-            numberOfRooms: '02',
-            status: 'checked-in'
-        },
-        {
-            userName: 'John Doe',
-            phoneNumber: '9876543210',
-            date: '15-11-2022',
-            numberOfRooms: '03',
-            status: 'checked-out'
-        },
-        {
-            userName: 'John Doe',
-            phoneNumber: '9876543210',
-            date: '15-11-2022',
-            numberOfRooms: '03',
-            status: 'cancelled'
-        },
-        {
-            userName: 'Jane Smith',
-            phoneNumber: '5555555555',
-            date: '08-12-2022',
-            numberOfRooms: '01',
-            status: 'checked-in'
-        },
-        {
-            userName: 'Chijioke Emechebe',
-            phoneNumber: '0123456789',
-            date: '25-10-2022',
-            numberOfRooms: '02',
-            status: 'checked-in'
-        },
-        {
-            userName: 'John Doe',
-            phoneNumber: '9876543210',
-            date: '15-11-2022',
-            numberOfRooms: '03',
-            status: 'checked-out'
-        },
-        {
-            userName: 'John Doe',
-            phoneNumber: '9876543210',
-            date: '15-11-2022',
-            numberOfRooms: '03',
-            status: 'cancelled'
-        },
-        {
-            userName: 'Chijioke Emechebe',
-            phoneNumber: '0123456789',
-            date: '25-10-2022',
-            numberOfRooms: '02',
-            status: 'checked-in'
-        },
-        {
-            userName: 'John Doe',
-            phoneNumber: '9876543210',
-            date: '15-11-2022',
-            numberOfRooms: '03',
-            status: 'checked-out'
-        },
-    ];
+    const rows = bookings.map((booking) => ({
+        id: booking.id,
+        customerName: booking.fullName,
+        code: booking.code,
+        date: booking.dateRangeString,
+        status: booking.status
+    }))
 
-    const getStatusChip = (status: string) => {
+
+    const getStatusChip = (status: number) => {
         let chipColor = '';
         let chipText = '';
 
         switch (status) {
-            case 'checked-in':
-                chipColor = 'bg-[#EAF5EA] text-[#56CA00]';
-                chipText = 'Checked-in';
-                break;
-            case 'checked-out':
+            case 0:
                 chipColor = 'bg-[#EDEDED] text-[#636363]';
-                chipText = 'Checked-out';
+                chipText = 'Pending';
                 break;
-            case 'cancelled':
+            case 1:
+                chipColor = 'bg-[#EAF5EA] text-[#56CA00]';
+                chipText = 'Running';
+                break;
+            case 2:
+                chipColor = 'bg-[#EAF5EA] text-[#56CA00]';
+                chipText = 'Completed';
+                break;
+            case 3:
                 chipColor = 'bg-[#FFF1F1] text-[#FF4C51]';
                 chipText = 'Cancelled';
                 break;
+            case 4:
+                chipColor = 'bg-[#EAF5EA] text-[#56CA00]';
+                chipText = 'Confirmed';
+                break;
             default:
-                chipColor = 'bg-[#F9FAFC] text-[#6366F1]';
-                chipText = status;
+                chipColor = 'bg-[#EAF5EA] text-[#56CA00]';
+                chipText = 'Pending';
         }
 
         return (
@@ -207,24 +160,24 @@ export default function Dashboard({ dashboardData }: {dashboardData: IDashboard}
                                     }}
                                     className='text-xs leading-6 font-[600] uppercase text-[#1a1a1a]'
                                 >
-                                    <TableCell className=" ">Name</TableCell>
-                                    <TableCell className=" ">Phone</TableCell>
+                                    <TableCell className="w-8">S/N</TableCell>
+                                    <TableCell className=" ">Booking Number</TableCell>
+                                    <TableCell className=" ">Booked By</TableCell>
                                     <TableCell className=" ">Date</TableCell>
-                                    <TableCell className=" ">No. of rooms</TableCell>
                                     <TableCell className=" ">Status</TableCell>
-                                    <TableCell className="w-16 md:w-20">Action</TableCell>
+                                    <TableCell className="w-20">Action</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
                                     <TableRowStyled key={index}>
-                                        <TableCell>{row.userName}</TableCell>
-                                        <TableCell>{row.phoneNumber}</TableCell>
-                                        <TableCell>{row.date}</TableCell>
-                                        <TableCell>{row.numberOfRooms}</TableCell>
+                                        <TableCell className='w-8'>{index + 1}</TableCell>
+                                        <TableCell className='text-[0.875rem]'>{row.code}</TableCell>
+                                        <TableCell className='font-medium'>{row.customerName}</TableCell>
+                                        <TableCell className='tracking-wider'>{row.date}</TableCell>
                                         <TableCell>{getStatusChip(row.status)}</TableCell>
-                                        <TableCell className='w-16 md:w-20'>
-                                            <Link href='/'
+                                        <TableCell className='w-20'>
+                                            <Link href={`/bookings/details/${row.id}`}
                                             >
                                                 <Eye size={18} className='text-[#636363] hover:text-[#1a1a1a] cursor-pointer' />
                                             </Link>
