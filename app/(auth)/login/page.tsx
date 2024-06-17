@@ -25,6 +25,9 @@ function Login() {
         try {
             const response = await fetch(`${baseUrl}Auth/Staff/SignIn`, {
                 method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+            }
                 body: JSON.stringify({ email, password })
             })
 
