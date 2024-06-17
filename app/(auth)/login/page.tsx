@@ -9,6 +9,7 @@ import { message } from 'antd';
 import { cookies } from 'next/dist/client/components/headers';
 
 function Login() {
+    const baseUrl = process.env.NEXT_PUBLIC_REACT_API_BASE_URL
     const router = useRouter()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -22,7 +23,7 @@ function Login() {
     async function loginUser() {
         setIsLoading(true)
         try {
-            const response = await fetch('api/login', {
+            const response = await fetch(`${baseUrl}api/login`, {
                 method: 'POST',
                 body: JSON.stringify({ email, password })
             })
