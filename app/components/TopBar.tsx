@@ -18,7 +18,7 @@ const sidebarLinks = [
     { path: "/bookings", label: "Bookings", icon: Calendar, isAdmin: false },
     { path: "/hotel", label: "Manage Hotel", icon: Buildings2, isAdmin: true },
     { path: "/notifications", label: "Notifications", icon: Notification, isAdmin: false },
-    { path: "/settings", label: "Settings", icon: Setting2, isAdmin: true },
+    { path: "/settings", label: "Settings", icon: Setting2, isAdmin: false },
 ];
 
 export default function TopBar({ showNav, setShowNav, userId, accountType }: { showNav: boolean; setShowNav: any, userId: string, accountType: number }) {
