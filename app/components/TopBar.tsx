@@ -4,23 +4,24 @@ import { Menu, Transition, Popover } from "@headlessui/react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import Image from 'next/image';
-import logo from '../logo.png'
+import logo from '../logo.png';
 import { Drawer } from 'antd';
 import { HambergerMenu, DirectNotification, Setting2, LogoutCurve, People, Buildings2, Calendar, Messages2, Category, Money2, Notification } from 'iconsax-react';
 import { logOutUser } from "../lib/helpers";
 import { makeApiCall } from "../helpers/apiRequest";
 import { format } from "date-fns";
+import { is } from "date-fns/locale";
 
 const sidebarLinks = [
-    { path: "/", label: "Dashboard", icon: Category },
-    { path: "/staffs", label: "Staffs", icon: People },
-    { path: "/bookings", label: "Bookings", icon: Calendar },
-    { path: "/hotel", label: "Manage Hotel", icon: Buildings2 },
-    { path: "/notifications", label: "Notifications", icon: Notification },
-    { path: "/settings", label: "Settings", icon: Setting2 }
+    { path: "/", label: "Dashboard", icon: Category, isAdmin: false },
+    { path: "/staffs", label: "Staffs", icon: People, isAdmin: true },
+    { path: "/bookings", label: "Bookings", icon: Calendar, isAdmin: false },
+    { path: "/hotel", label: "Manage Hotel", icon: Buildings2, isAdmin: true },
+    { path: "/notifications", label: "Notifications", icon: Notification, isAdmin: false },
+    { path: "/settings", label: "Settings", icon: Setting2, isAdmin: true },
 ];
 
-export default function TopBar({ showNav, setShowNav, userId }: { showNav: boolean; setShowNav: any, userId: string }) {
+export default function TopBar({ showNav, setShowNav, userId, accountType }: { showNav: boolean; setShowNav: any, userId: string, accountType: number }) {
     const [notifications, setNotifications] = useState<any[] | null>([])
     // const [notifications, setNotifications] = useState(false)
 
@@ -108,19 +109,23 @@ export default function TopBar({ showNav, setShowNav, userId }: { showNav: boole
 
 
                 <div className="flex flex-col gap-y-4 px-2 text-sm">
-                    {sidebarLinks.map(({ path, label, icon: Icon }) => (
-                        <Link key={path} href={path}>
-                            <div
-                                className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${isLinkActive(path)
-                                    ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
-                                    : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
-                                    }`}
-                            >
-                                <Icon className="h-5 w-5" variant="Bold" />
-                                <p className="">{label}</p>
-                            </div>
-                        </Link>
-                    ))}
+                    {sidebarLinks.map(({ path, label, icon: Icon, isAdmin }) => {
+                        if (isAdmin && accountType === 3) return;
+
+                        return (
+                            <Link key={path} href={path}>
+                                <div
+                                    className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${isLinkActive(path)
+                                        ? "bg-[#fff7d8] text-[#D4AA00] rounded-xl"
+                                        : "text-[#636363] hover:bg-[#FFF7D8] hover:text-[#D4AA00] rounded-xl"
+                                        }`}
+                                >
+                                    <Icon className="h-5 w-5" variant="Bold" />
+                                    <p className="">{label}</p>
+                                </div>
+                            </Link>
+                        )
+                    })}
 
                     <div
                         className={`px-5 py-3 text-center cursor-pointer flex items-center gap-3 transition-colors ${isLinkActive("/#")

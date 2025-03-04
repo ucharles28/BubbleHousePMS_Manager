@@ -6,7 +6,7 @@ import SideBar from "./Sidebar";
 import NProgress from "./NProgress";
 
 
-export default function Layout({ children, hotelName, userId }: { children: React.ReactNode, hotelName : string, userId: string }) {
+export default function Layout({ children, hotelName, userId, accountType }: { children: React.ReactNode, hotelName : string, userId: string, accountType: number }) {
     const [showNav, setShowNav] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
 
@@ -37,7 +37,7 @@ export default function Layout({ children, hotelName, userId }: { children: Reac
 
                 <div className="w-full h-full flex-1 flex-col justify-between">
                     {/* Header */}
-                    <TopBar showNav={showNav} setShowNav={setShowNav} userId={userId}/>
+                    <TopBar showNav={showNav} setShowNav={setShowNav} userId={userId} accountType={accountType}/>
 
                     {/* Main Content */}
                     <main

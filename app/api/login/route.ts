@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const loginResponse = await makeApiCall('Auth/Staff/SignIn', 'POST', { email, password })
 
     if (loginResponse.successful) {
-      const user = { hotelId: loginResponse.data.hotel.hotelId, userId: loginResponse.data.id, hotelName: loginResponse.data.hotel.hotel.name } as User
+      const user = { hotelId: loginResponse.data.hotel.hotelId, userId: loginResponse.data.id, hotelName: loginResponse.data.hotel.hotel.name, accountType: loginResponse.data.accountType } as User
       const response = new NextResponse(
         JSON.stringify(user),
         {
