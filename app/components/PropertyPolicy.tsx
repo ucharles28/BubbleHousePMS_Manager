@@ -143,12 +143,12 @@ export default function ProperyPolicy({ propertyPolicyPayload, hotelId }: { prop
 
                         <div className="flex flex-col space-y-1">
                             <label className="text-xs font-medium leading-5 text-gray-700">
-                                Are children allowed?
+                                Are pets allowed?
                             </label>
                             <input
                                 type="text"
-                                value={propertyPolicy.internet}
-                                onChange={(e) => setPropertyPolicy((prev) => ({ ...prev, internet: e.target.value }))}
+                                value={propertyPolicy.pets}
+                                onChange={(e) => setPropertyPolicy((prev) => ({ ...prev, pets: e.target.value }))}
                                 // placeholder="eg. Deluxe"
                                 className="w-full border border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal p-3 pl-2 focus:outline-0 bg-transparent rounded-md"
                             />
