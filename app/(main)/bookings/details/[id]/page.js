@@ -6,6 +6,7 @@ import { Suspense } from 'react';
 
 async function getBookingDetails(bookingId) {
   const res = await makeApiCall(`Booking/${bookingId}`, 'GET')
+  console.log(res.data)
   if (res.successful) {
     return res.data
   }
@@ -17,9 +18,11 @@ async function getAvailableRooms(booking, hotelId) {
     checkInDate: booking.checkInDate,
     checkOutDate: booking.checkOutDate,
     hotelId,
-    roomTypeId: null
+    bookingId: booking.id,
+    roomTypeIds: booking.roomTypes.map((roomType) => roomType.roomTypeId)
   }
   const res = await makeApiCall(`Room/Hotel/GetAvailableRooms`, 'POST', req)
+
   if (res.successful) {
     return res.data
   }

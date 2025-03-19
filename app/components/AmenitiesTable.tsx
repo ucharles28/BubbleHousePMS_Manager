@@ -26,6 +26,7 @@ export default async function AmenitiesTable({ amenities, hotelId }: { amenities
 
     const handleClose = () => {
         setOpenDialog(false);
+        console.log('close dialog')
         // setOpenUpdateDialog(false);
     };
 
@@ -71,8 +72,8 @@ export default async function AmenitiesTable({ amenities, hotelId }: { amenities
     return (
         <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
             <div className='flex flex-col items-end gap-y-1 md:flex-row w-full'>
-                <p className='block w-full text-xl font-medium text-[#1A1A1A] leading-6'>
-                    Amenities
+                <p className='block w-full text-xl font-medium text-[#1A1A1A] leading-6 flex'>
+                    Amenities 
                 </p>
 
                 <div className='flex justify-end gap-2 w-full'>
