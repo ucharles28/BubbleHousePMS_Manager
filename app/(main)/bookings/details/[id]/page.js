@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 
 async function getBookingDetails(bookingId) {
   const res = await makeApiCall(`Booking/${bookingId}`, 'GET')
-  console.log(res.data)
+ 
   if (res.successful) {
     return res.data
   }

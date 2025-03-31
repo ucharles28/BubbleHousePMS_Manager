@@ -45,7 +45,6 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
 
     useEffect(() => {
         if (selectedRooms && selectedRooms.length > 0) {
-            console.log(selectedRooms)
             const rooms = selectedRooms.map((selectedRoom) => {
                 const room = availableRooms.find(item => String(item.id) === selectedRoom.value)
                 return {
@@ -77,12 +76,11 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                 const bookedRooms: BookedRoom[] = booking.bookedRooms as BookedRoom[]
 
                 const selected = roomsOptions.map(room => {
-                    if (bookedRooms.some(item => item.roomId === room.value)) {
+                    if (bookedRooms.some(item => String(item.roomId) === room.value)) {
                         return room
                     }
                 })
-                console.log(selected)
-                // setSelectedRooms(selected)
+                setSelectedRooms(selected as MultiValue<OptionType>)
             }
         }
     }, [booking])
@@ -153,7 +151,6 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
 
         const response = await makeApiCall(`Booking/${booking.id}`, 'PUT', req)
 
-        console.log(response)
 
         if (response.successful) {
             message.success('Booking updated successfully')
@@ -164,7 +161,6 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
     }
 
     function getRoomTypesText(roomTypes: any[]) {
-        console.log(roomTypes)
         let roomTypesText = ''
 
         roomTypes.forEach((roomType, index) => {
@@ -173,7 +169,6 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                 roomTypesText += ', '
             }
         })
-        console.log(roomTypesText)
         return roomTypesText
     }
 
@@ -293,6 +288,16 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                         <p className='text-sm font-normal text-[#636363]'>Estimated Arrival Time</p>
                         <p className='text-sm font-medium text-[#1A1A1A]'>
                             {booking?.estimatedArrivalTime}
+                        </p>
+                    </div>
+
+                    <div className='flex flex-col gap-2'>
+                        <p className='text-sm font-normal text-[#636363]'>Room Number(s)</p>
+                        <p
+                            className='text-sm font-medium text-[#1A1A1A]'
+                            onClick={handleClickOpen}
+                        >
+                            {booking.bookedRooms ? booking.bookedRooms.map((bookedRoom : any) => bookedRoom.room.roomNumber).join(', ') : 'None'} 
                         </p>
                     </div>
 
