@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/bookings/details/[id]/page.js", "app/components/BookRoom.js", "app/components/CreateAmenitiesDialog.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/bookings/details/[id]/page.js", "app/components/BookRoom.js", "app/components/CreateAmenitiesDialog.js", "app/components/UpgradeRoom.jsx"],
   "exclude": ["node_modules"]
 }

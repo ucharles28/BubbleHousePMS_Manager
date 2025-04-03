@@ -31,7 +31,6 @@ function Login() {
             })
 
             if (response.ok) { 
-                //console.log(await response.json())           
                 router.push('/')
             } else {
                 message.error(response.json())

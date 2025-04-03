@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 
 async function getBookingDetails(bookingId) {
   const res = await makeApiCall(`Booking/${bookingId}`, 'GET')
- 
+
   if (res.successful) {
     return res.data
   }
@@ -28,6 +28,7 @@ async function getAvailableRooms(booking, hotelId) {
   }
 }
 
+
 async function BookingDetailsPage(param) {
   const { hotelId } = await getUserInfo()
   let booking = {}
@@ -37,11 +38,9 @@ async function BookingDetailsPage(param) {
     availbleRooms = await getAvailableRooms(booking, hotelId)
   }
 
-
-
   return (
     <Suspense fallback={<Loading />}>
-      <BookingDetails booking={booking} availableRooms={availbleRooms} />
+      <BookingDetails booking={booking} availableRooms={availbleRooms} hotelId={hotelId} />
     </Suspense>
   )
 }

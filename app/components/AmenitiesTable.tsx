@@ -26,7 +26,6 @@ export default async function AmenitiesTable({ amenities, hotelId }: { amenities
 
     const handleClose = () => {
         setOpenDialog(false);
-        console.log('close dialog')
         // setOpenUpdateDialog(false);
     };
 

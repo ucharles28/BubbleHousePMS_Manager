@@ -111,7 +111,6 @@ const CreateAmenitiesDialog = ({ open, onClose, confirmationTitle, hotelId, amen
     // const [question, setQuestion] = useState(faq ? faq.question : '')
     const [selectedOption, setSelectedOption] = useState(null)
     useEffect(() => {
-        console.log('from useEffect', amenity)
         if (amenity) {
             setTitle(amenity.title)
             setSelectedOption(iconOptions.find((option) => option.value === amenity.icon))

@@ -3,15 +3,22 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import Fade from '@mui/material/Fade';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import { OptionType } from '../models/optionType';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Menu } from '@mui/material';
 import { makeApiCall } from '../helpers/apiRequest';
 import { message } from 'antd';
 import { ArrowLeft2 } from 'iconsax-react';
 import { useRouter } from 'next/navigation';
+import UpgradeRoom from './UpgradeRoom';
+import Box from '@mui/material/Box';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 type Room = {
     roomNumber: string
@@ -23,8 +30,19 @@ type BookedRoom = {
 }
 
 
+const bookingStatusOptions: OptionType[] = [
+    {
+        label: 'Check In',
+        value: '1'
+    },
+    {
+        label: 'Check Out',
+        value: '2'
+    }
+]
 
-export default function BookingDetails({ booking, availableRooms = [] }: { booking: any, availableRooms: any[] }) {
+
+export default function BookingDetails({ booking, availableRooms = [], hotelId }: { booking: any, availableRooms: any[], hotelId: string }) {
     const router = useRouter()
 
     const [selectedRooms, setSelectedRooms] = useState<MultiValue<OptionType> | null>([])
@@ -38,9 +56,38 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
     const [subTotal, setSubTotal] = useState(0)
     const [totalAmount, setTotalAmount] = useState(0)
     const [selectedBookingStatus, setSelectedBookingStatus] = useState<SingleValue<OptionType> | null>()
+    const [openDialog, setOpenDialog] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(false);
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
+
+
+    const roomsOptions: OptionType[] = availableRooms.map((room) => (
+        {
+            value: String(room.id),
+            label: String(room.roomNumber)
+        }
+    ))
 
     const goBack = () => {
         router.back()
+    }
+
+
+    const handleRoomSelect = (selected: MultiValue<OptionType>) => {
+        const totalNumberOfRoomsBooked = getTotalBookedRooms(booking?.roomTypes)
+        if (selected.length > totalNumberOfRoomsBooked) {
+            return;
+        }
+
+        setSelectedRooms(selected)
     }
 
     useEffect(() => {
@@ -49,7 +96,7 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                 const room = availableRooms.find(item => String(item.id) === selectedRoom.value)
                 return {
                     roomNumber: room.roomNumber,
-                    price: Number(room.roomType.price)
+                    price: Number(room.price)
                 }
             })
 
@@ -75,35 +122,13 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
             if (booking.bookedRooms) {
                 const bookedRooms: BookedRoom[] = booking.bookedRooms as BookedRoom[]
 
-                const selected = roomsOptions.map(room => {
-                    if (bookedRooms.some(item => String(item.roomId) === room.value)) {
-                        return room
-                    }
-                })
+                const selected = roomsOptions.filter(room => (bookedRooms.some(item => String(item.roomId) === room.value)))
                 setSelectedRooms(selected as MultiValue<OptionType>)
             }
         }
     }, [booking])
 
-    const roomsOptions: OptionType[] = availableRooms.map((room) => (
-        {
-            value: String(room.id),
-            label: String(room.roomNumber)
-        }
-    ))
 
-    const bookingStatusOptions: OptionType[] = [
-        {
-            label: 'Check In',
-            value: '1'
-        },
-        {
-            label: 'Check Out',
-            value: '2'
-        }
-    ]
-
-    const [openDialog, setOpenDialog] = useState(false);
 
     const handleClickOpen = () => {
         setOpenDialog(true);
@@ -111,6 +136,14 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
 
     const handleClose = () => {
         setOpenDialog(false);
+    };
+
+
+    const handleCloseDrawer = (refresh: boolean = false) => {
+        setOpenDrawer(false);
+        if (refresh) {
+            router.refresh()
+        }
     };
 
 
@@ -182,6 +215,11 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
         return totalBookedRooms
     }
 
+    function handleUpgradeRoom() {
+        setOpenDrawer(true)
+        handleCloseMenu();
+    }
+
     return (
         <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
             <div className='flex items-center justify-between gap-y-1 w-full'>
@@ -189,11 +227,52 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                     Booking details of {booking?.code}
                 </p>
 
-                <div
-                    onClick={goBack}
-                    className="px-2 py-1 rounded-lg flex items-center cursor-pointer bg-white hover:bg-[#f9f9f9] border-2 border-[#E4E4E4] text-gray-600 hover:text-gray-800">
-                    <ArrowLeft2 size={14} />
-                    <span className="text-xs font-medium leading-6">Back</span>
+                <div className='flex justify-end items-center gap-2 w-full'>
+
+                    <button
+                        onClick={goBack}
+                        className="px-2 py-1.5 rounded-lg flex items-center cursor-pointer bg-white hover:bg-[#f9f9f9] border-2 border-[#E4E4E4] text-gray-500 hover:text-gray-800">
+                        <ArrowLeft2 size={14} />
+                        <span className="text-xs font-medium leading-6">Back</span>
+                    </button>
+
+                    {/* <button
+                        type="button"
+                        className="w-auto bg-[#1a1a1a]/50 hover:bg-[#636363] uppercase text-white font-medium leading-6 rounded-lg text-xs text-center px-2.5 py-1.5"
+                        onClick={handleClickOpen}
+                    >
+                        Add New
+                    </button> */}
+
+                    <>
+                        <Button
+                            id="fade-button"
+                            // xs={{ background: '#1a1a1a', color: '#ffff' }}
+                            className='bg-[#1a1a1a]/50 hover:bg-[#636363] text-white text-xs font-medium flex items-center px-2 py-2'
+                            aria-controls={open ? 'fade-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleClick}
+                            endIcon={<KeyboardArrowDownIcon />}
+                        >
+                            More Options
+                        </Button>
+                        <Menu
+                            id="fade-menu"
+                            MenuListProps={{
+                                'aria-labelledby': 'fade-button',
+                            }}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleCloseMenu}
+                            TransitionComponent={Fade}
+                        >
+                            <MenuItem onClick={handleUpgradeRoom}>Upgrade Room</MenuItem>
+                            {/* <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={handleClose}>Logout</MenuItem> */}
+                        </Menu>
+                    </>
+
                 </div>
             </div>
             <div className='flex flex-col gap-y-11 w-full'>
@@ -297,7 +376,7 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                             className='text-sm font-medium text-[#1A1A1A]'
                             onClick={handleClickOpen}
                         >
-                            {booking.bookedRooms ? booking.bookedRooms.map((bookedRoom : any) => bookedRoom.room.roomNumber).join(', ') : 'None'} 
+                            {booking.bookedRooms ? booking.bookedRooms.map((bookedRoom: any) => bookedRoom.room.roomNumber).join(', ') : 'None'}
                         </p>
                     </div>
 
@@ -313,11 +392,12 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
 
                 </div>
 
-                <Dialog 
-                open={openDialog} 
-                onClose={handleClose}
-                maxWidth={'sm'}
-                fullWidth={true}
+                {/* Dialog */}
+                <Dialog
+                    open={openDialog}
+                    onClose={handleClose}
+                    maxWidth={'sm'}
+                    fullWidth={true}
                 >
                     <DialogTitle
                         className='font-poppins'
@@ -344,6 +424,17 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                     </DialogContent>
                 </Dialog>
 
+                {/* Drawer */}
+                <Drawer
+                    anchor={'right'}
+                    open={openDrawer}
+                    onClose={() => handleCloseDrawer()}
+                >
+                    <Box sx={{ width: 550 }} role="presentation">
+                        <UpgradeRoom bookedRoomTypes={booking?.roomTypes} bookedRooms={roomsOptions} hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />
+                    </Box>
+                </Drawer>
+
                 <div className='grid grid-cols-1 md:grid-cols-2 w-full gap-4'>
 
                     <div className='flex flex-col gap-5 w-full'>
@@ -354,7 +445,7 @@ export default function BookingDetails({ booking, availableRooms = [] }: { booki
                                 isMulti
                                 options={roomsOptions}
                                 value={selectedRooms}
-                                onChange={(e) => setSelectedRooms(e)}
+                                onChange={(e) => handleRoomSelect(e)}
                                 className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
                                 // placeholder='eg. WiFi'
                                 classNamePrefix="select"
