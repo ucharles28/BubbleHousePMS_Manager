@@ -14,6 +14,10 @@ async function getBookingDetails(bookingId) {
 
 
 async function getAvailableRooms(booking, hotelId) {
+  if (!booking || Object.keys(booking).length === 0) {
+    return []
+  }
+
   const req = {
     checkInDate: booking.checkInDate,
     checkOutDate: booking.checkOutDate,
@@ -27,7 +31,6 @@ async function getAvailableRooms(booking, hotelId) {
     return res.data
   }
 }
-
 
 async function BookingDetailsPage(param) {
   const { hotelId } = await getUserInfo()

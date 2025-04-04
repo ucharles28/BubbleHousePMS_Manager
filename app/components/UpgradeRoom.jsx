@@ -141,7 +141,7 @@ const UpgradeRoom = ({ bookedRooms, bookedRoomTypes, hotelId, booking, onClose }
 
     return (
 
-        <div className='flex flex-col p-4 h-screen gap-4 p-4'>
+        <div className='flex flex-col p-4 h-screen gap-4 p-4 w-full'>
             <div className="flex flex-col gap-8">
                 <p className='block md:w-full text-xl font-medium text-[#1A1A1A] leading-6'>
                     Upgrade Room
@@ -182,7 +182,7 @@ const UpgradeRoom = ({ bookedRooms, bookedRoomTypes, hotelId, booking, onClose }
                     </div>
 
                     <div className='grid grid-cols-3 gap-4 w-full items-center'>
-                        <label className='text-sm font-font-normal text-[#1A1A1A]'>Total Amount</label>
+                        <label className='text-sm font-font-normal text-[#1A1A1A]'>Rate Per Night: </label>
                         <input
                             type="number"
                             value={totalAmount}

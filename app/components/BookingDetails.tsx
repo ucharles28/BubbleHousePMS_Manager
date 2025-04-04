@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import UpgradeRoom from './UpgradeRoom';
 import Box from '@mui/material/Box';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AmendStay from './AmendStay';
 
 type Room = {
     roomNumber: string
@@ -58,9 +59,12 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
     const [selectedBookingStatus, setSelectedBookingStatus] = useState<SingleValue<OptionType> | null>()
     const [openDialog, setOpenDialog] = useState(false);
     const [openDrawer, setOpenDrawer] = useState(false);
+    const [menuIndex, setMenuIndex] = useState(0);
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const daysDiff = dateDiffInDays(new Date(booking.checkInDate), new Date(booking.checkOutDate))
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -78,6 +82,15 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
 
     const goBack = () => {
         router.back()
+    }
+
+    function dateDiffInDays(a: Date, b: Date) {
+        const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+        // Discard the time and time-zone information.
+        const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+        const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+        return Math.floor((utc2 - utc1) / _MS_PER_DAY);
     }
 
 
@@ -100,7 +113,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                 }
             })
 
-            let totalRoomsPrice = rooms.map(item => item.price).reduce((prev, next) => prev + next);
+            let totalRoomsPrice = rooms.map(item => item.price).reduce((prev, next) => prev + next) * daysDiff;
 
             const theVat = 0.075 * totalRoomsPrice
             const theStateTax = 0.05 * totalRoomsPrice
@@ -145,7 +158,6 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
             router.refresh()
         }
     };
-
 
     async function confirmBooking() {
         setIsApproving(true)
@@ -215,7 +227,8 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
         return totalBookedRooms
     }
 
-    function handleUpgradeRoom() {
+    function handleMenuClick(index: number) {
+        setMenuIndex(index)
         setOpenDrawer(true)
         handleCloseMenu();
     }
@@ -267,9 +280,9 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                             onClose={handleCloseMenu}
                             TransitionComponent={Fade}
                         >
-                            <MenuItem onClick={handleUpgradeRoom}>Upgrade Room</MenuItem>
-                            {/* <MenuItem onClick={handleClose}>My account</MenuItem>
-                            <MenuItem onClick={handleClose}>Logout</MenuItem> */}
+                            <MenuItem onClick={() => handleMenuClick(0)}>Upgrade Room</MenuItem>
+                            <MenuItem onClick={() => handleMenuClick(1)}>Extend Stay</MenuItem>
+                            {/*<MenuItem onClick={handleClose}>Logout</MenuItem> */}
                         </Menu>
                     </>
 
@@ -430,9 +443,10 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                     open={openDrawer}
                     onClose={() => handleCloseDrawer()}
                 >
-                    <Box sx={{ width: 550 }} role="presentation">
-                        <UpgradeRoom bookedRoomTypes={booking?.roomTypes} bookedRooms={roomsOptions} hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />
-                    </Box>
+                    <div className="flex w-full md:w-[350px] lg:w-[550px] h-full">
+                        {menuIndex == 0 && <UpgradeRoom bookedRoomTypes={booking?.roomTypes} bookedRooms={roomsOptions} hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
+                        {menuIndex == 1 && <AmendStay booking={booking} onClose={handleCloseDrawer} />}
+                    </div>
                 </Drawer>
 
                 <div className='grid grid-cols-1 md:grid-cols-2 w-full gap-4'>
@@ -476,7 +490,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                                 </div>
                                 {roomsToBook.map((room) => (<div className='flex w-full justify-between text-[#636363]'>
                                     <p className='text-sm font-normal'>{room.roomNumber}</p>
-                                    <p className='text-sm font-normal text-right'>NGN {room.price.toLocaleString()}</p>
+                                    <p className='text-sm font-normal text-right'>NGN {(room.price * daysDiff).toLocaleString()}</p>
                                 </div>))}
                                 <div className='flex w-full justify-between pb-1 border-b border-b-[#E4E4E4]'>
                                     <p className='text-sm font-normal text-[#636363]'>Sub Total</p>
