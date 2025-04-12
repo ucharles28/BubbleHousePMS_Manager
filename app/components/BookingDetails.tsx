@@ -104,7 +104,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
     }
 
     useEffect(() => {
-        if (selectedRooms && selectedRooms.length > 0) {
+        if (selectedRooms && selectedRooms.length > 0 && booking.isComplementary) {
             const rooms = selectedRooms.map((selectedRoom) => {
                 const room = availableRooms.find(item => String(item.id) === selectedRoom.value)
                 return {
@@ -122,6 +122,11 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
             setStateTax(theStateTax)
             setSubTotal(totalRoomsPrice)
             setRoomsToBook(rooms)
+        } else {
+            setTotalAmount(0)
+            setVat(0)
+            setStateTax(0)
+            setSubTotal(0)          
         }
     }, [selectedRooms])
 

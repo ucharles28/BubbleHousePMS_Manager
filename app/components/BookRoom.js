@@ -8,7 +8,7 @@ import { OptionType } from "../models/optionType"
 import { format } from "date-fns"
 import ReactCalendar from "react-calendar";
 import { makeApiCall } from "../helpers/apiRequest"
-import { CircularProgress } from "@mui/material"
+import { Checkbox, CircularProgress } from "@mui/material"
 import { message } from "antd"
 
 
@@ -25,6 +25,8 @@ export default function BookRoom({ roomTypes, hotelId }) {
     const [rooms, setRooms] = useState([]);
     const [selectedRooms, setSelectedRooms] = useState([]);
     const [searchRoomIsLoading, setSearchRoomIsLoading] = useState(false);
+    const [isComplementary, setIsComplementary] = useState(false);
+    const [checkin, setCheckin] = useState(false);
     const [stateTax, setStateTax] = useState(0)
     const [subTotal, setSubTotal] = useState(0)
     const [totalAmount, setTotalAmount] = useState(0)
@@ -41,9 +43,10 @@ export default function BookRoom({ roomTypes, hotelId }) {
     };
 
     useEffect(() => {
-        if (selectedRooms.length > 0) {
+        if (selectedRooms.length > 0 && !isComplementary) {
             const days = dateDiffInDays(dateFrom, dateTo)
-            let totalRoomsPrice = selectedRooms.map(item => item.roomType.price).reduce((prev, next) => prev + next);
+            setNumberOfDays(days)
+            let totalRoomsPrice = selectedRooms.map(item => item.price).reduce((prev, next) => prev + next);
             totalRoomsPrice *= days
             const theVat = 0.075 * totalRoomsPrice
             const theStateTax = 0.05 * totalRoomsPrice
@@ -52,14 +55,13 @@ export default function BookRoom({ roomTypes, hotelId }) {
             setStateTax(theStateTax)
             setSubTotal(totalRoomsPrice)
 
-            setNumberOfDays(days)
         } else {
             setTotalAmount(0)
             setVat(0)
             setStateTax(0)
             setSubTotal(0)
         }
-    }, [selectedRooms])
+    }, [selectedRooms, isComplementary])
 
     const roomTypesOption = roomTypes.map((roomType) => (
         { value: roomType.id, label: roomType.name }
@@ -103,20 +105,19 @@ export default function BookRoom({ roomTypes, hotelId }) {
             phone,
             StateTaxAmount: stateTax,
             totalAmount,
+            isComplementary,
             totalRoomPrice: subTotal,
+            checkIn: checkin,
             bookedRoomIds: selectedRooms.map((room) => room.id),
             totalAmountPaid: Number(payingAmount),
             totalAdults: 1
         }
-        const groupedRooms = groupBy(selectedRooms, "roomTypeId");
-        const bookedRoomTypeList = Object.keys(groupedRooms).map((key) => {
-            const roomType = groupedRooms[key][0].roomType
-            return {
-                numberBookedRooms: groupedRooms[key].length,
-                roomPrice: roomType.price,
-                roomTypeId: roomType.id
-            }
-        })
+
+        const bookedRoomTypeList = [{
+            numberBookedRooms: selectedRooms.length,
+            roomPrice: selectedRooms[0].price,
+            roomTypeId: selectedRooms[0].roomTypeId
+        }]
 
         request.roomTypes = bookedRoomTypeList
 
@@ -173,7 +174,7 @@ export default function BookRoom({ roomTypes, hotelId }) {
         const request = {
             checkInDate: dateFrom,
             checkOutDate: dateTo,
-            roomTypeId: selectedRoomType.value,
+            roomTypeIds: [selectedRoomType.value],
             numberOfRooms,
             hotelId
         }
@@ -211,75 +212,82 @@ export default function BookRoom({ roomTypes, hotelId }) {
             </div>
 
             <div className='flex flex-col gap-y-11 w-full'>
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-3 w-full'>
-
-                    <div className="flex flex-col gap-1 w-full md:col-span-1">
-                        <label className='text-xs font-medium leading-5 text-gray-700'>Room Type</label>
-                        <Select
-                            options={roomTypesOption}
-                            value={selectedRoomType}
-                            onChange={handleRoomTypeSelectChange}
-                            className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
-                            placeholder='Select room type'
-                            classNamePrefix="select"
-                        />
+                <div className="flex flex-col gap-1 w-full">
+                    <div className="flex items-end justify-end w-full">
+                        <div className="flex gap-2 items-center justify-end w-full">
+                            <Checkbox checked={isComplementary} onChange={(e) => setIsComplementary(e.target.checked)} />
+                            <p className='text-sm text-[#636363] font-medium leading-6 w-full'>Complementary Room</p>
+                        </div>
                     </div>
-
-                    <div className="relative flex flex-col gap-1 w-full md:col-span-1">
-                        <label className='text-xs font-medium leading-5 text-gray-700'>Check In/Out</label>
-                        <div
-                            className="bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md flex items-center gap-2 cursor-pointer"
-                            onClick={datePickerHandler}
-                        >
-                            {`${format(dateFrom, "dd-MM-yyy")} - ${format(
-                                dateTo,
-                                "dd-MM-yyy"
-                            )}`}
+                    <div className='grid grid-cols-1 md:grid-cols-3 gap-3 w-full'>
+                        <div className="flex flex-col gap-1 w-full md:col-span-1">
+                            <label className='text-xs font-medium leading-5 text-gray-700'>Room Type</label>
+                            <Select
+                                options={roomTypesOption}
+                                value={selectedRoomType}
+                                onChange={handleRoomTypeSelectChange}
+                                className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
+                                placeholder='Select room type'
+                                classNamePrefix="select"
+                            />
                         </div>
 
-                        {openDate && (
-                            <div className="absolute mt-16 left-0">
-                                <ReactCalendar
-                                    selectRange
-                                    prev2Label={null}
-                                    next2Label={null}
-                                    minDetail="month"
-                                    value={[dateFrom, dateTo]}
-                                    onChange={(res) => {
-                                        setDateFrom(res[0])
-                                        setDateTo(res[1])
-                                    }}
-                                    tileDisabled={(day) => {
-                                        return day.date.getDay() === 0;
-                                    }}
-                                />
+                        <div className="relative flex flex-col gap-1 w-full md:col-span-1">
+                            <label className='text-xs font-medium leading-5 text-gray-700'>Check In/Out</label>
+                            <div
+                                className="bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md flex items-center gap-2 cursor-pointer"
+                                onClick={datePickerHandler}
+                            >
+                                {`${format(dateFrom, "dd-MM-yyy")} - ${format(
+                                    dateTo,
+                                    "dd-MM-yyy"
+                                )}`}
                             </div>
-                        )}
+
+                            {openDate && (
+                                <div className="absolute mt-16 left-0">
+                                    <ReactCalendar
+                                        selectRange
+                                        prev2Label={null}
+                                        next2Label={null}
+                                        minDetail="month"
+                                        value={[dateFrom, dateTo]}
+                                        onChange={(res) => {
+                                            setDateFrom(res[0])
+                                            setDateTo(res[1])
+                                        }}
+                                        tileDisabled={(day) => {
+                                            return day.date.getDay() === 0;
+                                        }}
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col gap-1 w-full md:col-span-1">
+                            <label className='text-xs font-medium leading-5 text-gray-700'>Room</label>
+                            <input
+                                type='number'
+                                placeholder='eg. 2'
+                                value={numberOfRooms}
+                                onChange={(e) => setNumberOfRooms(e.target.value)}
+                                className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+                            />
+                        </div>
+
+                        <div className="md:col-span-3 w-full mt-3">
+                            <button
+                                type="button"
+                                disabled={!selectedRoomType || (dateFrom > dateTo) || (numberOfRooms < 1)}
+                                onClick={getRooms}
+                                className="w-full text-gray-800 font-medium flex items-center justify-center p-3 rounded-md bg-[#F5C400] text-xs tracking-wide leading-6 capitalize hover:bg-[#f1ce40] disabled:bg-[#FFDD55]"
+                            >
+                                {searchRoomIsLoading ? <CircularProgress size={20} color="inherit" /> : 'Search'}
+                            </button>
+
+                        </div>
+
                     </div>
-
-                    <div className="flex flex-col gap-1 w-full md:col-span-1">
-                        <label className='text-xs font-medium leading-5 text-gray-700'>Room</label>
-                        <input
-                            type='number'
-                            placeholder='eg. 2'
-                            value={numberOfRooms}
-                            onChange={(e) => setNumberOfRooms(e.target.value)}
-                            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
-                        />
-                    </div>
-
-                    <div className="md:col-span-3 w-full mt-3">
-                        <button
-                            type="button"
-                            disabled={!selectedRoomType || (dateFrom > dateTo) || (numberOfRooms < 1)}
-                            onClick={getRooms}
-                            className="w-full text-gray-800 font-medium flex items-center justify-center p-3 rounded-md bg-[#F5C400] text-xs tracking-wide leading-6 capitalize hover:bg-[#f1ce40] disabled:bg-[#FFDD55]"
-                        >
-                            {searchRoomIsLoading ? <CircularProgress size={20} color="inherit" /> : 'Search'}
-                        </button>
-
-                    </div>
-
                 </div>
 
                 <div className='grid grid-cols-1 md:grid-cols-2 w-full h-full gap-3'>
@@ -395,7 +403,7 @@ export default function BookRoom({ roomTypes, hotelId }) {
                                         {numberOfDays}
                                     </span>
                                     <span className='font-normal leading-6 w-full flex justify-end'>
-                                        NGN {Number(selectedRoom.roomType.price).toLocaleString()}
+                                        NGN {Number(selectedRoom.price).toLocaleString()}
                                     </span>
                                 </div>))}
                             </div>
@@ -423,28 +431,32 @@ export default function BookRoom({ roomTypes, hotelId }) {
                                 </div>
 
                             </div>
-
-                            <div className="flex flex-col gap-1 w-full">
-                                <label className='text-xs font-medium leading-5 text-gray-700'>Paying Amount</label>
-                                <input
-                                    type='number'
-                                    placeholder='eg. N21,000'
-                                    value={payingAmount}
-                                    onChange={(e) => setPayingAmount(e.target.value)}
-                                    className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
-                                />
+                            <div>
+                                <div className="flex flex-col gap-1 w-full">
+                                    <label className='text-xs font-medium leading-5 text-gray-700'>Paying Amount</label>
+                                    <input
+                                        type='number'
+                                        placeholder='eg. N21,000'
+                                        value={payingAmount}
+                                        onChange={(e) => setPayingAmount(e.target.value)}
+                                        className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+                                    />
+                                </div>
+                                <div className="flex gap-2 items-center justify-end w-full">
+                                    <Checkbox checked={checkin} onChange={(e) => setCheckin(e.target.checked)} />
+                                    <p className='text-sm text-[#636363] font-medium leading-6 w-full'>Check In</p>
+                                </div>
                             </div>
 
                             <div className="w-full mt-3">
                                 <button
                                     type="button"
                                     onClick={handleBookRoom}
-                                    disabled={!fullName || !email || !phone || selectedRooms.length < 1 || payingAmount < 1}
+                                    disabled={!fullName || !email || !phone || selectedRooms.length < 1 || (payingAmount < 1 && !isComplementary) || (dateFrom > dateTo) || isLoading}
                                     className="cursor-pointer w-full text-gray-800 font-medium flex items-center justify-center p-3 rounded-md bg-[#F5C400] text-xs tracking-wide leading-6 uppercase hover:bg-[#f1ce40] disabled:bg-[#FFDD55]"
                                 >
                                     {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Book now'}
                                 </button>
-
                             </div>
 
                         </div>
