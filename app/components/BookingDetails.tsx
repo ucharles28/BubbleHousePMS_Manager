@@ -20,6 +20,7 @@ import UpgradeRoom from './UpgradeRoom';
 import Box from '@mui/material/Box';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AmendStay from './AmendStay';
+import AddExtraRoomToBooking from './AddExtraRoomToBooking';
 
 type Room = {
     roomNumber: string
@@ -287,7 +288,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                         >
                             <MenuItem onClick={() => handleMenuClick(0)}>Upgrade Room</MenuItem>
                             <MenuItem onClick={() => handleMenuClick(1)}>Extend Stay</MenuItem>
-                            {/*<MenuItem onClick={handleClose}>Logout</MenuItem> */}
+                            <MenuItem onClick={() => handleMenuClick(2)}>Add Room</MenuItem>
                         </Menu>
                     </>
 
@@ -451,6 +452,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                     <div className="flex w-full md:w-[350px] lg:w-[550px] h-full">
                         {menuIndex == 0 && <UpgradeRoom bookedRoomTypes={booking?.roomTypes} bookedRooms={roomsOptions} hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
                         {menuIndex == 1 && <AmendStay booking={booking} onClose={handleCloseDrawer} />}
+                        {menuIndex == 2 && <AddExtraRoomToBooking hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
                     </div>
                 </Drawer>
 
