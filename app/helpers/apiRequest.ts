@@ -2,7 +2,6 @@
 const baseUrl = process.env.NEXT_PUBLIC_REACT_API_BASE_URL
 
 export async function makeApiCall(url: String, method: 'POST' | 'GET' | 'PUT' | 'DELETE', request: any = {}, isJson: Boolean = true) {
-    console.log("API URL: ", `${baseUrl}${url}`)
     try {
         const result = await fetch(`${baseUrl}${url}`, {
             method,

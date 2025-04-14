@@ -17,10 +17,10 @@ import { message } from 'antd';
 import { ArrowLeft2 } from 'iconsax-react';
 import { useRouter } from 'next/navigation';
 import UpgradeRoom from './UpgradeRoom';
-import Box from '@mui/material/Box';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AmendStay from './AmendStay';
 import AddExtraRoomToBooking from './AddExtraRoomToBooking';
+import ApplyDiscount from './ApplyDiscount';
 
 type Room = {
     roomNumber: string
@@ -289,6 +289,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                             <MenuItem onClick={() => handleMenuClick(0)}>Upgrade Room</MenuItem>
                             <MenuItem onClick={() => handleMenuClick(1)}>Extend Stay</MenuItem>
                             <MenuItem onClick={() => handleMenuClick(2)}>Add Room</MenuItem>
+                            <MenuItem onClick={() => handleMenuClick(3)}>Apply Discount</MenuItem>
                         </Menu>
                     </>
 
@@ -453,6 +454,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                         {menuIndex == 0 && <UpgradeRoom bookedRoomTypes={booking?.roomTypes} bookedRooms={roomsOptions} hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
                         {menuIndex == 1 && <AmendStay booking={booking} onClose={handleCloseDrawer} />}
                         {menuIndex == 2 && <AddExtraRoomToBooking hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
+                        {menuIndex == 3 && <ApplyDiscount hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
                     </div>
                 </Drawer>
 
