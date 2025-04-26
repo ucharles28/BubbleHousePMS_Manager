@@ -14,9 +14,17 @@ export async function makeApiCall(url: String, method: 'POST' | 'GET' | 'PUT' | 
             }
         })
 
+        let text = await result.text()
+        let json: any = {}
+        try {
+            json = JSON.parse(text);
+        } catch (e) {
+            json = text
+        }
+
         return {
             successful: result.ok,
-            data: await result.json()
+            data: json
         }
     } catch (error) {
         console.log("Error: ", error)

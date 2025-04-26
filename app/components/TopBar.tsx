@@ -6,7 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Image from 'next/image';
 import logo from '../logo.png';
 import { Drawer } from 'antd';
-import { HambergerMenu, DirectNotification, Setting2, LogoutCurve, People, Buildings2, Calendar, Messages2, Category, Money2, Notification } from 'iconsax-react';
+import { HambergerMenu, DirectNotification, Setting2, LogoutCurve, People, Buildings2, Calendar, Messages2, Category, Money2, Notification, Building4 } from 'iconsax-react';
 import { logOutUser } from "../lib/helpers";
 import { makeApiCall } from "../helpers/apiRequest";
 import { format } from "date-fns";
@@ -15,6 +15,7 @@ import { is } from "date-fns/locale";
 const sidebarLinks = [
     { path: "/", label: "Dashboard", icon: Category, isAdmin: false },
     { path: "/staffs", label: "Staffs", icon: People, isAdmin: true },
+    { path: "/company", label: "Companies", icon: Building4, isAdmin: true },
     { path: "/bookings", label: "Bookings", icon: Calendar, isAdmin: false },
     { path: "/hotel", label: "Manage Hotel", icon: Buildings2, isAdmin: true },
     { path: "/notifications", label: "Notifications", icon: Notification, isAdmin: false },

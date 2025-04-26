@@ -6,4 +6,5 @@ export interface Company {
     email: string
     phone: string
     createdDate: string
+    hotelId: string
 }
