@@ -19,10 +19,10 @@ type Props = {}
 
 async function BookRoomPage({ }: Props) {
     const { hotelId } = await getUserInfo()
-    const roomTypes: any[] = await getRoomTypes(hotelId);
+    // const roomTypes: any[] = await getRoomTypes(hotelId);
     return (
         <Suspense fallback={<Loading />}>
-            <BookRoom roomTypes={roomTypes} hotelId={hotelId} />
+            <BookRoom hotelId={hotelId} />
         </Suspense>
     )
 }

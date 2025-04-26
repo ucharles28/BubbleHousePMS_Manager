@@ -8,16 +8,34 @@ import { OptionType } from "../models/optionType"
 import { format } from "date-fns"
 import ReactCalendar from "react-calendar";
 import { makeApiCall } from "../helpers/apiRequest"
-import { Checkbox, CircularProgress } from "@mui/material"
+import { Checkbox, CircularProgress, Drawer } from "@mui/material"
 import { message } from "antd"
+import AddPayment from "./AddPayment"
 
 
-export default function BookRoom({ roomTypes, hotelId }) {
+export default function BookRoom({ hotelId }) {
     const router = useRouter()
+
+    const bookingTypeOptions = [
+        {
+            label: 'Individual',
+            value: 0,
+        },
+        {
+            label: 'Corporate',
+            value: 1,
+        },
+        {
+            label: 'Group',
+            value: 2,
+        },
+    ]
+
     const goBack = () => {
         router.back()
     }
 
+    const [selectedBookingType, setSelectedBookingType] = useState()
     const [dateFrom, setDateFrom] = useState(new Date());
     const [dateTo, setDateTo] = useState(new Date(new Date().setDate(new Date().getDate() + 1)));
     const [numberOfRooms, setNumberOfRooms] = useState(0);
@@ -26,34 +44,62 @@ export default function BookRoom({ roomTypes, hotelId }) {
     const [selectedRooms, setSelectedRooms] = useState([]);
     const [searchRoomIsLoading, setSearchRoomIsLoading] = useState(false);
     const [isComplementary, setIsComplementary] = useState(false);
-    const [checkin, setCheckin] = useState(false);
     const [stateTax, setStateTax] = useState(0)
     const [subTotal, setSubTotal] = useState(0)
     const [totalAmount, setTotalAmount] = useState(0)
     const [vat, setVat] = useState(0)
-    const [payingAmount, setPayingAmount] = useState(0)
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [numberOfDays, setNumberOfDays] = useState(0);
+    const [selectedRoomType, setSelectedRoomType] = useState();
+    const [roomTypes, setRoomTypes] = useState([]);
+    const [roomTypesOptions, setRoomTypesOptions] = useState([]);
+    const [openDrawer, setOpenDrawer] = useState(false);
+    const [paymentInfo, setPaymentInfo] = useState()
+
+    const [selectedRoomTypes, setSelectedRoomTypes] = useState([{
+        roomType: { label: '', value: '' },
+        numberOfRooms: { label: 0, value: 0 },
+        availableRooms: [],
+        roomPrice: 0,
+    }])
+
+    function handleCloseDrawer() {
+        setOpenDrawer(false)
+    }
+
+    function handleOpenDrawer() {
+        setOpenDrawer(true)
+    }
+
+    function savePaymentInfo(thePaymentInfo) {
+        setPaymentInfo(thePaymentInfo)
+        handleCloseDrawer()
+    }
 
     const datePickerHandler = () => {
         setOpenDate(!openDate);
     };
 
     useEffect(() => {
-        if (selectedRooms.length > 0 && !isComplementary) {
-            const days = dateDiffInDays(dateFrom, dateTo)
-            setNumberOfDays(days)
-            let totalRoomsPrice = selectedRooms.map(item => item.price).reduce((prev, next) => prev + next);
-            totalRoomsPrice *= days
+        if (selectedRoomTypes.length > 0 && selectedRoomTypes[0].roomType && !isComplementary) {
+            let totalRoomsPrice = selectedRoomTypes
+                .map(item => (item.roomPrice * item.numberOfRooms.value))
+                .reduce((prev, next) => prev + next);
+
+            totalRoomsPrice *= numberOfDays
             const theVat = 0.075 * totalRoomsPrice
             const theStateTax = 0.05 * totalRoomsPrice
-            setTotalAmount(theVat + theStateTax + totalRoomsPrice)
             setVat(theVat)
             setStateTax(theStateTax)
             setSubTotal(totalRoomsPrice)
+            if (paymentInfo) {
+                setTotalAmount((theVat + theStateTax + totalRoomsPrice) - paymentInfo.amount)
+                return
+            }
+            setTotalAmount((theVat + theStateTax + totalRoomsPrice))
 
         } else {
             setTotalAmount(0)
@@ -61,23 +107,85 @@ export default function BookRoom({ roomTypes, hotelId }) {
             setStateTax(0)
             setSubTotal(0)
         }
-    }, [selectedRooms, isComplementary])
+    }, [selectedRoomTypes, isComplementary, paymentInfo])
 
-    const roomTypesOption = roomTypes.map((roomType) => (
-        { value: roomType.id, label: roomType.name }
-    ))
 
-    const [selectedRoomType, setSelectedRoomType] = useState();
+    useEffect(() => {
+        console.log('Date from', dateTo)
+        const days = dateDiffInDays(dateFrom, dateTo)
+        setNumberOfDays(days)
+        getRoomTypesAvailablity()
+    }, [dateTo])
 
-    const handleRoomTypeSelectChange = (selectedOption) => {
-        setSelectedRoomType(selectedOption);
+
+
+    async function getRoomTypesAvailablity() {
+        const request = {
+            checkInDate: dateFrom,
+            checkOutDate: dateTo,
+            hotelId
+        }
+        const response = await makeApiCall('Hotel/BookingDetails', 'POST', request)
+        if (response.successful) {
+            setRoomTypes(response.data.roomTypes)
+            setRoomTypesOptions(response.data.roomTypes.map((roomType) => (
+                { value: roomType.id, label: roomType.name }
+            )))
+        }
+    }
+
+
+    const handleRoomTypeSelectChange = (selectedOption, index) => {
+        const roomType = roomTypes.find((roomType) => roomType.id == selectedOption.value)
+        let temp_list = []
+        for (let i = 1; i <= roomType.numberOfAvailableRooms; i++) {
+            temp_list.push({
+                label: i,
+                value: i,
+            })
+        }
+        setSelectedRoomTypes((prevState) => {
+            const newState = [...prevState]
+            newState[index].roomType = selectedOption
+            newState[index].roomPrice = roomTypes.find((roomType) => roomType.id == selectedOption.value).price
+            newState[index].availableRooms = temp_list
+            return newState
+        })
     };
+
+    const handleNumberOfRoomsChange = (selectedOption, index) => {
+        setSelectedRoomTypes((prevState) => {
+            const newState = [...prevState]
+            newState[index].numberOfRooms = selectedOption
+            return newState
+        })
+    };
+
+    const handleRoomPriceChange = (value, index) => {
+        setSelectedRoomTypes((prevState) => {
+            const newState = [...prevState]
+            newState[index].roomPrice = value
+            return newState
+        })
+    };
+
+    function addRoom() {
+        const temp_list = [...selectedRoomTypes]
+        temp_list.push({
+            roomType: { label: '', value: '' },
+            numberOfRooms: { label: 0, value: 0 },
+            availableRooms: [],
+            roomPrice: 0,
+        })
+
+        setSelectedRoomTypes(temp_list)
+    }
 
     function handleSelectRoom(index) {
         let list = [...rooms]
         const room = list[index]
         if (room.status === 2) {//if already selected
-            handleRemoveRoom(room)
+            handleRemoveRoomType(room)
         } else {
             list.forEach((item) => {
                 if (item.id === room.id) {
@@ -92,32 +200,40 @@ export default function BookRoom({ roomTypes, hotelId }) {
     }
 
     async function handleBookRoom() {
+        console.log('Date from', dateFrom)
+
         setIsLoading(true)
         let request = {
-            checkInDate: dateFrom,
             checkOutDate: dateTo,
+            checkInDate: dateFrom,
             email,
             fullName,
             vATAmount: vat,
             hotelId,
             isMainGuest: true,
-            isReservation: true,
+            isReservation: (paymentInfo && paymentInfo.amount > 0),
             phone,
             StateTaxAmount: stateTax,
             totalAmount,
             isComplementary,
             totalRoomPrice: subTotal,
-            checkIn: checkin,
-            bookedRoomIds: selectedRooms.map((room) => room.id),
-            totalAmountPaid: Number(payingAmount),
+            bookingType: selectedBookingType.value,
+            // checkIn: checkin,
+            // bookedRoomIds: selectedRooms.map((room) => room.id),
+            amountPaid: paymentInfo ? paymentInfo.amount : 0,
+            paymentMethod: paymentInfo ? paymentInfo.paymentMethod : '',
             totalAdults: 1
         }
 
-        const bookedRoomTypeList = [{
-            numberBookedRooms: selectedRooms.length,
-            roomPrice: selectedRooms[0].price,
-            roomTypeId: selectedRooms[0].roomTypeId
-        }]
+        const filterdRoomTypes = selectedRoomTypes.filter((roomType) => (roomType.roomType.value !== '' || roomType.numberOfRooms.value !== 0))
+
+        const bookedRoomTypeList = filterdRoomTypes.map((roomType) => (
+            {
+                numberOfRoomsBooked: roomType.numberOfRooms.value,
+                roomPrice: roomType.roomPrice,
+                roomTypeId: roomType.roomType.value,
+            }
+        ))
 
         request.roomTypes = bookedRoomTypeList
 
@@ -152,90 +268,71 @@ export default function BookRoom({ roomTypes, hotelId }) {
         }, initialValue);
     };
 
-    function handleRemoveRoom(room) {
-        let list = [...selectedRooms]
+    function handleRemoveRoomType(room) {
+        let list = [...selectedRoomTypes]
         const index = list.indexOf(room)
         list.splice(index, 1)
-        setSelectedRooms(list)
-
-        list = [...rooms]
-        if (list.some(item => item.id === room.id)) {
-            list.forEach((item) => {
-                if (item.id === room.id) {
-                    item.status = 0
-                }
-            })
-            setRooms(list)
-        }
+        setSelectedRoomTypes(list)
     }
 
-    const getRooms = async () => {
-        setSearchRoomIsLoading(true)
-        const request = {
-            checkInDate: dateFrom,
-            checkOutDate: dateTo,
-            roomTypeIds: [selectedRoomType.value],
-            numberOfRooms,
-            hotelId
-        }
+    // const getRooms = async () => {
+    //     setSearchRoomIsLoading(true)
+    //     const request = {
+    //         checkInDate: dateFrom,
+    //         checkOutDate: dateTo,
+    //         roomTypeIds: [selectedRoomType.value],
+    //         numberOfRooms,
+    //         hotelId
+    //     }
 
-        const response = await makeApiCall('Room/Hotel/GetAvailableRooms', 'POST', request)
-        if (response.successful) {
-            setRooms(response.data.map((room) => {
-                if (selectedRooms.some(item => item.id === room.id)) {
-                    room.status = 2
-                }
-                return room
-            }))
-        } else {
-            message.error(response.data)
-        }
-        setSearchRoomIsLoading(false)
-    }
+    //     const response = await makeApiCall('Room/Hotel/GetAvailableRooms', 'POST', request)
+    //     if (response.successful) {
+    //         setRooms(response.data.map((room) => {
+    //             if (selectedRooms.some(item => item.id === room.id)) {
+    //                 room.status = 2
+    //             }
+    //             return room
+    //         }))
+    //     } else {
+    //         message.error(response.data)
+    //     }
+    //     setSearchRoomIsLoading(false)
+    // }
 
     return (
         <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
+            <Drawer
+                anchor={'right'}
+                open={openDrawer}
+                onClose={() => handleCloseDrawer()}
+            >
+                <div className="flex w-full md:w-[350px] lg:w-[550px] h-full">
+                    <AddPayment onClose={handleCloseDrawer} savePaymentInfo={savePaymentInfo} />
+                </div>
+            </Drawer>
             <div className='flex flex-col items-end gap-y-2 md:flex-row w-full'>
                 <p className='block w-full text-xl font-medium text-[#1A1A1A] leading-6'>
                     Book room
                 </p>
 
                 <div className='flex justify-end gap-2 w-full'>
-                    <div
+                    <button
                         onClick={goBack}
                         className="px-2 py-1.5 rounded-lg flex items-center cursor-pointer bg-white hover:bg-[#f9f9f9] border-2 border-[#E4E4E4] text-gray-500 hover:text-gray-800">
                         <ArrowLeft2 size={14} />
                         <span className="text-xs font-medium leading-6">Back</span>
-                    </div>
-
+                    </button>
                 </div>
             </div>
 
-            <div className='flex flex-col gap-y-11 w-full'>
-                <div className="flex flex-col gap-1 w-full">
-                    <div className="flex items-end justify-end w-full">
-                        <div className="flex gap-2 items-center justify-end w-full">
-                            <Checkbox checked={isComplementary} onChange={(e) => setIsComplementary(e.target.checked)} />
-                            <p className='text-sm text-[#636363] font-medium leading-6 w-full'>Complementary Room</p>
-                        </div>
-                    </div>
-                    <div className='grid grid-cols-1 md:grid-cols-3 gap-3 w-full'>
-                        <div className="flex flex-col gap-1 w-full md:col-span-1">
-                            <label className='text-xs font-medium leading-5 text-gray-700'>Room Type</label>
-                            <Select
-                                options={roomTypesOption}
-                                value={selectedRoomType}
-                                onChange={handleRoomTypeSelectChange}
-                                className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
-                                placeholder='Select room type'
-                                classNamePrefix="select"
-                            />
-                        </div>
-
+            <div className='flex flex-col gap-y-4 w-full'>
+                {/* First section */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full border-b-2 border-[#1A1A1A]/3 pb-6">
+                    <div className="flex items-end gap-1">
                         <div className="relative flex flex-col gap-1 w-full md:col-span-1">
                             <label className='text-xs font-medium leading-5 text-gray-700'>Check In/Out</label>
                             <div
-                                className="bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md flex items-center gap-2 cursor-pointer"
+                                className="bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-2 focus:outline-0 bg-transparent rounded-md flex items-center gap-2 cursor-pointer"
                                 onClick={datePickerHandler}
                             >
                                 {`${format(dateFrom, "dd-MM-yyy")} - ${format(
@@ -245,7 +342,7 @@ export default function BookRoom({ roomTypes, hotelId }) {
                             </div>
 
                             {openDate && (
-                                <div className="absolute mt-16 left-0">
+                                <div className="absolute mt-16 left-0 z-50">
                                     <ReactCalendar
                                         selectRange
                                         prev2Label={null}
@@ -264,25 +361,99 @@ export default function BookRoom({ roomTypes, hotelId }) {
                             )}
                         </div>
 
-                        <div className="flex flex-col gap-1 w-full md:col-span-1">
-                            <label className='text-xs font-medium leading-5 text-gray-700'>Room</label>
+                        <div className="flex flex-col bg-[#FFDD55] w-12 text-gray-800 items-center px-7 pt-1 pb-1">
+                            <p className="text-base">{numberOfDays}</p>
+                            <p className="text-xs">Nights</p>
+                        </div>
+                    </div>
+
+                    {/* <div className="flex flex-col gap-1 w-full md:col-span-1">
+                        <label className='text-xs font-medium leading-5 text-gray-700'>Room</label>
+                        <input
+                            type='number'
+                            placeholder='eg. 2'
+                            value={numberOfRooms}
+                            onChange={(e) => setNumberOfRooms(e.target.value)}
+                            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+                        />
+                    </div> */}
+
+                    <div className="flex flex-col gap-1 w-full md:col-span-1 h-full">
+                        <label className='text-xs font-medium leading-5 text-gray-700'>Booking Type</label>
+                        <Select
+                            options={bookingTypeOptions}
+                            value={selectedBookingType}
+                            onChange={(e) => setSelectedBookingType(e)}
+                            className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
+                            placeholder='Select room type'
+                            classNamePrefix="select"
+                        />
+                    </div>
+
+                    <div className="flex flex-col gap-1 w-full md:col-span-1 h-full">
+                        <label className='text-xs font-medium leading-5 text-gray-700'>Company</label>
+                        <Select
+                            options={bookingTypeOptions}
+                            value={selectedBookingType}
+                            onChange={(e) => setSelectedBookingType(e)}
+                            className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
+                            placeholder='Select room type'
+                            classNamePrefix="select"
+                        />
+                    </div>
+
+                </div>
+
+                {/* Second section */}
+                <div className="flex flex-col gap-1 w-full">
+                    <div className="flex w-full w-full justify-end">
+                        <div className="flex items-center">
+                            <Checkbox checked={isComplementary} onChange={(e) => setIsComplementary(e.target.checked)} />
+                            <p className='text-sm text-[#636363] font-medium leading-6 w-full'>Complementary Room</p>
+                        </div>
+                    </div>
+                    <div className='grid grid-cols-3 md:grid-cols-3 gap-3 w-full'>
+                        <p className='text-xs font-medium leading-5 text-gray-700'>Room Type</p>
+                        <p className='text-xs font-medium leading-5 text-gray-700'>No. of Rooms</p>
+                        <p className='text-xs font-medium leading-5 text-gray-700'>Price</p>
+
+
+                        {selectedRoomTypes.map((roomType, index) => (<>
+                            <Select
+                                options={roomTypesOptions}
+                                value={selectedRoomTypes[index].roomType}
+                                onChange={(e) => handleRoomTypeSelectChange(e, index)}
+                                className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
+                                placeholder='Select room type'
+                                classNamePrefix="select"
+                            />
+
+                            <Select
+                                options={selectedRoomTypes[index].availableRooms}
+                                value={selectedRoomTypes[index].numberOfRooms}
+                                onChange={(e) => handleNumberOfRoomsChange(e, index)}
+                                className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
+                                placeholder='Select room type'
+                                classNamePrefix="select"
+                            />
+
                             <input
                                 type='number'
                                 placeholder='eg. 2'
-                                value={numberOfRooms}
-                                onChange={(e) => setNumberOfRooms(e.target.value)}
-                                className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
+                                value={selectedRoomTypes[index].roomPrice}
+                                onChange={(e) => handleRoomPriceChange(e.target.value, index)}
+                                className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-2 focus:outline-0 bg-transparent rounded-md'
                             />
-                        </div>
+                        </>))}
 
-                        <div className="md:col-span-3 w-full mt-3">
+                        <div className="flex justify-start w-full mt-3">
                             <button
                                 type="button"
-                                disabled={!selectedRoomType || (dateFrom > dateTo) || (numberOfRooms < 1)}
-                                onClick={getRooms}
-                                className="w-full text-gray-800 font-medium flex items-center justify-center p-3 rounded-md bg-[#F5C400] text-xs tracking-wide leading-6 capitalize hover:bg-[#f1ce40] disabled:bg-[#FFDD55]"
+                                // disabled={!selectedRoomType || (dateFrom > dateTo) || (numberOfRooms < 1)}
+                                onClick={addRoom}
+                                className="text-gray-800 font-medium flex items-center justify-center p-3 rounded-md bg-[#F5C400] text-xs tracking-wide leading-6 capitalize hover:bg-[#f1ce40] disabled:bg-[#FFDD55]"
                             >
-                                {searchRoomIsLoading ? <CircularProgress size={20} color="inherit" /> : 'Search'}
+                                {searchRoomIsLoading ? <CircularProgress size={20} color="inherit" /> : 'Add Room'}
                             </button>
 
                         </div>
@@ -292,7 +463,7 @@ export default function BookRoom({ roomTypes, hotelId }) {
 
                 <div className='grid grid-cols-1 md:grid-cols-2 w-full h-full gap-3'>
 
-                    <div className='flex flex-col w-full h-auto gap-y-4 justify-start bg-white border-[1.2px] border-[#E4E4E4] rounded-md p-3'>
+                    {/* <div className='flex flex-col w-full h-auto gap-y-4 justify-start bg-white border-[1.2px] border-[#E4E4E4] rounded-md p-3'>
                         <p className='mb-[0] text-sm text-[#636363] font-medium leading-6 w-full'>Room Selection</p>
 
                         <div className='flex items-center gap-6 w-full'>
@@ -338,10 +509,10 @@ export default function BookRoom({ roomTypes, hotelId }) {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className='flex flex-col w-full h-auto gap-y-4 justify-start bg-white border-[1.2px] border-[#E4E4E4] rounded-md p-3'>
-                        <p className='mb-[0] text-sm text-[#636363] font-medium leading-6 w-full'>Booking Information</p>
+                        <p className='mb-[0] text-sm text-[#636363] font-medium leading-6 w-full'>User Information</p>
 
                         <div className='grid grid-cols-1 w-full gap-6'>
 
@@ -382,6 +553,13 @@ export default function BookRoom({ roomTypes, hotelId }) {
 
                             </div>
 
+                        </div>
+                    </div>
+                    <div className='flex flex-col w-full h-auto gap-y-4 justify-start bg-white border-[1.2px] border-[#E4E4E4] rounded-md p-3'>
+                        <p className='mb-[0] text-sm text-[#636363] font-medium leading-6 w-full'>Price Breakdown</p>
+
+                        <div className='grid grid-cols-1 w-full gap-6'>
+
                             <div className="flex flex-col gap-2 w-full">
                                 <div className='grid grid-cols-3 w-full justify-between gap-1'>
                                     <span className='text-xs font-semibold leading-6 flex justify-start'>Rooms</span>
@@ -389,21 +567,21 @@ export default function BookRoom({ roomTypes, hotelId }) {
                                     <span className='text-xs font-semibold leading-6 flex justify-end'>Room price</span>
                                 </div>
 
-                                {selectedRooms.map((selectedRoom, index) => (<div key={index} className='grid grid-cols-3 w-full items-center justify-between text-[#636363] text-xs gap-1'>
+                                {selectedRoomTypes.map((roomType, index) => (<div key={index} className='grid grid-cols-3 w-full items-center justify-between text-[#636363] text-xs gap-1'>
                                     <div className="flex gap-1.5 items-center w-full justify-start">
                                         <span
                                             className="px-2.5 py-1 rounded-lg bg-[#FF6166] text-xs font-medium text-white cursor-pointer"
-                                            onClick={() => handleRemoveRoom(selectedRoom)}
+                                            onClick={() => handleRemoveRoomType(roomType)}
                                         >
                                             x
                                         </span>
-                                        <span className='font-normal leading-6'>{selectedRoom.roomNumber}</span>
+                                        <span className='font-normal leading-6'>{roomType.numberOfRooms.label}</span>
                                     </div>
                                     <span className='font-normal leading-6 w-full flex justify-center'>
                                         {numberOfDays}
                                     </span>
                                     <span className='font-normal leading-6 w-full flex justify-end'>
-                                        NGN {Number(selectedRoom.price).toLocaleString()}
+                                        NGN {roomType.roomPrice ? Number(roomType.roomPrice).toLocaleString() : Number(roomType.roomPrice)}
                                     </span>
                                 </div>))}
                             </div>
@@ -425,37 +603,26 @@ export default function BookRoom({ roomTypes, hotelId }) {
                                     <span className='font-medium text-gray-950'>NGN {stateTax.toLocaleString()}</span>
                                 </div>
 
+                                {paymentInfo && <div className="flex items-center justify-between w-full text-xs font-normal text-[#636363]">
+                                    <span className=''>Payment </span>
+                                    <span className='font-medium text-gray-950'>- NGN {paymentInfo.amount.toLocaleString()}</span>
+                                </div>}
+
                                 <div className="flex items-center justify-between w-full text-sm font-bold text-gray-950">
-                                    <span className=''>Total</span>
+                                    <span className=''>Due Amount</span>
                                     <span className=''>NGN {totalAmount.toLocaleString()}</span>
                                 </div>
 
                             </div>
-                            <div>
-                                <div className="flex flex-col gap-1 w-full">
-                                    <label className='text-xs font-medium leading-5 text-gray-700'>Paying Amount</label>
-                                    <input
-                                        type='number'
-                                        placeholder='eg. N21,000'
-                                        value={payingAmount}
-                                        onChange={(e) => setPayingAmount(e.target.value)}
-                                        className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
-                                    />
-                                </div>
-                                <div className="flex gap-2 items-center justify-end w-full">
-                                    <Checkbox checked={checkin} onChange={(e) => setCheckin(e.target.checked)} />
-                                    <p className='text-sm text-[#636363] font-medium leading-6 w-full'>Check In</p>
-                                </div>
-                            </div>
 
-                            <div className="w-full mt-3">
+                            <div className="w-full mt-3 flex justify-end">
                                 <button
                                     type="button"
-                                    onClick={handleBookRoom}
-                                    disabled={!fullName || !email || !phone || selectedRooms.length < 1 || (payingAmount < 1 && !isComplementary) || (dateFrom > dateTo) || isLoading}
-                                    className="cursor-pointer w-full text-gray-800 font-medium flex items-center justify-center p-3 rounded-md bg-[#F5C400] text-xs tracking-wide leading-6 uppercase hover:bg-[#f1ce40] disabled:bg-[#FFDD55]"
+                                    onClick={handleOpenDrawer}
+                                    // disabled={!fullName || !email || !phone || selectedRooms.length < 1 || (payingAmount < 1 && !isComplementary) || (dateFrom > dateTo) || isLoading}
+                                    className="cursor-pointer text-gray-800 font-medium flex items-center justify-center p-3 rounded-md bg-[#F5C400] text-xs tracking-wide leading-6 uppercase hover:bg-[#f1ce40] disabled:bg-[#FFDD55]"
                                 >
-                                    {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Book now'}
+                                    Add Payment
                                 </button>
                             </div>
 
@@ -465,6 +632,14 @@ export default function BookRoom({ roomTypes, hotelId }) {
                 </div>
             </div>
 
+            <div className="flex h-full w-full items-end">
+                <div className="flex gap-3 w-full justify-end pt-4 border-t border-[#1A1A1A]/2">
+                    <button className='p-3 text-sm font-medium text-white rounded-lg bg-[#404040] disabled:bg-[#404040]/50'>Cancel</button>
+                    <button onClick={handleBookRoom} disabled={!fullName || !email || !phone || (selectedRoomTypes.length < 1 || !selectedRoomTypes[0].roomType.label) || (dateFrom > dateTo) || isLoading} className='p-3 text-sm font-medium text-gray-900 rounded-lg bg-yellow-500'>
+                        {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Book now'}
+                    </button>
+                </div>
+            </div>
         </div>
     )
 }

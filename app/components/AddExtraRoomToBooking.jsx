@@ -14,13 +14,6 @@ const AddExtraRoomToBooking = ({ hotelId, booking, onClose }) => {
         room: { label: '', value: '' }
     }])
     const [isLoading, setIsLoading] = useState(false)
-    // const [selectedRoomTypesOption, setSelectedRoomTypesOption] = useState({
-    //     0: { label: '', value: '' }
-    // })
-
-    // const [selectedRoomsOption, setSelectedRoomsOption] = useState({
-    //     0: { label: '', value: '' }
-    // })
 
     useEffect(() => {
         async function fetchRoomTypes() {
