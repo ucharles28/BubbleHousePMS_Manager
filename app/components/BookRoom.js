@@ -11,6 +11,9 @@ import { makeApiCall } from "../helpers/apiRequest"
 import { Checkbox, CircularProgress, Drawer } from "@mui/material"
 import { message } from "antd"
 import AddPayment from "./AddPayment"
+import { DatePicker } from 'antd';
+
+const { RangePicker } = DatePicker;
 
 
 export default function BookRoom({ hotelId, companies }) {
@@ -280,22 +283,17 @@ export default function BookRoom({ hotelId, companies }) {
         return Math.floor((utc2 - utc1) / _MS_PER_DAY);
     }
 
-
-    const groupBy = (arr, key) => {
-        const initialValue = {};
-        return arr.reduce((acc, cval) => {
-            const myAttribute = cval[key];
-            acc[myAttribute] = [...(acc[myAttribute] || []), cval]
-            return acc;
-        }, initialValue);
-    };
-
     function handleRemoveRoomType(room) {
         let list = [...selectedRoomTypes]
         const index = list.indexOf(room)
         list.splice(index, 1)
         setSelectedRoomTypes(list)
     }
+
+    const onChange = (date, dateString) => {
+        setDateFrom(new Date(dateString[0]));
+        setDateTo(new Date(dateString[1]));
+      };
 
     // const getRooms = async () => {
     //     setSearchRoomIsLoading(true)
@@ -353,7 +351,8 @@ export default function BookRoom({ hotelId, companies }) {
                     <div className="flex items-end gap-1">
                         <div className="relative flex flex-col gap-1 w-full md:col-span-1">
                             <label className='text-xs font-medium leading-5 text-gray-700'>Check In/Out</label>
-                            <div
+                            <RangePicker onChange={onChange}  className="p-4"/>
+                            {/* <div
                                 className="bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-2 focus:outline-0 bg-transparent rounded-md flex items-center gap-2 cursor-pointer"
                                 onClick={datePickerHandler}
                             >
@@ -380,7 +379,8 @@ export default function BookRoom({ hotelId, companies }) {
                                         }}
                                     />
                                 </div>
-                            )}
+                            )} */}
+
                         </div>
 
                         <div className="flex flex-col bg-[#FFDD55] w-12 text-gray-800 items-center px-7 pt-1 pb-1">

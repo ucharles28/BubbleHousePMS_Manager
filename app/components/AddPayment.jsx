@@ -23,7 +23,7 @@ const AddPayment = ({onClose, savePaymentInfo}) => {
     ]
 
     const [selectedPaymenthMethod, setSelectedPaymentMethod] = React.useState(null)
-    const [amount, setAmount] = React.useState(0)
+    const [amount, setAmount] = React.useState()
 
     function setPaymentInfo() {
         const thePaymentInfo = {

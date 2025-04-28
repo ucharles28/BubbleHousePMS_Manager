@@ -21,6 +21,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AmendStay from './AmendStay';
 import AddExtraRoomToBooking from './AddExtraRoomToBooking';
 import ApplyDiscount from './ApplyDiscount';
+import AddPayment from './AddPayment';
 
 type Room = {
     roomNumber: string
@@ -48,7 +49,10 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
     const router = useRouter()
 
     const [selectedRooms, setSelectedRooms] = useState<MultiValue<OptionType> | null>([])
-    const [selectedRooms2, setSelectedRooms2] = useState<Record<number, MultiValue<OptionType>>>({0: []})
+    const [selectedRooms2, setSelectedRooms2] = useState<Record<number, MultiValue<OptionType>>>(booking.roomTypes.reduce((acc: any, current: any, index: number) => {
+        acc[index] = [];
+        return acc;
+    }, {}))
     // const [roomOptions, setRoomOptions] = useState<Record<number, OptionType[]>>(booking.roomTypes.map((_roomType: any, index: number) => ({ [index]: [] })))
     const [roomOptions, setRoomOptions] = useState<Record<number, OptionType[]>>(booking.roomTypes.reduce((acc: any, current: any, index: number) => {
         acc[index] = [];
@@ -148,18 +152,39 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
     useEffect(() => {
         if (booking) {
             setBookingStatus(booking.status)
-            if (bookingStatusOptions.some(item => item.value === String(booking.status))) {
-                setSelectedBookingStatus(bookingStatusOptions.find(item => item.value === String(booking.status)))
-            }
+            // if (bookingStatusOptions.some(item => item.value === String(booking.status))) {
+            //     setSelectedBookingStatus(bookingStatusOptions.find(item => item.value === String(booking.status)))
+            // }
 
-            if (booking.bookedRooms) {
-                const bookedRooms: BookedRoom[] = booking.bookedRooms as BookedRoom[]
+            // if (booking.bookedRooms) {
+            //     const bookedRooms: BookedRoom[] = booking.bookedRooms as BookedRoom[]
 
-                const selected = roomsOptions.filter(room => (bookedRooms.some(item => String(item.roomId) === room.value)))
-                setSelectedRooms(selected as MultiValue<OptionType>)
-            }
+            //     const selected = roomsOptions.filter(room => (bookedRooms.some(item => String(item.roomId) === room.value)))
+            //     setSelectedRooms(selected as MultiValue<OptionType>)
+            // }
+            setTotalAmount(booking.totalAmount - booking.totalAmountPaid)
         }
     }, [booking])
+
+    async function handleCheckIn() {
+        const response = await makeApiCall(`Booking/Hotel/Checkin/${booking.id}`, 'GET')
+        if (response.successful) {
+            message.success('Check in successful')
+            refreshPage()
+        } else {
+            message.error(response.data)
+        }
+    }
+
+    async function handleCheckOut() {
+        const response = await makeApiCall(`Booking/Hotel/Checkout/${booking.id}`, 'GET')
+        if (response.successful) {
+            message.success('Check out successful')
+            refreshPage()
+        } else {
+            message.error(response.data)
+        }
+    }
 
     async function fetchRoomsByRoomType(roomTypeId: string, index: number) {
             const request = {
@@ -246,6 +271,19 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
         setIsLoading(false)
     }
 
+    async function savePaymentInfo(paymentInfo: any) {
+        paymentInfo['bookingId'] = booking.id;
+
+        const response = await makeApiCall('Booking/Hotel/Payment', 'POST', paymentInfo)
+        if (response.successful) {
+            message.success('Payment added successfully')
+            handleCloseDrawer()
+            refreshPage()
+        } else {
+            message.error(response.data)
+        }
+    }
+
     function getRoomTypesText(roomTypes: any[]) {
         const roomTypeNames = roomTypes.map((roomType) => (`${roomType.numberOfRoomsBooked} ${roomType?.roomType?.name}`))
         return roomTypeNames.join(',')
@@ -290,7 +328,6 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
 
     function handleShowRoomsDropdown(index: number, roomType: any) {
         setRoomsDropdown((prevState) => ({...prevState, [index]: !roomsDropdown[index]}))
-        console.log(roomOptions)
         if (!roomsDropdown[index] && roomOptions[index].length < 1) {
             fetchRoomsByRoomType(roomType.roomTypeId, index)
         }
@@ -343,10 +380,14 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                             onClose={handleCloseMenu}
                             TransitionComponent={Fade}
                         >
-                            <MenuItem onClick={() => handleMenuClick(0)}>Upgrade Room</MenuItem>
-                            <MenuItem onClick={() => handleMenuClick(1)}>Extend Stay</MenuItem>
-                            <MenuItem onClick={() => handleMenuClick(2)}>Add Room</MenuItem>
-                            <MenuItem onClick={() => handleMenuClick(3)}>Apply Discount</MenuItem>
+                            {booking.status === 1 ?
+                            <MenuItem onClick={() => handleCheckOut()}>Check Out</MenuItem> 
+                            : <MenuItem onClick={() => handleCheckIn()}>Check In</MenuItem>}
+                            <MenuItem onClick={() => handleMenuClick(0)}>Add Payment</MenuItem>
+                            <MenuItem onClick={() => handleMenuClick(1)}>Upgrade Room</MenuItem>
+                            <MenuItem onClick={() => handleMenuClick(2)}>Extend Stay</MenuItem>
+                            <MenuItem onClick={() => handleMenuClick(3)}>Add Room</MenuItem>
+                            <MenuItem onClick={() => handleMenuClick(4)}>Apply Discount</MenuItem>
                         </Menu>
                     </>
 
@@ -427,7 +468,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                     <div className='flex flex-col gap-2'>
                         <p className='text-sm font-normal text-[#636363]'>Total Paid</p>
                         <p className='text-sm font-medium text-[#1A1A1A]'>
-                            {Number(booking.totalAmountPaid) > 0 ? `NGN ${Number(booking.totalAmount).toLocaleString()}` : 'None'}
+                            {Number(booking.totalAmountPaid) > 0 ? `NGN ${Number(booking.totalAmountPaid).toLocaleString()}` : 'None'}
                         </p>
                     </div>
 
@@ -513,11 +554,11 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                     onClose={() => handleCloseDrawer()}
                 >
                     <div className="flex w-full md:w-[350px] lg:w-[550px] h-full">
-                        {menuIndex == 0 && <UpgradeRoom bookedRoomTypes={booking?.roomTypes} bookedRooms={roomsOptions} hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
-                        {menuIndex == 1 && <AmendStay booking={booking} onClose={handleCloseDrawer} />}
-                        {menuIndex == 2 && <AddExtraRoomToBooking hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
-                        {menuIndex == 3 && <ApplyDiscount hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
-                        {menuIndex == 3 && <ApplyDiscount hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
+                        {menuIndex == 0 && <AddPayment savePaymentInfo={savePaymentInfo} onClose={handleCloseDrawer} />}
+                        {menuIndex == 1 && <UpgradeRoom bookedRoomTypes={booking?.roomTypes} bookedRooms={roomsOptions} hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
+                        {menuIndex == 2 && <AmendStay booking={booking} onClose={handleCloseDrawer} />}
+                        {menuIndex == 3 && <AddExtraRoomToBooking hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
+                        {menuIndex == 4 && <ApplyDiscount hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
                     </div>
                 </Drawer>
 
@@ -568,7 +609,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                             </div>))}
                         </div>
 
-                        <div className="flex flex-col space-y-1" >
+                        {/* <div className="flex flex-col space-y-1" >
                             <label className='text-xs font-medium leading-5 text-gray-700'>Booking Status</label>
                             <Select
                                 options={bookingStatusOptions}
@@ -578,33 +619,38 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                                 // placeholder='eg. WiFi'
                                 classNamePrefix="select"
                             />
-                        </div>
-
+                        </div> */}
                     </div>
 
                     <div className='flex flex-col gap-3'>
                         <div className='w-full bg-white border border-[#E4E4E4] rounded-md flex flex-col p-4'>
                             <p className='text-base font-normal'>Billing Details</p>
                             <div className='flex flex-col w-full p-[10px] gap-[6px]'>
-                                <div className='flex w-full justify-between text-[#383838]'>
-                                    <p className='text-sm font-medium'>Room</p>
-                                    <p className='text-sm font-medium'>Room price</p>
+                                <div className='grid grid-cols-3 w-full text-[#383838]'>
+                                    <p className='text-sm font-medium'>Room Types</p>
+                                    <p className='text-sm font-medium text-center'>No. of Rooms</p>
+                                    <p className='text-sm font-medium text-right'>Room price</p>
                                 </div>
-                                {roomsToBook.map((room) => (<div className='flex w-full justify-between text-[#636363]'>
-                                    <p className='text-sm font-normal'>{room.roomNumber}</p>
-                                    <p className='text-sm font-normal text-right'>NGN {(room.price * daysDiff).toLocaleString()}</p>
+                                {booking.roomTypes.map((roomType: any) => (<div className='grid grid-cols-3 w-full text-[#636363]'>
+                                    <p className='text-sm font-normal'>{roomType.roomType.name}</p>
+                                    <p className='text-sm font-normal text-center'>{roomType.numberOfRoomsBooked}</p>
+                                    <p className='text-sm font-normal text-right'>NGN {(roomType.roomPrice * daysDiff).toLocaleString()}</p>
                                 </div>))}
-                                <div className='flex w-full justify-between pb-1 border-b border-b-[#E4E4E4]'>
+                                <div className='grid w-full grid-cols-2 pb-1 border-b border-b-[#E4E4E4]'>
                                     <p className='text-sm font-normal text-[#636363]'>Sub Total</p>
-                                    <p className='text-sm font-normal text-right text-[#383838]'>NGN {subTotal.toLocaleString()}</p>
+                                    <p className='text-sm font-normal text-right text-[#383838]'>NGN {booking.totalRoomPrice.toLocaleString()}</p>
                                 </div>
                                 <div className='flex w-full justify-between border-b pb-1 border-b-[#E4E4E4]'>
                                     <p className='text-sm font-normal text-[#636363]'>7.5 % VAT</p>
-                                    <p className='text-sm font-normal text-right text-[#383838]'>NGN {vat.toLocaleString()}</p>
+                                    <p className='text-sm font-normal text-right text-[#383838]'>NGN {booking.vatAmount.toLocaleString()}</p>
                                 </div>
                                 <div className='flex w-full justify-between border-b pb-1 border-b-[#E4E4E4]'>
                                     <p className='text-sm font-normal text-[#636363]'>5 % State Tax</p>
-                                    <p className='text-sm font-normal text-right text-[#383838]'>NGN {stateTax.toLocaleString()}</p>
+                                    <p className='text-sm font-normal text-right text-[#383838]'>NGN {booking.stateTaxAmount.toLocaleString()}</p>
+                                </div>
+                                <div className='flex w-full justify-between border-b pb-1 border-b-[#E4E4E4]'>
+                                    <p className='text-sm font-normal text-[#636363]'>Payment</p>
+                                    <p className='text-sm font-normal text-right text-[#383838]'>- NGN {booking.totalAmountPaid.toLocaleString()}</p>
                                 </div>
                                 <div className='flex w-full justify-between'>
                                     <p className='text-sm font-medium text-[#383838]'>Total</p>
@@ -627,9 +673,9 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                                 {isApproving ? <CircularProgress size={20} color="inherit" /> : 'Approve'}
                             </button>}
 
-                            {(bookingStatus !== 0 && bookingStatus !== 3) && <button className="text-white font-medium flex items-center px-3 py-2 rounded-md bg-[#F5C400] text-xs leading-6 uppercase hover:bg-[#F5C400]/70" onClick={updateBooking}>
+                            {/* {(bookingStatus !== 0 && bookingStatus !== 3) && <button className="text-white font-medium flex items-center px-3 py-2 rounded-md bg-[#F5C400] text-xs leading-6 uppercase hover:bg-[#F5C400]/70" onClick={updateBooking}>
                                 {isLoading ? <CircularProgress size={20} color="inherit" /> : 'Save Changes'}
-                            </button>}
+                            </button>} */}
                         </div>
                     </div>
                 </div>
