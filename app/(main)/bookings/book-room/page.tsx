@@ -6,9 +6,10 @@ import { getUserInfo } from '@/app/lib/helpers';
 import { makeApiCall } from '@/app/helpers/apiRequest';
 import BookRoom from '@/app/components/BookRoom';
 import Loading from '../../loading';
+import { Company } from '@/app/models/company';
 
-async function getRoomTypes(hotelId: string) {
-    const res = await makeApiCall(`RoomType/Hotel/${hotelId}`, 'GET')
+async function getCompanies(hotelId: string) {
+    const res = await makeApiCall(`Company/Hotel/${hotelId}`, 'GET')
     if (res.successful) {
         return res.data
     }
@@ -19,10 +20,11 @@ type Props = {}
 
 async function BookRoomPage({ }: Props) {
     const { hotelId } = await getUserInfo()
-    // const roomTypes: any[] = await getRoomTypes(hotelId);
+    const companies: Company[] = await getCompanies(hotelId) as Company[];
+
     return (
         <Suspense fallback={<Loading />}>
-            <BookRoom hotelId={hotelId} />
+            <BookRoom hotelId={hotelId} companies={companies} />
         </Suspense>
     )
 }

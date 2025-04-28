@@ -13,21 +13,26 @@ import { message } from "antd"
 import AddPayment from "./AddPayment"
 
 
-export default function BookRoom({ hotelId }) {
+export default function BookRoom({ hotelId, companies }) {
     const router = useRouter()
+
+    const companyOptions = companies.map((company) => ({
+        value: company.id,
+        label: company.name
+    }));
 
     const bookingTypeOptions = [
         {
             label: 'Individual',
-            value: 0,
-        },
-        {
-            label: 'Corporate',
             value: 1,
         },
         {
-            label: 'Group',
+            label: 'Corporate',
             value: 2,
+        },
+        {
+            label: 'Group',
+            value: 3,
         },
     ]
 
@@ -57,7 +62,14 @@ export default function BookRoom({ hotelId }) {
     const [roomTypes, setRoomTypes] = useState([]);
     const [roomTypesOptions, setRoomTypesOptions] = useState([]);
     const [openDrawer, setOpenDrawer] = useState(false);
-    const [paymentInfo, setPaymentInfo] = useState()
+    const [paymentInfo, setPaymentInfo] = useState({
+        amount: 0,
+        paymentMethod: ''
+    })
+    const [selectedCompany, setSelectedCompany] = useState({
+        label: '',
+        value: ''
+    })
 
     const [selectedRoomTypes, setSelectedRoomTypes] = useState([{
         roomType: { label: '', value: '' },
@@ -111,7 +123,6 @@ export default function BookRoom({ hotelId }) {
 
 
     useEffect(() => {
-        console.log('Date from', dateTo)
         const days = dateDiffInDays(dateFrom, dateTo)
         setNumberOfDays(days)
         getRoomTypesAvailablity()
@@ -200,8 +211,6 @@ export default function BookRoom({ hotelId }) {
     }
 
     async function handleBookRoom() {
-        console.log('Date from', dateFrom)
-
         setIsLoading(true)
         let request = {
             checkOutDate: dateTo,
@@ -214,12 +223,11 @@ export default function BookRoom({ hotelId }) {
             isReservation: (paymentInfo && paymentInfo.amount > 0),
             phone,
             StateTaxAmount: stateTax,
-            totalAmount,
+            totalAmount: (subTotal + vat + stateTax) - paymentInfo.amount,
             isComplementary,
             totalRoomPrice: subTotal,
             bookingType: selectedBookingType.value,
-            // checkIn: checkin,
-            // bookedRoomIds: selectedRooms.map((room) => room.id),
+            companyId: selectedCompany ? selectedCompany.value : null,
             amountPaid: paymentInfo ? paymentInfo.amount : 0,
             paymentMethod: paymentInfo ? paymentInfo.paymentMethod : '',
             totalAdults: 1
@@ -241,13 +249,26 @@ export default function BookRoom({ hotelId }) {
 
         if (response.successful) {
             message.success('Booking created successfully')
-            setSelectedRoomType([])
-            setSelectedRooms([])
+            resetFormValues();
         } else {
             message.error(response.data)
         }
 
         setIsLoading(false)
+    }
+
+    function resetFormValues() {
+        setSelectedRoomTypes([{
+            roomType: { label: '', value: '' },
+            numberOfRooms: { label: 0, value: 0 },
+            availableRooms: [],
+            roomPrice: 0,
+        }])
+        setFullName('')
+        setEmail('')
+        setPhone('')
+        setSelectedBookingType({ value: '', label: '' })
+        setPaymentInfo({ amount: 0, paymentMethod: '' })
     }
 
     function dateDiffInDays(a, b) {
@@ -258,6 +279,7 @@ export default function BookRoom({ hotelId }) {
 
         return Math.floor((utc2 - utc1) / _MS_PER_DAY);
     }
+
 
     const groupBy = (arr, key) => {
         const initialValue = {};
@@ -367,17 +389,6 @@ export default function BookRoom({ hotelId }) {
                         </div>
                     </div>
 
-                    {/* <div className="flex flex-col gap-1 w-full md:col-span-1">
-                        <label className='text-xs font-medium leading-5 text-gray-700'>Room</label>
-                        <input
-                            type='number'
-                            placeholder='eg. 2'
-                            value={numberOfRooms}
-                            onChange={(e) => setNumberOfRooms(e.target.value)}
-                            className='bg-white w-full border-[1.2px] border-[#E4E4E4] placeholder:text placeholder:text-xs text-sm font-normal p-4 focus:outline-0 bg-transparent rounded-md'
-                        />
-                    </div> */}
-
                     <div className="flex flex-col gap-1 w-full md:col-span-1 h-full">
                         <label className='text-xs font-medium leading-5 text-gray-700'>Booking Type</label>
                         <Select
@@ -390,17 +401,17 @@ export default function BookRoom({ hotelId }) {
                         />
                     </div>
 
-                    <div className="flex flex-col gap-1 w-full md:col-span-1 h-full">
+                    {(selectedBookingType && selectedBookingType.value === 2) && <div className="flex flex-col gap-1 w-full md:col-span-1 h-full">
                         <label className='text-xs font-medium leading-5 text-gray-700'>Company</label>
                         <Select
-                            options={bookingTypeOptions}
-                            value={selectedBookingType}
-                            onChange={(e) => setSelectedBookingType(e)}
+                            options={companyOptions}
+                            value={selectedCompany}
+                            onChange={(e) => setSelectedCompany(e)}
                             className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
                             placeholder='Select room type'
                             classNamePrefix="select"
                         />
-                    </div>
+                    </div>}
 
                 </div>
 

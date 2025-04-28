@@ -25,7 +25,6 @@ const CreateCompany = ({hotelId}: {hotelId: string}) => {
       async function saveCompany() {
         setIsLoading(true)
         const response = await makeApiCall('Company', 'POST', formData)
-        console.log('res', response)
         if (response.successful) {
           message.success('Company created successfully')
           resetFormData()

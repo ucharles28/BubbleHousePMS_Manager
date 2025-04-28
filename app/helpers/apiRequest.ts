@@ -27,7 +27,6 @@ export async function makeApiCall(url: String, method: 'POST' | 'GET' | 'PUT' | 
             data: json
         }
     } catch (error) {
-        console.log("Error: ", error)
         return {
             successful: false,
             data: "Something went wrong please try again later"

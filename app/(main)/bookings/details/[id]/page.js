@@ -38,6 +38,7 @@ async function BookingDetailsPage(param) {
   let availbleRooms = []
   if (param) {
     booking = await getBookingDetails(param.params.id)
+    console.log(booking)
     availbleRooms = await getAvailableRooms(booking, hotelId)
   }
 

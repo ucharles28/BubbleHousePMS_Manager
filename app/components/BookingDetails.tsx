@@ -48,6 +48,16 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
     const router = useRouter()
 
     const [selectedRooms, setSelectedRooms] = useState<MultiValue<OptionType> | null>([])
+    const [selectedRooms2, setSelectedRooms2] = useState<Record<number, MultiValue<OptionType>>>({0: []})
+    // const [roomOptions, setRoomOptions] = useState<Record<number, OptionType[]>>(booking.roomTypes.map((_roomType: any, index: number) => ({ [index]: [] })))
+    const [roomOptions, setRoomOptions] = useState<Record<number, OptionType[]>>(booking.roomTypes.reduce((acc: any, current: any, index: number) => {
+        acc[index] = [];
+        return acc;
+    }, {}))
+    const [roomsDropdown, setRoomsDropdown] = useState<Record<number, boolean>>(booking.roomTypes.reduce((acc:any, current:any, index:number) => {
+        acc[index] = false;
+        return acc;
+    }, {}))
     const [roomsToBook, setRoomsToBook] = useState<Room[]>([])
     const [isApproving, setIsApproving] = useState(false)
     const [isCancelling, setIsCancelling] = useState(false)
@@ -65,6 +75,11 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const daysDiff = dateDiffInDays(new Date(booking.checkInDate), new Date(booking.checkOutDate))
+    const bookingType: Record<number, string> = {
+        1: 'Individual',
+        2: 'Corporate',
+        3: 'Group'
+    }
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -95,13 +110,12 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
     }
 
 
-    const handleRoomSelect = (selected: MultiValue<OptionType>) => {
-        const totalNumberOfRoomsBooked = getTotalBookedRooms(booking?.roomTypes)
-        if (selected.length > totalNumberOfRoomsBooked) {
+    function handleRoomSelect (selected: MultiValue<OptionType>, index: number) {
+        if (selected.length > Number(booking.roomTypes[index].numberOfRoomsBooked)) {
             return;
         }
 
-        setSelectedRooms(selected)
+        setSelectedRooms2((prevState) => ({...prevState, [index]: selected}))
     }
 
     useEffect(() => {
@@ -147,7 +161,24 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
         }
     }, [booking])
 
-
+    async function fetchRoomsByRoomType(roomTypeId: string, index: number) {
+            const request = {
+                roomTypeId,
+                checkInDate: booking.checkInDate,
+                checkOutDate: booking.checkOutDate,
+            }
+            const response = await makeApiCall(`Room/RoomType/GetAvailableRooms`, 'POST', request);
+            if (response.successful) {
+                setRoomOptions((prevState) => {
+                    const newState = { ...prevState }
+                    newState[index] = response.data.map((room: any) => ({
+                        label: room.roomNumber,
+                        value: room.id,
+                    }))
+                    return newState
+                })
+            }
+    }
 
     const handleClickOpen = () => {
         setOpenDialog(true);
@@ -157,11 +188,15 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
         setOpenDialog(false);
     };
 
+    const refreshPage = () => {
+        router.refresh()
+    }
+
 
     const handleCloseDrawer = (refresh: boolean = false) => {
         setOpenDrawer(false);
         if (refresh) {
-            router.refresh()
+            refreshPage()
         }
     };
 
@@ -212,22 +247,36 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
     }
 
     function getRoomTypesText(roomTypes: any[]) {
-        let roomTypesText = ''
+        const roomTypeNames = roomTypes.map((roomType) => (`${roomType.numberOfRoomsBooked} ${roomType?.roomType?.name}`))
+        return roomTypeNames.join(',')
+    }
 
-        roomTypes.forEach((roomType, index) => {
-            roomTypesText += `${roomType.numberBookedRooms} ${roomType?.roomType?.name}`
-            if (roomTypes.length - 1 !== index) {
-                roomTypesText += ', '
-            }
-        })
-        return roomTypesText
+    async function assignRoom(index: number) {
+        if (selectedRooms2[index].length < (booking.roomTypes[index].numberOfRoomsBooked)) {
+            message.error('The rooms selected is less than the number of rooms booked')
+            return
+        }
+
+        const req = {
+            bookingId: booking.id,
+            roomIds: selectedRooms2[index].map((room) => room.value)
+        }
+        const response = await makeApiCall('Booking/Hotel/Assign', "POST", req)
+
+        if (response.successful) {
+            message.success('Room assigned successfully')
+            handleShowRoomsDropdown(index, booking.roomTypes[index])
+            refreshPage()
+        } else {
+            message.error(response.data)
+        }
     }
 
     function getTotalBookedRooms(roomTypes: any[]) {
         let totalBookedRooms = 0
 
         roomTypes.forEach((roomType) => {
-            totalBookedRooms += Number(roomType?.numberBookedRooms)
+            totalBookedRooms += Number(roomType?.numberOfRoomsBooked)
         })
 
         return totalBookedRooms
@@ -237,6 +286,14 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
         setMenuIndex(index)
         setOpenDrawer(true)
         handleCloseMenu();
+    }
+
+    function handleShowRoomsDropdown(index: number, roomType: any) {
+        setRoomsDropdown((prevState) => ({...prevState, [index]: !roomsDropdown[index]}))
+        console.log(roomOptions)
+        if (!roomsDropdown[index] && roomOptions[index].length < 1) {
+            fetchRoomsByRoomType(roomType.roomTypeId, index)
+        }
     }
 
     return (
@@ -314,8 +371,18 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                     </div>
 
                     <div className='flex flex-col gap-2'>
+                        <p className='text-sm font-normal text-[#636363]'>Booking Type</p>
+                        <p className='text-sm font-medium text-[#1A1A1A]'>{bookingType[Number(booking.bookingType)]}</p>
+                    </div>
+
+                    <div className='flex flex-col gap-2'>
                         <p className='text-sm font-normal text-[#636363]'>Check-In</p>
                         <p className='text-sm font-medium text-[#1A1A1A]'>{format(new Date(booking.checkInDate), 'dd-MM-yyyy')}</p>
+                    </div>
+
+                    <div className='flex flex-col gap-2'>
+                        <p className='text-sm font-normal text-[#636363]'>Check-Out</p>
+                        <p className='text-sm font-medium text-[#1A1A1A]'>{format(new Date(booking.checkOutDate), 'dd-MM-yyyy')}</p>
                     </div>
 
                     <div className='flex flex-col gap-2'>
@@ -326,11 +393,6 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                     <div className='flex flex-col gap-2'>
                         <p className='text-sm font-normal text-[#636363]'>Adults</p>
                         <p className='text-sm font-medium text-[#1A1A1A]'>{booking.totalAdults}</p>
-                    </div>
-
-                    <div className='flex flex-col gap-2'>
-                        <p className='text-sm font-normal text-[#636363]'>Check-Out</p>
-                        <p className='text-sm font-medium text-[#1A1A1A]'>{format(new Date(booking.checkOutDate), 'dd-MM-yyyy')}</p>
                     </div>
 
                     <div className='flex flex-col gap-2'>
@@ -351,7 +413,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                     <div className='flex flex-col gap-2'>
                         <p className='text-sm font-normal text-[#636363]'>Payment Method</p>
                         <p className='text-sm font-medium text-[#1A1A1A]'>
-                            {booking.isReservation ? "Premises" : "Online"}
+                            {booking.paymentMethod}
                         </p>
                     </div>
 
@@ -455,24 +517,55 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                         {menuIndex == 1 && <AmendStay booking={booking} onClose={handleCloseDrawer} />}
                         {menuIndex == 2 && <AddExtraRoomToBooking hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
                         {menuIndex == 3 && <ApplyDiscount hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
+                        {menuIndex == 3 && <ApplyDiscount hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
                     </div>
                 </Drawer>
 
                 <div className='grid grid-cols-1 md:grid-cols-2 w-full gap-4'>
 
                     <div className='flex flex-col gap-5 w-full'>
+                        <div className="flex flex-col gap-4">
+                            {booking.roomTypes.map((roomType: any, index: number) => (<div className="flex-col w-2/3 border border-[#1a1a1a]/35 shadow p-4">
+                                <div className="grid grid-cols-3">
+                                    <p className="text-xs text-[#636363] mb-2">Room Type</p>
+                                    <p className="text-xs text-[#636363] font-medium">Room(s)</p>
+                                    <p className="text-xs text-[#636363] font-medium">Number of Rooms</p>
+                                    <p className="text-base">{roomType.roomType.name}</p>
+                                    {booking.bookedRooms.some((room: any) => room.room.roomTypeId == roomType.roomTypeId) 
+                                    ? <p className="text-base">{booking.bookedRooms
+                                        .filter((room: any) => room.room.roomTypeId == roomType.roomTypeId)
+                                        .map((room: any) => room.room.roomNumber)
+                                        .join(', ')}</p>
+                                    : 
+                                    <div className="flex justify-start text-xs">
+                                    <button onClick={() => handleShowRoomsDropdown(index, roomType)} className='border-[#F5C400] rounded text-[#F5C400] py-1 px-2 border'>Assign Room</button>
+                                    </div>}                                
+                                    <p className="text-base">{roomType.numberOfRoomsBooked}</p>
+                                </div>
+                                {roomsDropdown[index] ? <div className="flex flex-col transform transition duration-[1000ms]">
+                                    <div className="flex flex-col space-y-1 mt-3" >
+                                            <label className="text-xs text-[#636363]">Room(s)</label>
+                                            <Select
+                                                isMulti
+                                                options={roomOptions[index]}    
+                                                value={selectedRooms2[index]}                                        // value={selectedRooms}
+                                                onChange={(e) => handleRoomSelect(e, index)}
+                                                className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
+                                                classNamePrefix="select"
+                                            />
+                                    </div>
 
-                        <div className="flex flex-col space-y-1" >
-                            <label className='text-xs font-medium leading-5 text-gray-700'>Room Number</label>
-                            <Select
-                                isMulti
-                                options={roomsOptions}
-                                value={selectedRooms}
-                                onChange={(e) => handleRoomSelect(e)}
-                                className="w-full border-[#666666]/50 placeholder:text-[#636363] text-xs font-normal focus:outline-0 bg-transparent rounded-md"
-                                // placeholder='eg. WiFi'
-                                classNamePrefix="select"
-                            />
+                                    <div className="flex justify-end gap-3 mt-3">
+                                        <button className="text-white font-medium flex items-center px-3 py-2 rounded-md bg-[#1a1a1a]/50 text-xs leading-6 uppercase hover:bg-[#1a1a1a]/70" onClick={() => handleShowRoomsDropdown(index, roomType)}>
+                                            Cancel
+                                        </button>
+                                        <button className="text-white font-medium flex items-center px-3 py-2 rounded-md bg-[#F5C400] text-xs leading-6 uppercase hover:bg-[#F5C400]/70 disabled:bg-[#F5C400]/70" disabled={selectedRooms2[index].length < 1} onClick={() => assignRoom(index)}>
+                                            Assign Room
+                                        </button>
+                                    </div>
+                                </div> : null}
+
+                            </div>))}
                         </div>
 
                         <div className="flex flex-col space-y-1" >
