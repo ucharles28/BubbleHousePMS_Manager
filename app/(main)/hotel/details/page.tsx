@@ -15,7 +15,7 @@ async function getHotelDetails(hotelId: string) {
 export default async function HotelDetailsPage() {
     const { hotelId } = await getUserInfo()
     const hotel = await getHotelDetails(hotelId)
-
+ 
     return (
             <Suspense fallback={<Loading />}>
                 <HotelDetails hotelPayload={hotel} />
