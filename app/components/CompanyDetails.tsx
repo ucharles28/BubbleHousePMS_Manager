@@ -40,7 +40,7 @@ const CompanyDetails = ({ company }: { company: Company }) => {
         <div className='min-h-screen w-full py-6 flex flex-col gap-6'>
                 <div className='flex items-center justify-between gap-y-1 w-full'>
                   <p className='block md:w-full text-lg font-medium text-[#1A1A1A] leading-6'>
-                    Add Staff
+                    Company details
                   </p>
           
                   <div
