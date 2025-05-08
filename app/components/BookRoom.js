@@ -327,7 +327,7 @@ export default function BookRoom({ hotelId, companies }) {
                 onClose={() => handleCloseDrawer()}
             >
                 <div className="flex w-full md:w-[350px] lg:w-[550px] h-full">
-                    <AddPayment onClose={handleCloseDrawer} savePaymentInfo={savePaymentInfo} />
+                    <AddPayment onClose={handleCloseDrawer} savePaymentInfo={savePaymentInfo} showSurchargeFee={false} />
                 </div>
             </Drawer>
             <div className='flex flex-col items-end gap-y-2 md:flex-row w-full'>

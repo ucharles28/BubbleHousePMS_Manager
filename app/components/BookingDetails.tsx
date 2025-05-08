@@ -554,7 +554,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                     onClose={() => handleCloseDrawer()}
                 >
                     <div className="flex w-full md:w-[350px] lg:w-[550px] h-full">
-                        {menuIndex == 0 && <AddPayment savePaymentInfo={savePaymentInfo} onClose={handleCloseDrawer} />}
+                        {menuIndex == 0 && <AddPayment savePaymentInfo={savePaymentInfo} onClose={handleCloseDrawer} showSurchargeFee={true} />}
                         {menuIndex == 1 && <UpgradeRoom bookedRoomTypes={booking?.roomTypes} bookedRooms={roomsOptions} hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
                         {menuIndex == 2 && <AmendStay booking={booking} onClose={handleCloseDrawer} />}
                         {menuIndex == 3 && <AddExtraRoomToBooking hotelId={hotelId} booking={booking} onClose={handleCloseDrawer} />}
@@ -572,7 +572,7 @@ export default function BookingDetails({ booking, availableRooms = [], hotelId }
                                     <p className="text-xs text-[#636363] font-medium">Room(s)</p>
                                     <p className="text-xs text-[#636363] font-medium">Number of Rooms</p>
                                     <p className="text-base">{roomType.roomType.name}</p>
-                                    {booking.bookedRooms.some((room: any) => room.room.roomTypeId == roomType.roomTypeId) 
+                                    {booking.bookedRooms.some((room: any, index: number) => room.room.roomTypeId == roomType.roomTypeId) 
                                     ? <p className="text-base">{booking.bookedRooms
                                         .filter((room: any) => room.room.roomTypeId == roomType.roomTypeId)
                                         .map((room: any) => room.room.roomNumber)

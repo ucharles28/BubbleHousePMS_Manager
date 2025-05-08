@@ -51,7 +51,7 @@ const AddExtraRoomToBooking = ({ hotelId, booking, onClose }) => {
         const response = await makeApiCall(`Booking/Hotel/AddRoomToBooking/${booking.id}`, 'PUT', request);
         if (response.successful) {
             message.success('Room added successfully')
-            onClose()
+            onClose(true)
         } else {
             message.error('Error adding room')
         }
