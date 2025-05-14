@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import Image from 'next/image';
 import logo from '../logo.png'
-import { Setting2, People, Notification, Buildings2, Calendar, Messages2, Category, LogoutCurve, Money2, Building4 } from 'iconsax-react';
+import { Setting2, People, Note, Notification, Buildings2, Calendar, Messages2, Category, LogoutCurve, Money2, Building4 } from 'iconsax-react';
 import { logOutUser } from "../lib/helpers";
 
 const sidebarLinks = [
     { path: "/", label: "Dashboard", icon: Category },
     { path: "/staffs", label: "Staffs", icon: People },
+    { path: "/audits", label: "System Audits", icon: Note },
     { path: "/company", label: "Companies", icon: Building4, isAdmin: true },
     { path: "/bookings", label: "Bookings", icon: Calendar },
     { path: "/hotel", label: "Manage Hotel", icon: Buildings2 },
