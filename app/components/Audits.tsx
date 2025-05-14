@@ -7,6 +7,8 @@ import { Audit } from '../models/audit';
 import { TableCell, TablePagination, TableRow, Table, TableContainer, TableHead, TableBody, TextField, CircularProgress } from '@mui/material';
 import styled from 'styled-components';
 import Loading from '../(main)/loading';
+import { CSVLink, CSVDownload } from "react-csv";
+import { ExportCurve } from 'iconsax-react';
 
 const Audits = ({hotelId} : {hotelId: string}) => {
     const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1))
@@ -16,6 +18,22 @@ const Audits = ({hotelId} : {hotelId: string}) => {
     const [isButtonLoading, setIsButtonLoading] = useState(false)
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
+   const headers = [
+                        {label: 'Guest Name', key: 'fullName' },
+                                    {label: 'Tier', key: 'bookingType' },
+                                    {label: 'Room Type', key: 'roomTypes' },
+                                    {label: 'Room No.', key: 'roomNumbers' },
+                                    {label: 'Room Rate Total', key: 'totalRoomPrice' },
+                                    {label: 'Due Out', key: 'checkout' },
+                                    {label: 'Balance Due(-/+)', key: 'balance' },
+                                    {label: 'Notes', key: 'notes' }
+        ];
+
+
+                                    
+ 
+
 
     useEffect(() => {
         fetchAudits()
@@ -102,12 +120,18 @@ const Audits = ({hotelId} : {hotelId: string}) => {
                                 onChange={onChange} 
                                 />
                 </p>
-    
-                <div
+
+                
+                <button
                 //   onClick={goBack}
                   className="px-2 py-1 rounded-lg flex items-center cursor-pointer bg-white hover:bg-[#f9f9f9] border-2 border-[#E4E4E4] text-gray-600 hover:text-gray-800">
+                  <CSVLink data={audits} headers={headers}>
+                        <div className="flex items-center gap-2">
+                        <ExportCurve size="20" className="text-gray-600"/>
                   <span className="text-xs font-medium leading-6">Export</span>
-                </div>
+                        </div>
+                  </CSVLink>
+                </button>
         </div>
 
         {!isLoading 
